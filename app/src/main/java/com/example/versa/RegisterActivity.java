@@ -57,8 +57,9 @@ public class RegisterActivity extends AppCompatActivity {
                 final String name = binding.usernameEt.getText().toString().trim();
                 final String email = binding.emailEt.getText().toString().trim();
                 final String pass = binding.passwordEt.getText().toString().trim();
-                
-                if (name.isEmpty() || email.isEmpty() || pass.isEmpty()) {
+                final String jobtitle = binding.JobTitleEt.getText().toString().trim();
+
+                if (name.isEmpty() || email.isEmpty() || pass.isEmpty() || jobtitle.isEmpty()) {
                     Toast.makeText(RegisterActivity.this, "Fields cannot be empty", Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -71,8 +72,8 @@ public class RegisterActivity extends AppCompatActivity {
                                     FirebaseUser fUser = mAuth.getCurrentUser();
                                     if (fUser != null){
                                         String uid = fUser.getUid();
-                                        User newUser = new User(uid, name, email);
-                                        db.collection("User").document(uid).set(newUser)
+                                        User newUser = new User(uid, name, email, jobtitle);
+                                        db.collection("Users").document(uid).set(newUser)
                                                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                                                     @Override
                                                     public void onComplete(@NonNull Task<Void> task2) {
