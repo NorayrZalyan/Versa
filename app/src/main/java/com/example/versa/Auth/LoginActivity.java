@@ -1,4 +1,4 @@
-package com.example.versa;
+package com.example.versa.Auth;
 
 import  android.content.Intent;
 import android.os.Bundle;
@@ -7,13 +7,10 @@ import android.view.View;
 import android.widget.Toast;
 
 
-import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
+import com.example.versa.HomeActivity;
 import com.example.versa.databinding.ActivityLoginBinding;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -66,7 +63,7 @@ public class LoginActivity extends AppCompatActivity {
                                     // Sign in success, update UI with the signed-in user's information
                                     Log.d("TAG", "signInWithEmail:success");
                                     Toast.makeText(LoginActivity.this, "Login is completed", Toast.LENGTH_SHORT).show();
-                                    startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                                    startActivity(new Intent(LoginActivity.this, HomeActivity.class));
 
                                 } else {
                                     // If sign in fails, display a message to the user.

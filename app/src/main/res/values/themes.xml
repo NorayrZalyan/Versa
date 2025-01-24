@@ -6,4 +6,10 @@
     </style>
 
     <style name="Theme.Versa" parent="Base.Theme.Versa" />
+    <style name="Theme.Versa.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+    <style name="Theme.Versa.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+    <style name="Theme.Versa.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>

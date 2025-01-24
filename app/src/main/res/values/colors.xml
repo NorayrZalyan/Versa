@@ -3,5 +3,8 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="Bacground_color">#404143</color>
+    <color name="bacground_light">#585F62</color>
     <color name="button_color">#44adc2</color>
+    <color name="button_dark">#025566</color>
+
 </resources>
