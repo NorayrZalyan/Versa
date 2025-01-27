@@ -5,14 +5,14 @@
     android:background="@color/Bacground_color"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context="com.example.versa.fragment.start.CreateRoomBottomSheet">
+    tools:context="com.example.versa.fragment.start.JoinRoomBottomSheet">
 
 
     <TextView
         android:id="@+id/room_nameTv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Room name"
+        android:text="Room ID"
         android:textColor="@color/white"
         android:textSize="35dp"
         app:layout_constraintStart_toStartOf="parent"
@@ -22,7 +22,7 @@
     <EditText
         android:id="@+id/Room_nameEt"
         android:layout_width="300dp"
-        android:hint="Room name"
+        android:hint="Room ID"
         android:layout_marginTop="50dp"
         android:textColorHint="@color/white"
         android:layout_height="50dp"
@@ -48,10 +48,10 @@
         />
 
     <Button
-        android:id="@+id/createroom_bottomsheetBt"
+        android:id="@+id/create_roomBt"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:text="Create"
+        android:text="Join"
         android:background="@color/button_color"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

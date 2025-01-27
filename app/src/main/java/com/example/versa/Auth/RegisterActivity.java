@@ -2,6 +2,7 @@ package com.example.versa.Auth;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -62,7 +63,7 @@ public class RegisterActivity extends AppCompatActivity {
                                     FirebaseUser fUser = mAuth.getCurrentUser();
                                     if (fUser != null){
                                         String uid = fUser.getUid();
-                                        User newUser = new User(uid, name, email, jobtitle);
+                                        User newUser = new User(uid, name, email, jobtitle, null);
                                         db.collection("Users").document(uid).set(newUser)
                                                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                                                     @Override
@@ -86,10 +87,8 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
 
+
+
+
     }
-
-
-
-
-
 }
