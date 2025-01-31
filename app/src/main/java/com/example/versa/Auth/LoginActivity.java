@@ -90,21 +90,22 @@ public class LoginActivity extends AppCompatActivity {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 if (task.isSuccessful()) {
-                                    // Sign in success, update UI with the signed-in user's information
-                                    Log.d("TAG", "signInAnonymously:success");
-
+                                    // Успешная аутентификация
+                                    FirebaseUser user = mAuth.getCurrentUser();
+                                    if (user != null) {
+                                        Log.d("FirebaseAuth", "Успешный вход как гость. ID: " + user.getUid());
+                                    }
                                 } else {
-                                    // If sign in fails, display a message to the user.
-                                    Log.w("TAG", "signInAnonymously:failure", task.getException());
-                                    Toast.makeText(LoginActivity.this, "Authentication failed.",
-                                            Toast.LENGTH_SHORT).show();
+                                    // Ошибка аутентификации
+                                    Log.e("FirebaseAuth", "Ошибка анонимной аутентификации", task.getException());
                                 }
                             }
                         });
 
+
+
             }
         });
-
 
 
 

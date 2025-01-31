@@ -62,6 +62,8 @@ public class CreateRoomBottomSheet extends BottomSheetDialogFragment {
                 db.collection("Users").document(uid)
                         .update("roomId", rId);
 
+                dismiss();
+
             }
         });
 

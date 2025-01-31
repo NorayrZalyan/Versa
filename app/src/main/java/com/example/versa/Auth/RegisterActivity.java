@@ -4,12 +4,16 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.versa.HomeActivity;
+import com.example.versa.R;
 import com.example.versa.databinding.ActivityRegisterBinding;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -31,6 +35,7 @@ public class RegisterActivity extends AppCompatActivity {
         binding = ActivityRegisterBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
 
@@ -41,6 +46,13 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
 
+
+
+
+
+
+
+
         binding.signupBt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -48,8 +60,7 @@ public class RegisterActivity extends AppCompatActivity {
                 final String name = binding.usernameEt.getText().toString().trim();
                 final String email = binding.emailEt.getText().toString().trim();
                 final String pass = binding.passwordEt.getText().toString().trim();
-                final String jobtitle = binding.JobTitleEt.getText().toString().trim();
-
+                final String jobtitle = binding.jobTitleSp.getSelectedItem().toString();
                 if (name.isEmpty() || email.isEmpty() || pass.isEmpty() || jobtitle.isEmpty()) {
                     Toast.makeText(RegisterActivity.this, "Fields cannot be empty", Toast.LENGTH_SHORT).show();
                     return;
@@ -83,6 +94,33 @@ public class RegisterActivity extends AppCompatActivity {
                                 }
                             }
                         });
+
+            }
+        });
+
+
+        binding.guestLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+
+                mAuth.signInAnonymously()
+                        .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                if (task.isSuccessful()) {
+                                    Toast.makeText(RegisterActivity.this, "gg", Toast.LENGTH_SHORT).show();
+                                    startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
+
+                                } else {
+                                    // Ошибка аутентификации
+                                    Log.e("FirebaseAuth", "g", task.getException());
+                                }
+                            }
+                        });
+
+
 
             }
         });

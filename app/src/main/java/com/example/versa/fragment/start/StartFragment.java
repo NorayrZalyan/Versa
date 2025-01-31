@@ -13,6 +13,8 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.example.versa.databinding.StartFragmentBinding;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
@@ -53,7 +55,7 @@ public class StartFragment extends Fragment {
                         if (document.exists()) {
                             // Получаем значение поля "email"
                             String jobtitle = document.getString("jobtitle");
-
+                            String roomid = document.getString("roomId");
 
                             Toast.makeText(getContext(), "Jobtitle: " + jobtitle, Toast.LENGTH_SHORT).show();
 
@@ -65,9 +67,41 @@ public class StartFragment extends Fragment {
                                 binding.joinRoomBt.setVisibility(View.VISIBLE);
                             }
 
+                            if (roomid != null){
+                                binding.createRoomBt.setVisibility(View.GONE);
+                                binding.joinRoomBt.setVisibility(View.GONE);
 
 
-                            Log.d("Firestore", "Email: " + jobtitle);
+
+                                db.collection("Room")
+                                        .document(roomid)
+                                        .get()
+                                        .addOnCompleteListener(task2 -> {
+                                            if (task.isSuccessful()) {
+                                                DocumentSnapshot document2 = task2.getResult();
+                                                if (document.exists()) {
+
+                                                    binding.roomPositionRoomname.setText(document2.getString("name"));
+                                                    binding.roomPositionRoomid.setText(roomid);
+                                                    binding.RoomPosition.setVisibility(View.VISIBLE);
+
+                                                } else {
+                                                    Log.d("Firestore", "Документ не найден!");
+                                                }
+                                            } else {
+                                                Log.w("Firestore", "Ошибка при чтении документа.", task.getException());
+                                            }
+                                        });
+
+
+
+                            }
+
+
+
+
+
+
                         } else {
                             Log.d("Firestore", "Документ не найден!");
                         }
