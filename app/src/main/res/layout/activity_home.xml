@@ -5,16 +5,73 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/bacground_light"
     tools:context=".HomeActivity">
 
 
-    <FrameLayout
-        android:id="@+id/fragment_container"
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Room"
+        android:gravity="center"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="15dp"
+        android:textSize="40dp"
+        android:textColor="@color/white"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="80dp"
+        android:background="@color/white"/>
+
+
+
+    <Button
+        android:id="@+id/createroom_bottomsheetBt"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="@drawable/actionbutton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginEnd="30dp"
+        android:text="+"
+        android:visibility="invisible"
+        android:textSize="20dp"
+        android:layout_marginBottom="30dp"/>
+
+    <Button
+        android:id="@+id/join_roomBt"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="@drawable/actionbutton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginEnd="30dp"
+        android:text="join"
+        android:visibility="invisible"
+        android:textSize="20dp"
+        android:layout_marginBottom="30dp"/>
+
+    <ListView
+        android:id="@+id/listview"
+        android:background="@color/bacground_light"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:dividerHeight="10.0sp"
+        android:scrollbars="vertical"
+        android:layout_marginTop="82dp"
+        tools:listitem="@layout/list_item" />
+
+    <Button
+        android:id="@+id/button"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent">
-
-
-    </FrameLayout>
+        android:layout_height="wrap_content"
+        android:text="Button"
+        tools:layout_editor_absoluteX="27dp" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

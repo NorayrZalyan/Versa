@@ -2,31 +2,21 @@ package com.example.versa;
 
 public class Room {
 
-    private String name;
-    private static int nextid = 0;
-    private int id;
+    String roomName;
+    int roomId;
 
-    public Room(){
-
-    }
-    public Room(String name){
-        this.name = name;
-        this.id = ++nextid;
+    public Room(String roomName, int roomId){
+        this.roomName = roomName;
+        this.roomId = roomId;
     }
 
-    public String getName() {
-        return name;
+    public int getRoomId() {
+        return roomId;
     }
-
-    public int getId() {
-        return id;
+    public String getRoomName() {
+        return roomName;
     }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setId(int id) {
-        this.id = id;
+    public void setRoomName(String roomName) {
+        this.roomName = roomName;
     }
 }
