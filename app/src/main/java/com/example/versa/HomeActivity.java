@@ -46,15 +46,21 @@ public class HomeActivity extends AppCompatActivity {
                 if (task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
-                        Log.d("TAG", "DocumentSnapshot data: " + document.getData());
+                        Log.d("1", "DocumentSnapshot data: " + document.getData());
 
                         if (document.getString("jobtitle").equals("Owner")){
                             binding.createroomBottomsheetBt.setVisibility(View.VISIBLE);
                             binding.joinRoomBt.setVisibility(View.INVISIBLE);
-                        } else {
+                        } else if(document.getString("jobtitle").equals("Other")) {
                             binding.createroomBottomsheetBt.setVisibility(View.INVISIBLE);
                             binding.joinRoomBt.setVisibility(View.VISIBLE);
                         }
+                        if (document.getString("roomId") != null){
+                            binding.createroomBottomsheetBt.setVisibility(View.INVISIBLE);
+                            binding.joinRoomBt.setVisibility(View.INVISIBLE);
+                        }
+
+
                     } else {
                         Log.d("TAG", "No such document");
                     }
@@ -83,6 +89,7 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 mAuth.signOut();
+//                recreate();
 
             }
         });
@@ -96,18 +103,63 @@ public class HomeActivity extends AppCompatActivity {
 
 
 
+        db.collection("Users").document(Uid).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        Log.d("2", "DocumentSnapshot data: " + document.getData());
+                        String userRoom = document.getString("roomId");
+
+                        if(document.getString("roomId") != null){
+
+                            db.collection("Rooms").document(userRoom).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<DocumentSnapshot> task1) {
+                                    if (task1.isSuccessful()) {
+                                        DocumentSnapshot document1 = task1.getResult();
+                                        if (document.exists()) {
+                                            Log.d("TAG", "DocumentSnapshot data: " + document.getData());
+
+                                            String userRoomName = document1.getString("roomName");
+                                            long userRoomId = document1.getLong("roomId");
+
+                                            String[] nameList = new String[]{userRoomName};
+                                            String[] idList = new String[]{String.valueOf(userRoomId)};
+                                            for (int i = 0; i < nameList.length; i++){
+                                                roomData = new RoomData(nameList[i], idList[i]);
+                                                dataArrayList.add(roomData);
+                                            }
+                                            listAdapter = new ListAdapter(HomeActivity.this, dataArrayList);
+                                            binding.listview.setAdapter(listAdapter);
 
 
-//        list View
-//        String[] nameList = new String[0];
-//        String[] idList = new String[0];
-//        for (int i = 0; i < nameList.length; i++){
-//            roomData = new RoomData(nameList[i], idList[i]);
-//            dataArrayList.add(roomData);
-//        }
-//        listAdapter = new ListAdapter(HomeActivity.this, dataArrayList);
-//        binding.listview.setAdapter(listAdapter);
-//
+
+
+
+                                        } else {
+                                            Log.d("TAG", "No such document");
+                                        }
+                                    } else {
+                                        Log.d("TAG", "get failed with ", task.getException());
+                                    }
+                                }
+                            });
+
+
+                        }
+
+
+                    } else {
+                        Log.d("TAG", "No such document");
+                    }
+                } else {
+                    Log.d("TAG", "get failed with ", task.getException());
+                }
+            }
+        });
+
 
     }
 }

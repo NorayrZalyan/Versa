@@ -1,5 +1,6 @@
 package com.example.versa.bottomSheet;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -56,6 +57,12 @@ public class CreateRoomBottomSheet extends BottomSheetDialogFragment {
                                             public void onComplete(@NonNull Task<Void> task) {
                                                 if (task.isSuccessful()){
                                                     Log.d("TAG", "DocumentSnapshot successfully written!");
+                                                    dismiss();
+                                                    Activity activity = getActivity();
+                                                    if (activity != null) {
+                                                        activity.recreate();  // Пересоздаём активность
+                                                    }
+
                                                 } else {
                                                     Log.w("TAG", "Error writing document", task.getException());
                                                 }
@@ -74,6 +81,7 @@ public class CreateRoomBottomSheet extends BottomSheetDialogFragment {
                                             public void onComplete(@NonNull Task<Void> task) {
                                                 if (task.isSuccessful()){
                                                     Log.d("TAG", "DocumentSnapshot successfully written!");
+                                                    dismiss();
                                                 } else {
                                                     Log.w("TAG", "Error writing document", task.getException());
                                                 }
