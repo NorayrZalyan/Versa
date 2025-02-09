@@ -81,31 +81,6 @@ public class LoginActivity extends AppCompatActivity {
 
 
 
-        binding.guestLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                mAuth.signInAnonymously()
-                        .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                            @Override
-                            public void onComplete(@NonNull Task<AuthResult> task) {
-                                if (task.isSuccessful()) {
-                                    // Успешная аутентификация
-                                    FirebaseUser user = mAuth.getCurrentUser();
-                                    if (user != null) {
-                                        Log.d("FirebaseAuth", "Успешный вход как гость. ID: " + user.getUid());
-                                    }
-                                } else {
-                                    // Ошибка аутентификации
-                                    Log.e("FirebaseAuth", "Ошибка анонимной аутентификации", task.getException());
-                                }
-                            }
-                        });
-
-
-
-            }
-        });
 
 
 

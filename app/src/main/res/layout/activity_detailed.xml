@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bacground_light"
+    tools:context=".DetailedActivity">
+
+    <TextView
+        android:id="@+id/room_nameTv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="RoomName"
+        android:textColor="@color/white"
+        android:textSize="20dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/room_idTV"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:text="id"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/room_nameTv" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@color/white"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="60dp"/>
+
+    <ListView
+        android:id="@+id/listview"
+        android:background="@color/bacground_light"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:dividerHeight="10.0sp"
+        android:scrollbars="vertical"
+        android:layout_marginTop="70dp"
+        tools:listitem="@layout/list_item" />
+
+    <Button
+        android:id="@+id/create_CategoryBt"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:background="@drawable/actionbutton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginEnd="30dp"
+        android:text="create Category"
+        android:textSize="20dp"
+        android:layout_marginBottom="30dp"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

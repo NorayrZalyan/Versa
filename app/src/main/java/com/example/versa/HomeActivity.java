@@ -3,9 +3,11 @@ package com.example.versa;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Toast;
 
 import com.example.versa.bottomSheet.CreateRoomBottomSheet;
@@ -133,7 +135,18 @@ public class HomeActivity extends AppCompatActivity {
                                             }
                                             listAdapter = new ListAdapter(HomeActivity.this, dataArrayList);
                                             binding.listview.setAdapter(listAdapter);
+                                            binding.listview.setClickable(true);
+                                            binding.listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                                @Override
+                                                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
+                                                    Intent intent = new Intent(HomeActivity.this, DetailedActivity.class);
+                                                    intent.putExtra("name", nameList[i]);
+                                                    intent.putExtra("id", idList[i]);
+                                                    startActivity(intent);
+
+                                                }
+                                            });
 
 
 

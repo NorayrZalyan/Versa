@@ -82,6 +82,10 @@ public class CreateRoomBottomSheet extends BottomSheetDialogFragment {
                                                 if (task.isSuccessful()){
                                                     Log.d("TAG", "DocumentSnapshot successfully written!");
                                                     dismiss();
+                                                    Activity activity = getActivity();
+                                                    if (activity != null) {
+                                                        activity.recreate();  // Пересоздаём активность
+                                                    }
                                                 } else {
                                                     Log.w("TAG", "Error writing document", task.getException());
                                                 }

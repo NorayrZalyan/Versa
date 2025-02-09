@@ -99,31 +99,6 @@ public class RegisterActivity extends AppCompatActivity {
         });
 
 
-        binding.guestLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-
-
-                mAuth.signInAnonymously()
-                        .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                            @Override
-                            public void onComplete(@NonNull Task<AuthResult> task) {
-                                if (task.isSuccessful()) {
-                                    Toast.makeText(RegisterActivity.this, "gg", Toast.LENGTH_SHORT).show();
-                                    startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
-
-                                } else {
-                                    // Ошибка аутентификации
-                                    Log.e("FirebaseAuth", "g", task.getException());
-                                }
-                            }
-                        });
-
-
-
-            }
-        });
 
 
 
