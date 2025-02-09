@@ -78,14 +78,16 @@ public class DetailedActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                Bundle bundle = new Bundle();
-                bundle.putString("roomID", id);
                 CreateCategoryBottomSheet bottomSheet = new CreateCategoryBottomSheet();
-                bottomSheet.setArguments(bundle);
                 bottomSheet.show(getSupportFragmentManager(), bottomSheet.getTag());
 
             }
         });
+
+
+
+
+
 
 
 

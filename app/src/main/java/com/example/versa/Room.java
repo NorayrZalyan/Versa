@@ -1,9 +1,12 @@
 package com.example.versa;
 
+import java.util.ArrayList;
+
 public class Room {
 
     String roomName;
     int roomId;
+    ArrayList<Client> clients = new ArrayList<>();
 
     public Room(String roomName, int roomId){
         this.roomName = roomName;
@@ -18,5 +21,9 @@ public class Room {
     }
     public void setRoomName(String roomName) {
         this.roomName = roomName;
+    }
+
+    public void addClent(Client client){
+        clients.add(client);
     }
 }
