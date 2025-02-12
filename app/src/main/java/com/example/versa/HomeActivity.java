@@ -12,6 +12,8 @@ import android.widget.AdapterView;
 import com.example.versa.bottomSheet.CreateRoomBottomSheet;
 import com.example.versa.bottomSheet.JoinRoombottomsheet;
 import com.example.versa.databinding.ActivityHomeBinding;
+import com.example.versa.room.RoomData;
+import com.example.versa.room.RoomListAdapter;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;

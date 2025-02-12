@@ -1,4 +1,4 @@
-package com.example.versa;
+package com.example.versa.room;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -8,20 +8,21 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import com.example.versa.CategoryData;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-public class CategoryListAdapter extends ArrayAdapter<CategoryData> {
-    public CategoryListAdapter(@NonNull Context context, ArrayList<CategoryData> dataArrayList) {
+import com.example.versa.R;
+
+public class RoomListAdapter extends ArrayAdapter<RoomData> {
+    public RoomListAdapter(@NonNull Context context, ArrayList<RoomData> dataArrayList) {
         super(context, R.layout.list_item, dataArrayList);
     }
 
     @NonNull
     @Override
     public View getView(int position, @Nullable View view, @NonNull ViewGroup parent) {
-        CategoryData listData = getItem(position);
+        RoomData listData = getItem(position);
 
         if (view == null){
             view = LayoutInflater.from(getContext()).inflate(R.layout.list_item, parent, false);
@@ -32,6 +33,7 @@ public class CategoryListAdapter extends ArrayAdapter<CategoryData> {
         TextView roomId = view.findViewById(R.id.listId);
 
         roomName.setText(listData.name);
+        roomId.setText(listData.id);
 
         return view;
     }

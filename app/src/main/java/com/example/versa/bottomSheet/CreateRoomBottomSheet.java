@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.example.versa.classes.Room;
+import com.example.versa.room.Room;
 import com.example.versa.databinding.RoomBottomSheetBinding;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;

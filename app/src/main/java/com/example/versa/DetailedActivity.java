@@ -5,15 +5,12 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
-import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import com.example.versa.bottomSheet.CreateCategoryBottomSheet;
-import com.example.versa.bottomSheet.CreateRoomBottomSheet;
+import com.example.versa.category.CategoryData;
+import com.example.versa.category.CategoryListAdapter;
 import com.example.versa.databinding.ActivityDetailedBinding;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -96,7 +93,7 @@ public class DetailedActivity extends AppCompatActivity {
 
 
 
-        DocumentReference docRef = db.collection("Rooms").document("3");
+        DocumentReference docRef = db.collection("Rooms").document(id);
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {

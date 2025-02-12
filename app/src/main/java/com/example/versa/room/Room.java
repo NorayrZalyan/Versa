@@ -1,4 +1,6 @@
-package com.example.versa.classes;
+package com.example.versa.room;
+
+import com.example.versa.category.Category;
 
 import java.util.ArrayList;
 

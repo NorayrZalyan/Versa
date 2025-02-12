@@ -1,4 +1,6 @@
-package com.example.versa.classes;
+package com.example.versa.category;
+
+import com.example.versa.classes.Clent;
 
 import java.util.ArrayList;
 

@@ -16,7 +16,6 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.example.versa.classes.User;
 
 public class RegisterActivity extends AppCompatActivity {
 

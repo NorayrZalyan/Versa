@@ -1,4 +1,4 @@
-package com.example.versa;
+package com.example.versa.room;
 
 public class RoomData {
 
