@@ -7,6 +7,7 @@ android {
     namespace 'com.example.versa'
     compileSdk 35
 
+
     defaultConfig {
         applicationId "com.example.versa"
         minSdk 29

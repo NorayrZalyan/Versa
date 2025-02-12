@@ -32,7 +32,7 @@
             android:layout_width="match_parent"
             android:layout_height="30dp"
             android:id="@+id/listId"
-            android:text="id"
+            android:text=""
             android:textColor="@color/white"
             android:gravity="right"
             android:layout_marginRight="10dp"

@@ -23,13 +23,16 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 public class DetailedActivity extends AppCompatActivity {
 
     private ActivityDetailedBinding binding;
+    private ArrayList<CategoryData> dataArrayList = new ArrayList<>();
     FirebaseAuth mAuth;
+    CategoryListAdapter categoryListAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,6 +111,22 @@ public class DetailedActivity extends AppCompatActivity {
                         if (categories != null && !categories.isEmpty()) {
                             String name = (String) categories.get(0).get("name");
                             Log.d("TAG", "First category name: " + name);
+
+                            String[] nameList = new String[categories.size()];
+                            for (int i = 0; i < categories.size(); i++) {
+                                nameList[i] = (String) categories.get(i).get("name");
+                            }
+                            for (int i = 0; i < nameList.length; i++) {
+                                CategoryData categoryData = new CategoryData(nameList[i]);
+                                dataArrayList.add(categoryData);
+                            }
+                            categoryListAdapter = new CategoryListAdapter(DetailedActivity.this, dataArrayList);
+                            binding.listview.setAdapter(categoryListAdapter);
+
+
+
+
+
                         } else {
                             Log.d("TAG", "Categories list is empty or null");
                         }

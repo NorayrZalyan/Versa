@@ -46,6 +46,11 @@ public class CreateCategoryBottomSheet extends BottomSheetDialogFragment {
                         .addOnSuccessListener(aVoid -> Log.d("Firestore", "Категория добавлена"))
                         .addOnFailureListener(e -> Log.w("Firestore", "Ошибка добавления", e));
 
+                dismiss();
+                Activity activity = getActivity();
+                if (activity != null) {
+                    activity.recreate();
+                }
 
             }
         });
