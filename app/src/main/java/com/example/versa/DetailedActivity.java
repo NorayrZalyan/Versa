@@ -19,8 +19,12 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.List;
+import java.util.Map;
 
 public class DetailedActivity extends AppCompatActivity {
 
@@ -78,7 +82,10 @@ public class DetailedActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
+                Bundle bundle = new Bundle();
+                bundle.putString("roomid", id);
                 CreateCategoryBottomSheet bottomSheet = new CreateCategoryBottomSheet();
+                bottomSheet.setArguments(bundle);
                 bottomSheet.show(getSupportFragmentManager(), bottomSheet.getTag());
 
             }
@@ -86,9 +93,32 @@ public class DetailedActivity extends AppCompatActivity {
 
 
 
+        DocumentReference docRef = db.collection("Rooms").document("3");
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        Log.d("TAG", "DocumentSnapshot data: " + document.getData());
 
+                        // Получаем список категорий
+                        List<Map<String, Object>> categories = (List<Map<String, Object>>) document.get("categories");
 
-
+                        if (categories != null && !categories.isEmpty()) {
+                            String name = (String) categories.get(0).get("name");
+                            Log.d("TAG", "First category name: " + name);
+                        } else {
+                            Log.d("TAG", "Categories list is empty or null");
+                        }
+                    } else {
+                        Log.d("TAG", "No such document");
+                    }
+                } else {
+                    Log.d("TAG", "get failed with ", task.getException());
+                }
+            }
+        });
 
 
 

@@ -1,4 +1,4 @@
-package com.example.versa;
+package com.example.versa.classes;
 
 import java.util.ArrayList;
 
@@ -6,7 +6,7 @@ public class Room {
 
     String roomName;
     int roomId;
-    ArrayList<Client> clients = new ArrayList<>();
+    ArrayList<Category> clients = new ArrayList<>();
 
     public Room(String roomName, int roomId){
         this.roomName = roomName;
@@ -19,11 +19,8 @@ public class Room {
     public String getRoomName() {
         return roomName;
     }
-    public void setRoomName(String roomName) {
-        this.roomName = roomName;
-    }
 
-    public void addClent(Client client){
-        clients.add(client);
+    public ArrayList<Category> getClients() {
+        return clients;
     }
 }
