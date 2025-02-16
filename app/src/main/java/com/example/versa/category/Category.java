@@ -1,6 +1,6 @@
 package com.example.versa.category;
 
-import com.example.versa.classes.Clent;
+import com.example.versa.classes.Client;
 
 import java.util.ArrayList;
 
@@ -8,7 +8,7 @@ public class Category {
 
     private String name;
 
-    private ArrayList<Clent> clents = new ArrayList<>();
+    private ArrayList<Client> clents = new ArrayList<>();
 
     public Category(String name) {
         this.name = name;
@@ -18,7 +18,12 @@ public class Category {
         return name;
     }
 
-    public ArrayList<Clent> getClents() {
+    public ArrayList<Client> getClents() {
         return clents;
+    }
+
+
+    public void addClient(Client client) {
+        clents.add(client);
     }
 }

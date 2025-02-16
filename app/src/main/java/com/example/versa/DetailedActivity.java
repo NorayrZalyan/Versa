@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -78,6 +79,8 @@ public class DetailedActivity extends AppCompatActivity {
 
 
 
+
+
         binding.createCategoryBt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -108,7 +111,6 @@ public class DetailedActivity extends AppCompatActivity {
                         if (categories != null && !categories.isEmpty()) {
                             String name = (String) categories.get(0).get("name");
                             Log.d("TAG", "First category name: " + name);
-
                             String[] nameList = new String[categories.size()];
                             for (int i = 0; i < categories.size(); i++) {
                                 nameList[i] = (String) categories.get(i).get("name");
@@ -119,9 +121,18 @@ public class DetailedActivity extends AppCompatActivity {
                             }
                             categoryListAdapter = new CategoryListAdapter(DetailedActivity.this, dataArrayList);
                             binding.listview.setAdapter(categoryListAdapter);
-
-
-
+                            binding.listview.setClickable(true);
+                            binding.listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                @Override
+                                public void onItemClick(AdapterView<?> parent, View view, int position, long longid) {
+                                    Log.d("TAG", "onItemClick: "+position);
+                                    Intent intent = new Intent(DetailedActivity.this, CategoryActivity.class);
+                                    intent.putExtra("name", nameList[position]);
+                                    intent.putExtra("id",id);
+                                    intent.putExtra("position", position);
+                                    startActivity(intent);
+                                }
+                            });
 
 
                         } else {

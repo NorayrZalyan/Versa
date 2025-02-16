@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/Bacground_color"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context="com.example.versa.bottomSheet.ClientBottomSheet">
+
+
+    <TextView
+        android:id="@+id/add_clientTv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Add client"
+        android:textColor="@color/white"
+        android:textSize="35dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <EditText
+        android:id="@+id/client_nameEd"
+        android:layout_width="300dp"
+        android:hint="Client name"
+        android:layout_marginTop="50dp"
+        android:textColorHint="@color/white"
+        android:layout_height="50dp"
+        android:textColor="@color/white"
+        android:background="@drawable/input"
+        app:layout_constraintTop_toBottomOf="@+id/add_clientTv"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+    <EditText
+        android:id="@+id/client_phoneEt"
+        android:layout_width="300dp"
+        android:hint="Client phone"
+        android:layout_marginTop="20dp"
+        android:textColorHint="@color/white"
+        android:layout_height="50dp"
+        android:textColor="@color/white"
+        android:background="@drawable/input"
+        app:layout_constraintTop_toBottomOf="@+id/client_nameEd"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+    <EditText
+        android:id="@+id/client_emailEt"
+        android:layout_width="300dp"
+        android:hint="Client email"
+        android:layout_marginTop="20dp"
+        android:textColorHint="@color/white"
+        android:layout_height="50dp"
+        android:textColor="@color/white"
+        android:background="@drawable/input"
+        app:layout_constraintTop_toBottomOf="@+id/client_phoneEt"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+    <EditText
+        android:id="@+id/client_descriptionEt"
+        android:layout_width="300dp"
+        android:hint="Client description"
+        android:layout_marginTop="20dp"
+        android:textColorHint="@color/white"
+        android:layout_height="50dp"
+        android:textColor="@color/white"
+        android:background="@drawable/input"
+        app:layout_constraintTop_toBottomOf="@+id/client_emailEt"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        app:layout_constraintTop_toTopOf="@id/add_clientBt"
+        android:layout_marginTop="80dp"
+        android:singleLine="true"
+        android:ellipsize="none"
+        android:scrollHorizontally="true"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:focusable="true"
+        android:focusableInTouchMode="true"/>
+
+    <Button
+        android:id="@+id/add_clientBt"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:background="@color/button_color"
+        android:text="Create"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/client_descriptionEt" />
+</androidx.constraintlayout.widget.ConstraintLayout>
