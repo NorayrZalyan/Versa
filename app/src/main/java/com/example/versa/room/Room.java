@@ -8,7 +8,7 @@ public class Room {
 
     String roomName;
     int roomId;
-    ArrayList<Category> clients = new ArrayList<>();
+    ArrayList<Category> categories = new ArrayList<>();
 
     public Room(String roomName, int roomId){
         this.roomName = roomName;
@@ -22,7 +22,7 @@ public class Room {
         return roomName;
     }
 
-    public ArrayList<Category> getClients() {
-        return clients;
+    public ArrayList<Category> getCategories() {
+        return categories;
     }
 }

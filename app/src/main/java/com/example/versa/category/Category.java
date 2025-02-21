@@ -8,7 +8,7 @@ public class Category {
 
     private String name;
 
-    private ArrayList<Client> clents = new ArrayList<>();
+    private ArrayList<Client> clients = new ArrayList<>();
 
     public Category(String name) {
         this.name = name;
@@ -18,12 +18,12 @@ public class Category {
         return name;
     }
 
-    public ArrayList<Client> getClents() {
-        return clents;
+    public ArrayList<Client> getClients() {
+        return clients;
     }
 
 
     public void addClient(Client client) {
-        clents.add(client);
+        clients.add(client);
     }
 }

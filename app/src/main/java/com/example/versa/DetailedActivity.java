@@ -122,6 +122,9 @@ public class DetailedActivity extends AppCompatActivity {
                             categoryListAdapter = new CategoryListAdapter(DetailedActivity.this, dataArrayList);
                             binding.listview.setAdapter(categoryListAdapter);
                             binding.listview.setClickable(true);
+
+
+
                             binding.listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                                 @Override
                                 public void onItemClick(AdapterView<?> parent, View view, int position, long longid) {

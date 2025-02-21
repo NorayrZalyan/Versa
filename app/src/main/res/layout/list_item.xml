@@ -21,24 +21,19 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/listName"
-            android:text="Name"
-
+            android:text="N"
             android:textColor="@color/white"
             android:textSize="25sp"
             android:layout_marginTop="8dp"
             android:layout_marginStart="30dp"/>
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="30dp"
-            android:id="@+id/listId"
-            android:text=""
-            android:textColor="@color/white"
-            android:gravity="right"
-            android:layout_marginRight="10dp"
-            android:textSize="16sp"
-            android:layout_toEndOf="@id/listName"
-            android:layout_marginTop="10dp"/>
+
+        <ImageView
+            android:id="@+id/moreIv"
+            android:layout_width="20dp"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/listName"
+            android:src="@drawable/more_icon_white_nobg" />
 
     </RelativeLayout>
 
