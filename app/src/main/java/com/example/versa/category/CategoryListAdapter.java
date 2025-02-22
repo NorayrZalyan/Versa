@@ -1,6 +1,5 @@
 package com.example.versa.category;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -37,15 +36,12 @@ public class CategoryListAdapter extends ArrayAdapter<CategoryData> {
         more.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 PopupMenu popup = new PopupMenu(parent.getContext(), v);
-                popup.getMenuInflater().inflate(R.menu.list_item_menu, popup.getMenu());
-
+                popup.getMenuInflater().inflate(R.menu.category_list_item_menu, popup.getMenu());
                 popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
                         int id = item.getItemId();
-
                         if (id == R.id.option1) {
                             // Действие для варианта 1
                             return true;
@@ -56,11 +52,7 @@ public class CategoryListAdapter extends ArrayAdapter<CategoryData> {
                         return false;
                     }
                 });
-
-
                 popup.show();
-
-
             }
         });
 

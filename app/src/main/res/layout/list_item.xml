@@ -11,30 +11,59 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <RelativeLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/list_item_layout"
         android:layout_width="match_parent"
-        android:background="@color/Bacground_color"
-        android:layout_height="50dp">
+        android:layout_height="50dp"
+        android:background="@color/Bacground_color">
 
 
         <TextView
+            android:id="@+id/listName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/listName"
-            android:text="N"
+            android:layout_marginStart="7dp"
+            android:text="namw"
             android:textColor="@color/white"
-            android:textSize="25sp"
-            android:layout_marginTop="8dp"
-            android:layout_marginStart="30dp"/>
+            android:textSize="24dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
 
-        <ImageView
-            android:id="@+id/moreIv"
-            android:layout_width="20dp"
+        <TextView
+            android:id="@+id/listId"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/listName"
-            android:src="@drawable/more_icon_white_nobg" />
+            android:text=""
+            android:gravity="right"
+            android:textColor="@color/white"
+            android:textSize="15dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/linearLayout"
+            app:layout_constraintStart_toEndOf="@+id/textView"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginEnd="2dp"/>
 
-    </RelativeLayout>
+        <LinearLayout
+            android:id="@+id/linearLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="7dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/moreIv"
+                android:layout_width="20dp"
+                android:layout_height="wrap_content"
+                android:src="@drawable/more_icon_white_nobg"/>
+
+        </LinearLayout>
+            
+            
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
 
 </androidx.cardview.widget.CardView>
