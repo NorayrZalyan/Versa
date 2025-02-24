@@ -45,10 +45,6 @@ public class DetailedActivity extends AppCompatActivity {
         binding.roomIdTV.setText(id);
 
 
-
-
-
-
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser fUser = mAuth.getCurrentUser();
         String Uid = fUser.getUid();
@@ -106,36 +102,98 @@ public class DetailedActivity extends AppCompatActivity {
                         Log.d("TAG", "DocumentSnapshot data: " + document.getData());
 
                         // Получаем список категорий
-                        List<Map<String, Object>> categories = (List<Map<String, Object>>) document.get("categories");
+                        List<Map<String, Object>> roomCategories = (List<Map<String, Object>>) document.get("categories");
 
-                        if (categories != null && !categories.isEmpty()) {
-                            String name = (String) categories.get(0).get("name");
+                        if (roomCategories != null && !roomCategories.isEmpty()) {
+                            String name = (String) roomCategories.get(0).get("name");
                             Log.d("TAG", "First category name: " + name);
-                            String[] nameList = new String[categories.size()];
-                            for (int i = 0; i < categories.size(); i++) {
-                                nameList[i] = (String) categories.get(i).get("name");
-                            }
-                            for (int i = 0; i < nameList.length; i++) {
-                                CategoryData categoryData = new CategoryData(nameList[i]);
-                                dataArrayList.add(categoryData);
-                            }
-                            categoryListAdapter = new CategoryListAdapter(DetailedActivity.this, dataArrayList);
-                            binding.listview.setAdapter(categoryListAdapter);
-                            binding.listview.setClickable(true);
+
+                            String uid = FirebaseAuth.getInstance().getUid();
+                            db.collection("Users").document(uid)
+                                    .get()
+                                    .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                            if(task.isSuccessful()){
+                                                DocumentSnapshot documentSnapshot = task.getResult();
+                                                if (documentSnapshot.exists()){
+                                                    Log.d("TAG", "DocumentSnapshot data: " + document.getData());
+
+                                                    if (documentSnapshot.get("jobtitle").equals("Owner")){
+                                                        String[] nameList = new String[roomCategories.size()];
+
+                                                        for (int i = 0; i < roomCategories.size(); i++) {
+                                                            nameList[i] = (String) roomCategories.get(i).get("name");
+                                                        }
+                                                        for (int i = 0; i < nameList.length; i++) {
+                                                            CategoryData categoryData = new CategoryData(nameList[i]);
+                                                            dataArrayList.add(categoryData);
+                                                        }
+                                                        categoryListAdapter = new CategoryListAdapter(DetailedActivity.this, dataArrayList);
+                                                        binding.listview.setAdapter(categoryListAdapter);
+                                                        binding.listview.setClickable(true);
+                                                        binding.listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                                            @Override
+                                                            public void onItemClick(AdapterView<?> parent, View view, int position, long longid) {
+                                                                Log.d("TAG", "onItemClick: "+position);
+                                                                Intent intent = new Intent(DetailedActivity.this, CategoryActivity.class);
+                                                                intent.putExtra("name", nameList[position]);
+                                                                intent.putExtra("id",id);
+                                                                intent.putExtra("position", position);
+                                                                startActivity(intent);
+                                                            }
+                                                        });
 
 
 
-                            binding.listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                                @Override
-                                public void onItemClick(AdapterView<?> parent, View view, int position, long longid) {
-                                    Log.d("TAG", "onItemClick: "+position);
-                                    Intent intent = new Intent(DetailedActivity.this, CategoryActivity.class);
-                                    intent.putExtra("name", nameList[position]);
-                                    intent.putExtra("id",id);
-                                    intent.putExtra("position", position);
-                                    startActivity(intent);
-                                }
-                            });
+                                                    } else if (documentSnapshot.get("jobtitle").equals("Other")) {
+                                                        ArrayList<String> userCategories = (ArrayList<String>) documentSnapshot.get("categories");
+                                                        Log.d("TEST", "onComplete: import array");
+                                                        String[] nameList = new String[userCategories.size()];
+
+                                                        for (int i = 0; i < userCategories.size(); i++) {
+                                                            nameList[i] = (String) roomCategories.get(Integer.parseInt(userCategories.get(i))).get("name");
+                                                        }
+                                                        for (int i = 0; i < nameList.length; i++) {
+                                                            CategoryData categoryData = new CategoryData(nameList[i]);
+                                                            dataArrayList.add(categoryData);
+                                                        }
+                                                        categoryListAdapter = new CategoryListAdapter(DetailedActivity.this, dataArrayList);
+                                                        binding.listview.setAdapter(categoryListAdapter);
+                                                        binding.listview.setClickable(true);
+                                                        binding.listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                                            @Override
+                                                            public void onItemClick(AdapterView<?> parent, View view, int position, long longid) {
+                                                                Log.d("TAG", "onItemClick: "+position);
+                                                                Intent intent = new Intent(DetailedActivity.this, CategoryActivity.class);
+                                                                intent.putExtra("name", nameList[position]);
+                                                                intent.putExtra("id",id);
+                                                                intent.putExtra("position", position);
+                                                                startActivity(intent);
+                                                            }
+                                                        });
+
+
+
+                                                    }
+
+                                                } else {
+                                                    Log.d("TAG", "No such document");
+
+                                                }
+                                            } else {
+                                                Log.d("TAG", "get failed with ", task.getException());
+
+                                            }
+                                        }
+                                    });
+
+
+
+
+
+
+
 
 
                         } else {

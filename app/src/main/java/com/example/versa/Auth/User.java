@@ -1,7 +1,9 @@
 package com.example.versa.Auth;
 
-public class User {
+import java.util.ArrayList;
 
+public class User {
+    private ArrayList<Integer> categories = new ArrayList<>();
     private String userId;
     private String name;
     private String email;
@@ -34,5 +36,9 @@ public class User {
     }
     public String getRoomId() {
         return RoomId;
+    }
+
+    public ArrayList<Integer> getCategories() {
+        return categories;
     }
 }

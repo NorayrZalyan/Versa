@@ -1,5 +1,6 @@
 package com.example.versa.category;
 
+import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -13,13 +14,18 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import com.example.versa.R;
+import com.example.versa.bottomSheet.GiveAccessBottomSheet;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.FragmentActivity;
 
 public class CategoryListAdapter extends ArrayAdapter<CategoryData> {
-    public CategoryListAdapter(@NonNull Context context, ArrayList<CategoryData> dataArrayList) {
-        super(context, R.layout.list_item, dataArrayList);
+    private FragmentActivity activity;
+
+    public CategoryListAdapter(@NonNull FragmentActivity activity, ArrayList<CategoryData> dataArrayList) {
+        super(activity, R.layout.list_item, dataArrayList);
+        this.activity = activity;
     }
 
     @NonNull
@@ -46,7 +52,8 @@ public class CategoryListAdapter extends ArrayAdapter<CategoryData> {
                             // Действие для варианта 1
                             return true;
                         } else if (id == R.id.option2) {
-                            // Действие для варианта 2
+                            GiveAccessBottomSheet bottomSheet = new GiveAccessBottomSheet();
+                            bottomSheet.show(activity.getSupportFragmentManager(), "GiveAccessBottomSheet");
                             return true;
                         }
                         return false;

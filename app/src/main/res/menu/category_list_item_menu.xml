@@ -4,5 +4,5 @@
         android:title="delete" />
     <item
         android:id="@+id/option2"
-        android:title="Вариант 2" />
+        android:title="Give access" />
 </menu>

@@ -20,7 +20,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
-public class CreateRoomBottomSheet extends BottomSheetDialogFragment {
+public class  CreateRoomBottomSheet extends BottomSheetDialogFragment {
 
     private RoomBottomSheetBinding binding;
 
