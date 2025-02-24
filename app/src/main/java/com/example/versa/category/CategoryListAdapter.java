@@ -2,6 +2,7 @@ package com.example.versa.category;
 
 import android.app.Activity;
 import android.content.Context;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -49,11 +50,18 @@ public class CategoryListAdapter extends ArrayAdapter<CategoryData> {
                     public boolean onMenuItemClick(MenuItem item) {
                         int id = item.getItemId();
                         if (id == R.id.option1) {
-                            // Действие для варианта 1
+
+                            
+
                             return true;
                         } else if (id == R.id.option2) {
+
+                            Bundle bundle = new Bundle();
+                            bundle.putString("position", String.valueOf(position));
                             GiveAccessBottomSheet bottomSheet = new GiveAccessBottomSheet();
+                            bottomSheet.setArguments(bundle);
                             bottomSheet.show(activity.getSupportFragmentManager(), "GiveAccessBottomSheet");
+
                             return true;
                         }
                         return false;
