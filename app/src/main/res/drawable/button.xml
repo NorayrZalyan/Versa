@@ -3,13 +3,12 @@
 
 
     <solid
-        android:color="@color/button_color">
+        android:color="@color/button_color"/>
 
-    </solid>
     <stroke
         android:width="2dp"
-        android:color="@color/Bacground_color">
-
-    </stroke>
+        android:color="@color/Bacground_color"/>
+    <corners
+        android:radius="7dp"/>
 
 </shape>

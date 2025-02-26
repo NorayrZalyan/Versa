@@ -9,7 +9,7 @@
 
     <string-array name="options_array">
         <item>Select a position at work</item>
-        <item>Owner</item>
+        <item>Admin</item>
         <item>Other</item>
     </string-array>
 </resources>

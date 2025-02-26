@@ -11,6 +11,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -18,16 +19,19 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.example.versa.R;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.Firebase;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 public class RoomListAdapter extends ArrayAdapter<RoomData> {
-    FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private Context context;
-    String uid = FirebaseAuth.getInstance().getUid();
+    private String uid = FirebaseAuth.getInstance().getUid();
     public RoomListAdapter(@NonNull Context context, ArrayList<RoomData> dataArrayList) {
         super(context, R.layout.list_item, dataArrayList);
     }
@@ -53,35 +57,60 @@ public class RoomListAdapter extends ArrayAdapter<RoomData> {
                         int id = item.getItemId();
                         if (id == R.id.option1) {
 
-                            db.collection("Rooms").document(String.valueOf(listData.id))
-                                    .delete()
-                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                        @Override
-                                        public void onSuccess(Void aVoid) {
-                                            Log.d("TAG", "DocumentSnapshot successfully deleted!");
-                                        }
-                                    })
-                                    .addOnFailureListener(new OnFailureListener() {
-                                        @Override
-                                        public void onFailure(@NonNull Exception e) {
-                                                Log.w("TAG", "Error deleting document", e);
-                                        }
-                                    });
+
                             db.collection("Users").document(uid)
-                                    .update("roomId", null)
-                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    .get()
+                                    .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                                         @Override
-                                        public void onSuccess(Void unused) {
-                                            Log.d("TAG", "deleted from user");
-                                            ((Activity) context).recreate();
-                                        }
-                                    })
-                                    .addOnFailureListener(new OnFailureListener() {
-                                        @Override
-                                        public void onFailure(@NonNull Exception e) {
-                                            Log.d("TAG", "not deleted from the user");
+                                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                            if (task.isSuccessful()){
+                                                DocumentSnapshot documentSnapshot = task.getResult();
+                                                if (documentSnapshot.exists()){
+                                                    if (documentSnapshot.get("jobtitle").equals("Admin")){
+
+                                                        db.collection("Rooms").document(String.valueOf(listData.id))
+                                                                .delete()
+                                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                                    @Override
+                                                                    public void onSuccess(Void aVoid) {
+                                                                        Log.d("TAG", "DocumentSnapshot successfully deleted!");
+                                                                    }
+                                                                })
+                                                                .addOnFailureListener(new OnFailureListener() {
+                                                                    @Override
+                                                                    public void onFailure(@NonNull Exception e) {
+                                                                        Log.w("TAG", "Error deleting document", e);
+                                                                    }
+                                                                });
+                                                        db.collection("Users").document(uid)
+                                                                .update("roomId", null)
+                                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                                    @Override
+                                                                    public void onSuccess(Void unused) {
+                                                                        Log.d("TAG", "deleted from user");
+                                                                        ((Activity) context).recreate();
+                                                                    }
+                                                                })
+                                                                .addOnFailureListener(new OnFailureListener() {
+                                                                    @Override
+                                                                    public void onFailure(@NonNull Exception e) {
+                                                                        Log.d("TAG", "not deleted from the user");
+                                                                    }
+                                                                });
+
+                                                    } else {
+                                                        Toast.makeText(getContext(), "you are not an admin", Toast.LENGTH_LONG).show();
+                                                    }
+                                                } else {
+
+                                                }
+                                            } else {
+                                            }
                                         }
                                     });
+
+
+
 
 
                             return true;

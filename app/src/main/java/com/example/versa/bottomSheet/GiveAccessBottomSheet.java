@@ -44,6 +44,7 @@ public class GiveAccessBottomSheet extends BottomSheetDialogFragment {
                                             .update("categories", FieldValue.arrayUnion(category))
                                             .addOnSuccessListener(aVoid -> Log.d("Firestore", "Категория добавлена"))
                                             .addOnFailureListener(e -> Log.w("Firestore", "Ошибка добавления", e));
+                                    dismiss();
                                 }
                             } else {
                                 Log.d("Firestore", "Документ с таким email не найден.");

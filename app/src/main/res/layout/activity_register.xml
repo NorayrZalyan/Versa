@@ -13,6 +13,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="150dp"
+        android:fontFamily="@font/ubuntu_light"
         android:text="Sign up"
         android:textColor="@color/white"
         android:textSize="35dp"
@@ -82,6 +83,7 @@
             android:id="@+id/go_to_login"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/ubuntu_light"
             android:text="login"
             android:textColor="@color/button_color"
             android:textSize="20dp" />

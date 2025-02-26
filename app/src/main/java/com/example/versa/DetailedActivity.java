@@ -59,7 +59,7 @@ public class DetailedActivity extends AppCompatActivity {
                     if (document.exists()) {
                         Log.d("1", "DocumentSnapshot data: " + document.getData());
 
-                        if (document.getString("jobtitle").equals("Owner")){
+                        if (document.getString("jobtitle").equals("Admin")){
                             binding.createCategoryBt.setVisibility(View.VISIBLE);
                         } else if(document.getString("jobtitle").equals("Other")) {
                             binding.createCategoryBt.setVisibility(View.INVISIBLE);
@@ -119,7 +119,7 @@ public class DetailedActivity extends AppCompatActivity {
                                                 if (documentSnapshot.exists()){
                                                     Log.d("TAG", "DocumentSnapshot data: " + document.getData());
 
-                                                    if (documentSnapshot.get("jobtitle").equals("Owner")){
+                                                    if (documentSnapshot.get("jobtitle").equals("Admin")){
                                                         String[] nameList = new String[roomCategories.size()];
 
                                                         for (int i = 0; i < roomCategories.size(); i++) {
@@ -129,7 +129,7 @@ public class DetailedActivity extends AppCompatActivity {
                                                             CategoryData categoryData = new CategoryData(nameList[i]);
                                                             dataArrayList.add(categoryData);
                                                         }
-                                                        categoryListAdapter = new CategoryListAdapter(DetailedActivity.this, dataArrayList);
+                                                        categoryListAdapter = new CategoryListAdapter(DetailedActivity.this, dataArrayList, id);
                                                         binding.listview.setAdapter(categoryListAdapter);
                                                         binding.listview.setClickable(true);
                                                         binding.listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -158,7 +158,7 @@ public class DetailedActivity extends AppCompatActivity {
                                                             CategoryData categoryData = new CategoryData(nameList[i]);
                                                             dataArrayList.add(categoryData);
                                                         }
-                                                        categoryListAdapter = new CategoryListAdapter(DetailedActivity.this, dataArrayList);
+                                                        categoryListAdapter = new CategoryListAdapter(DetailedActivity.this, dataArrayList, id);
                                                         binding.listview.setAdapter(categoryListAdapter);
                                                         binding.listview.setClickable(true);
                                                         binding.listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {

@@ -59,7 +59,10 @@ public class RegisterActivity extends AppCompatActivity {
                     Toast.makeText(RegisterActivity.this, "Fields cannot be empty", Toast.LENGTH_SHORT).show();
                     return;
                 }
-
+                if (jobtitle.equals("Select a position at work") || jobtitle == "Select a position at work"){
+                    Toast.makeText(RegisterActivity.this, "select your position", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 mAuth.createUserWithEmailAndPassword(email, pass)
                         .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                             @Override

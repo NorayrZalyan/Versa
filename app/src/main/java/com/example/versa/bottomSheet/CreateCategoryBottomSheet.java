@@ -20,9 +20,9 @@ import com.google.firebase.firestore.FirebaseFirestore;
 public class CreateCategoryBottomSheet extends BottomSheetDialogFragment {
 
     private CategoryBottomSheetBinding binding;
-    FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-
+    String a ="Owner";
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

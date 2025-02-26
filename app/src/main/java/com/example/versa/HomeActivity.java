@@ -47,7 +47,7 @@ public class HomeActivity extends AppCompatActivity {
                     if (document.exists()) {
                         Log.d("1", "DocumentSnapshot data: " + document.getData());
 
-                        if (document.getString("jobtitle").equals("Owner")){
+                        if (document.getString("jobtitle").equals("Admin")){
                             binding.createroomBottomsheetBt.setVisibility(View.VISIBLE);
                             binding.joinRoomBt.setVisibility(View.INVISIBLE);
                         } else if(document.getString("jobtitle").equals("Other")) {

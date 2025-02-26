@@ -14,6 +14,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="200dp"
+        android:fontFamily="@font/ubuntu_light"
         android:text="Login"
         android:textColor="@color/white"
         android:textSize="35dp"
@@ -37,6 +38,7 @@
             android:id="@+id/No_accountTv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/ubuntu_bold"
             android:text="Have an account?  "
             android:textColor="@color/white"
             android:textSize="20dp" />
@@ -45,6 +47,7 @@
             android:id="@+id/go_to_register"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/ubuntu_light"
             android:text="Register"
             android:textColor="@color/button_color"
             android:textSize="20dp" />
