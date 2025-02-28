@@ -23,7 +23,5 @@ public class Category {
     }
 
 
-    public void addClient(Client client) {
-        clients.add(client);
-    }
+
 }
