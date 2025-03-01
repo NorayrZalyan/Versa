@@ -22,7 +22,6 @@ public class CreateCategoryBottomSheet extends BottomSheetDialogFragment {
     private CategoryBottomSheetBinding binding;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-    String a ="Owner";
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
