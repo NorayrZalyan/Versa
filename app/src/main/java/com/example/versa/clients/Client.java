@@ -1,4 +1,4 @@
-package com.example.versa.classes;
+package com.example.versa.clients;
 
 public class Client {
 

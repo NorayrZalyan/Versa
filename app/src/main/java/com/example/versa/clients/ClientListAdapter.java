@@ -1,0 +1,52 @@
+package com.example.versa.category;
+
+import android.app.Activity;
+import android.content.Context;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.ImageView;
+import android.widget.PopupMenu;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import com.example.versa.R;
+import com.example.versa.bottomSheet.GiveAccessBottomSheet;
+import com.example.versa.clients.ClientData;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.FragmentActivity;
+
+public class ClientListAdapter extends ArrayAdapter<ClientData> {
+    public ClientListAdapter(@NonNull Context context, ArrayList<ClientData> dataArrayList) {
+        super(context, R.layout.list_item, dataArrayList);
+    }
+    @NonNull
+    @Override
+    public View getView(int position, @Nullable View view, @NonNull ViewGroup parent) {
+        ClientData listData = getItem(position);
+        if (view == null){
+            view = LayoutInflater.from(getContext()).inflate(R.layout.list_item, parent, false);
+        }
+
+        TextView listName = view.findViewById(R.id.listName);
+        listName.setText(listData.name);
+
+        return view;
+    }
+}

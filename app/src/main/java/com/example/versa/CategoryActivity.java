@@ -9,8 +9,11 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.versa.bottomSheet.AddClientBottomSheet;
-import com.example.versa.category.Category;
-import com.example.versa.classes.Client;
+import com.example.versa.category.CategoryData;
+import com.example.versa.category.CategoryListAdapter;
+import com.example.versa.category.ClientListAdapter;
+import com.example.versa.clients.Client;
+import com.example.versa.clients.ClientData;
 import com.example.versa.databinding.ActivityCategoryBinding;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -18,8 +21,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-
-import org.checkerframework.checker.units.qual.C;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,6 +31,7 @@ public class CategoryActivity extends AppCompatActivity {
 
     private ActivityCategoryBinding binding;
     private FirebaseFirestore db;
+    private ArrayList<ClientData> clientData = new ArrayList<>();
     private FirebaseAuth mAuth;
 
     @Override
@@ -53,12 +55,8 @@ public class CategoryActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 Bundle bundle = new Bundle();
-                bundle.putString(
-                        "roomId",id
-                );
-                bundle.putInt(
-                        "category", position
-                );
+                bundle.putString("roomId", id);
+                bundle.putInt("category", position);
                 AddClientBottomSheet bottomSheet = new AddClientBottomSheet();
                 bottomSheet.setArguments(bundle);
                 bottomSheet.show(getSupportFragmentManager(), bottomSheet.getTag());
@@ -66,6 +64,41 @@ public class CategoryActivity extends AppCompatActivity {
             }
         });
 
+
+        db.collection("Rooms").document(id)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            DocumentSnapshot document = task.getResult();
+                            if (document.exists()) {
+                                List<Map<String, Object>> categoriesList = (List<Map<String, Object>>) document.get("categories");
+                                Map<String, Object> categoryMap = categoriesList.get(position);
+                                List<Map<String, String>> clientsList = (List<Map<String, String>>) categoryMap.get("clients");
+
+                                String[] nameList = new String[clientsList.size()];
+                                for (int i = 0; i < clientsList.size(); i++) {
+                                    nameList[i] = clientsList.get(i).get("name");
+                                }
+                                for (int i = 0; i < nameList.length; i++) {
+                                    ClientData clientData1 = new ClientData(nameList[i]);
+                                    clientData.add(clientData1);
+                                }
+                                ClientListAdapter clientListAdapter = new ClientListAdapter(CategoryActivity.this, clientData);
+                                binding.listview.setAdapter(clientListAdapter);
+
+
+                            } else {
+
+                            }
+
+
+                        } else {
+                            Log.e("TAG", "" + task.getException());
+                        }
+                    }
+                });
 
     }
 }

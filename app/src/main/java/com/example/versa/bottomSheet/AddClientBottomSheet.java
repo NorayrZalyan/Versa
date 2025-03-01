@@ -1,5 +1,6 @@
 package com.example.versa.bottomSheet;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -9,8 +10,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.example.versa.category.Category;
-import com.example.versa.classes.Client;
+import com.example.versa.clients.Client;
 import com.example.versa.databinding.AddclientBottomSheetBinding;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -19,7 +19,6 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,14 +38,15 @@ public class AddClientBottomSheet extends BottomSheetDialogFragment {
         String roomId = getArguments().getString("roomId");
         int category = getArguments().getInt("category");
 
-        String clientName = binding.clientNameEt.getText().toString();
-        String clientPhone = binding.clientPhoneEt.getText().toString();
-        String clientEmail = binding.clientEmailEt.getText().toString();
-        String description = binding.clientDescriptionEt.getText().toString();
 
         binding.addClientBt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                String clientName = binding.clientNameEt.getText().toString();
+                String clientPhone = binding.clientPhoneEt.getText().toString();
+                String clientEmail = binding.clientEmailEt.getText().toString();
+                String description = binding.clientDescriptionEt.getText().toString();
 
                 db.collection("Rooms").document(roomId)
                         .get()
@@ -69,7 +69,12 @@ public class AddClientBottomSheet extends BottomSheetDialogFragment {
 
                                                 List<Client> clientsList = (List<Client>) categoryMap.get("clients");
 
-                                                Client newClient = new Client("New Client Name","0","@","d");
+                                                Client newClient = new Client(
+                                                        clientName,
+                                                        clientPhone,
+                                                        clientEmail,
+                                                        description
+                                                );
 
                                                 clientsList.add(newClient);
 
@@ -80,6 +85,11 @@ public class AddClientBottomSheet extends BottomSheetDialogFragment {
 
                                                 docRef.update(updateMap).addOnSuccessListener(aVoid -> {
                                                     Log.d("Firestore", "Client added successfully!");
+                                                    dismiss();
+                                                    Activity activity = getActivity();
+                                                    if (activity != null){
+                                                        activity.recreate();
+                                                    }
                                                 }).addOnFailureListener(e -> {
                                                     Log.e("Firestore", "Error adding client: ", e);
                                                 });

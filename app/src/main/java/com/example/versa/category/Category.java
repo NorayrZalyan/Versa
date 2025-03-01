@@ -1,6 +1,6 @@
 package com.example.versa.category;
 
-import com.example.versa.classes.Client;
+import com.example.versa.clients.Client;
 
 import java.util.ArrayList;
 
