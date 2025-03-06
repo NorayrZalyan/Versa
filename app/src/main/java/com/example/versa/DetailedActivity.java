@@ -38,10 +38,10 @@ public class DetailedActivity extends AppCompatActivity {
         binding = ActivityDetailedBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        Intent intent = this.getIntent();
-        String name = intent.getStringExtra("name");
+        Intent intent = getIntent();
+        String roomName = intent.getStringExtra("name");
         String id = intent.getStringExtra("id");
-        binding.roomNameTv.setText(name);
+        binding.roomNameTv.setText(roomName);
         binding.roomIdTV.setText(id);
 
 
@@ -138,6 +138,7 @@ public class DetailedActivity extends AppCompatActivity {
                                                                 Log.d("TAG", "onItemClick: "+position);
                                                                 Intent intent = new Intent(DetailedActivity.this, CategoryActivity.class);
                                                                 intent.putExtra("name", nameList[position]);
+                                                                intent.putExtra("roomName",name);
                                                                 intent.putExtra("id",id);
                                                                 intent.putExtra("position", position);
                                                                 startActivity(intent);
@@ -168,6 +169,7 @@ public class DetailedActivity extends AppCompatActivity {
                                                                 Intent intent = new Intent(DetailedActivity.this, CategoryActivity.class);
                                                                 intent.putExtra("name", nameList[position]);
                                                                 intent.putExtra("id",id);
+                                                                intent.putExtra("roomName",roomName);
                                                                 intent.putExtra("position", position);
                                                                 startActivity(intent);
                                                             }

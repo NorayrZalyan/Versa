@@ -83,7 +83,7 @@ public class CategoryListAdapter extends ArrayAdapter<CategoryData> {
                                                             if (documentSnapshot1.exists()) {
                                                                 List<String> categories = (List<String>) documentSnapshot1.get("categories");
                                                                 if (categories != null && categories.size() > 0) {
-                                                                    categories.remove(0); // Удаляем элемент по индексу, например, нулевой
+                                                                    categories.remove(position); // Удаляем элемент по индексу, например, нулевой
                                                                     userRef.update("categories", categories)
                                                                             .addOnSuccessListener(aVoid -> Log.d("Firestore", "Element removed by index"))
                                                                             .addOnFailureListener(e -> Log.e("Firestore", "Error updating categories", e));

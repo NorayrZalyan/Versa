@@ -1,5 +1,6 @@
 package com.example.versa;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,7 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.versa.bottomSheet.AddClientBottomSheet;
 import com.example.versa.category.CategoryData;
 import com.example.versa.category.CategoryListAdapter;
-import com.example.versa.category.ClientListAdapter;
+import com.example.versa.clients.ClientListAdapter;
 import com.example.versa.clients.Client;
 import com.example.versa.clients.ClientData;
 import com.example.versa.databinding.ActivityCategoryBinding;
@@ -45,6 +46,7 @@ public class CategoryActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         Intent intent = getIntent();
         String name = intent.getStringExtra("name");
+        String roomName = intent.getStringExtra("roomName");
         String id = intent.getStringExtra("id");
         int position = intent.getIntExtra("position", 0);
         binding.categoryNameTv.setText(name);
@@ -85,7 +87,7 @@ public class CategoryActivity extends AppCompatActivity {
                                     ClientData clientData1 = new ClientData(nameList[i]);
                                     clientData.add(clientData1);
                                 }
-                                ClientListAdapter clientListAdapter = new ClientListAdapter(CategoryActivity.this, clientData);
+                                ClientListAdapter clientListAdapter = new ClientListAdapter( CategoryActivity.this, clientData, id, position);
                                 binding.listview.setAdapter(clientListAdapter);
 
 
