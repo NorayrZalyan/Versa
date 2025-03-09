@@ -16,7 +16,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.example.versa.CategoryActivity;
 import com.example.versa.DetailedActivity;
@@ -42,9 +44,12 @@ public class ClientListAdapter extends ArrayAdapter<ClientData> {
     private String roomId;
     private Context context1;
     private int category;
+    private Context context;
+
 
     public ClientListAdapter(@NonNull Context context, ArrayList<ClientData> dataArrayList, String roomId,  int category) {
         super(context, R.layout.list_item, dataArrayList);
+        this.context = context;
         this.context1 = context;
         this.roomId = roomId;
         this.category = category;
@@ -77,7 +82,36 @@ public class ClientListAdapter extends ArrayAdapter<ClientData> {
                             context1.startActivity(intent);
 
                             return true;
+                        } else if (id == R.id.option2) {
+                            FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+                            DocumentReference docRef = db.collection("Rooms").document(roomId);
+
+                                    docRef.get()
+                                    .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                            if (task.isSuccessful()) {
+                                                DocumentSnapshot document = task.getResult();
+                                                if (document.exists()) {
+                                                    List<Map<String, Object>> categoriesList = (List<Map<String, Object>>) document.get("categories");
+                                                    Map<String, Object> categoryMap = categoriesList.get(category);
+                                                    List<Map<String, String>> clientsList = (List<Map<String, String>>) categoryMap.get("clients");
+                                                    clientsList.remove(position);
+                                                    categoryMap.put("clients", clientsList);
+                                                    Map<String, Object> updateMap = new HashMap<>();
+                                                    updateMap.put("categories", categoriesList);
+                                                    docRef.update(updateMap);
+                                                    ((Activity) context).recreate();
+                                                }
+                                            }
+                                        }
+                                    });
+
+                            return true;
                         }
+
+
                         return false;
                     }
                 });

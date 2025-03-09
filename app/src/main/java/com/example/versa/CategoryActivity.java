@@ -90,7 +90,6 @@ public class CategoryActivity extends AppCompatActivity {
                                 ClientListAdapter clientListAdapter = new ClientListAdapter( CategoryActivity.this, clientData, id, position);
                                 binding.listview.setAdapter(clientListAdapter);
 
-
                             } else {
 
                             }

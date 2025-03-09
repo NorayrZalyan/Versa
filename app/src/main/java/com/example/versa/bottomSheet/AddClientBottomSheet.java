@@ -48,65 +48,48 @@ public class AddClientBottomSheet extends BottomSheetDialogFragment {
                 String clientEmail = binding.clientEmailEt.getText().toString();
                 String description = binding.clientDescriptionEt.getText().toString();
 
-                db.collection("Rooms").document(roomId)
-                        .get()
-                        .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                            @Override
-                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                if (task.isSuccessful()){
-                                    DocumentSnapshot document = task.getResult();
-                                    if (document.exists()){
 
 
-                                        FirebaseFirestore db = FirebaseFirestore.getInstance();
-                                        DocumentReference docRef = db.collection("Rooms").document("1");
-                                        docRef.get().addOnSuccessListener(documentSnapshot -> {
-                                            if (documentSnapshot.exists()) {
-                                                // Получаем список категорий
-                                                List<Map<String, Object>> categoriesList = (List<Map<String, Object>>) documentSnapshot.get("categories");
+                FirebaseFirestore db = FirebaseFirestore.getInstance();
+                DocumentReference docRef = db.collection("Rooms").document(roomId);
+                docRef.get().addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        // Получаем список категорий
+                        List<Map<String, Object>> categoriesList = (List<Map<String, Object>>) documentSnapshot.get("categories");
 
-                                                Map<String, Object> categoryMap = categoriesList.get(category);
+                        Map<String, Object> categoryMap = categoriesList.get(category);
 
-                                                List<Client> clientsList = (List<Client>) categoryMap.get("clients");
+                        List<Client> clientsList = (List<Client>) categoryMap.get("clients");
 
-                                                Client newClient = new Client(
-                                                        clientName,
-                                                        clientPhone,
-                                                        clientEmail,
-                                                        description
-                                                );
+                        Client newClient = new Client(
+                                clientName,
+                                clientPhone,
+                                clientEmail,
+                                description
+                        );
 
-                                                clientsList.add(newClient);
+                        clientsList.add(newClient);
 
-                                                categoryMap.put("clients", clientsList);
+                        categoryMap.put("clients", clientsList);
 
-                                                Map<String, Object> updateMap = new HashMap<>();
-                                                updateMap.put("categories", categoriesList);
+                        Map<String, Object> updateMap = new HashMap<>();
+                        updateMap.put("categories", categoriesList);
 
-                                                docRef.update(updateMap).addOnSuccessListener(aVoid -> {
-                                                    Log.d("Firestore", "Client added successfully!");
-                                                    dismiss();
-                                                    Activity activity = getActivity();
-                                                    if (activity != null){
-                                                        activity.recreate();
-                                                    }
-                                                }).addOnFailureListener(e -> {
-                                                    Log.e("Firestore", "Error adding client: ", e);
-                                                });
-
-                                            }
-                                        });
-
-//
-
-                                    } else {
-                                        Log.e("TAG", "No such document");
-                                    }
-                                } else {
-                                    Log.e("TAG", ""+task.getException());
-                                }
+                        docRef.update(updateMap).addOnSuccessListener(aVoid -> {
+                            Log.d("Firestore", "Client added successfully!");
+                            dismiss();
+                            Activity activity = getActivity();
+                            if (activity != null){
+                                activity.recreate();
                             }
+                        }).addOnFailureListener(e -> {
+                            Log.e("Firestore", "Error adding client: ", e);
                         });
+
+                    }
+                });
+
+
 
             }
         });

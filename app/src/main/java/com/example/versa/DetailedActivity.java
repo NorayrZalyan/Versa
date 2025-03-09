@@ -1,10 +1,12 @@
 package com.example.versa;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -135,10 +137,10 @@ public class DetailedActivity extends AppCompatActivity {
                                                         binding.listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                                                             @Override
                                                             public void onItemClick(AdapterView<?> parent, View view, int position, long longid) {
+                                                                Toast.makeText((Context) DetailedActivity.this, ""+parent.getAdapter().getItem(position), Toast.LENGTH_SHORT).show();
                                                                 Log.d("TAG", "onItemClick: "+position);
                                                                 Intent intent = new Intent(DetailedActivity.this, CategoryActivity.class);
                                                                 intent.putExtra("name", nameList[position]);
-                                                                intent.putExtra("roomName",name);
                                                                 intent.putExtra("id",id);
                                                                 intent.putExtra("position", position);
                                                                 startActivity(intent);
