@@ -34,6 +34,8 @@ public class RoomListAdapter extends ArrayAdapter<RoomData> {
     private String uid = FirebaseAuth.getInstance().getUid();
     public RoomListAdapter(@NonNull Context context, ArrayList<RoomData> dataArrayList) {
         super(context, R.layout.list_item, dataArrayList);
+        this.context = context;
+
     }
 
     @NonNull
@@ -89,6 +91,7 @@ public class RoomListAdapter extends ArrayAdapter<RoomData> {
                                                                     public void onSuccess(Void unused) {
                                                                         Log.d("TAG", "deleted from user");
                                                                         ((Activity) context).recreate();
+
                                                                     }
                                                                 })
                                                                 .addOnFailureListener(new OnFailureListener() {
@@ -108,9 +111,6 @@ public class RoomListAdapter extends ArrayAdapter<RoomData> {
                                             }
                                         }
                                     });
-
-
-
 
 
                             return true;

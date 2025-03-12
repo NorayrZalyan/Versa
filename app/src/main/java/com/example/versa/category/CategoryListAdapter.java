@@ -33,12 +33,14 @@ import androidx.fragment.app.FragmentActivity;
 
 public class CategoryListAdapter extends ArrayAdapter<CategoryData> {
     private FragmentActivity activity;
+    private Context context;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private String uid = FirebaseAuth.getInstance().getUid();
     private String roomId;
 
     public CategoryListAdapter(@NonNull FragmentActivity activity, ArrayList<CategoryData> dataArrayList, String roomId) {
         super(activity, R.layout.list_item, dataArrayList);
+        this.context = activity;
         this.activity = activity;
         this.roomId = roomId;
     }
@@ -85,7 +87,11 @@ public class CategoryListAdapter extends ArrayAdapter<CategoryData> {
                                                                 if (categories != null && categories.size() > 0) {
                                                                     categories.remove(position); // Удаляем элемент по индексу, например, нулевой
                                                                     userRef.update("categories", categories)
-                                                                            .addOnSuccessListener(aVoid -> Log.d("Firestore", "Element removed by index"))
+                                                                            .addOnSuccessListener(aVoid -> {
+                                                                                Log.d("Firestore", "Element removed by index");
+                                                                                ((Activity) context).recreate();
+
+                                                                            })
                                                                             .addOnFailureListener(e -> Log.e("Firestore", "Error updating categories", e));
                                                                 }
                                                             }

@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 
+import com.example.versa.Auth.MainActivity;
 import com.example.versa.bottomSheet.CreateRoomBottomSheet;
 import com.example.versa.bottomSheet.JoinRoombottomsheet;
 import com.example.versa.databinding.ActivityHomeBinding;
@@ -88,7 +89,7 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 mAuth.signOut();
-//                recreate();
+                startActivity(new Intent(HomeActivity.this, MainActivity.class));
 
             }
         });
