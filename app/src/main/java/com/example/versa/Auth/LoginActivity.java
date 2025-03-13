@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.versa.HomeActivity;
+import com.example.versa.LoadingDialog;
 import com.example.versa.databinding.ActivityLoginBinding;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -21,8 +22,9 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class LoginActivity extends AppCompatActivity {
 
-    ActivityLoginBinding binding;
-    FirebaseAuth mAuth;
+    private ActivityLoginBinding binding;
+    private FirebaseAuth mAuth;
+    private LoadingDialog loadingDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +33,7 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         mAuth = FirebaseAuth.getInstance();
+        loadingDialog = new LoadingDialog(LoginActivity.this);
 
 
         binding.goToRegister.setOnClickListener(new View.OnClickListener() {
@@ -46,10 +49,13 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
+                loadingDialog.startLoading();
+
                 final String email = binding.emailEt.getText().toString().trim();
                 final String password = binding.passwordEt.getText().toString().trim();
 
                 if (email.isEmpty() || password.isEmpty()) {
+                    loadingDialog.dismisDialog();
                     Toast.makeText(LoginActivity.this, "Fields cannot be empty", Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -59,12 +65,14 @@ public class LoginActivity extends AppCompatActivity {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 if (task.isSuccessful()) {
+                                    loadingDialog.dismisDialog();
                                     // Sign in success, update UI with the signed-in user's information
                                     Log.d("TAG", "signInWithEmail:success");
                                     Toast.makeText(LoginActivity.this, "Login is completed", Toast.LENGTH_SHORT).show();
                                     startActivity(new Intent(LoginActivity.this, HomeActivity.class));
 
                                 } else {
+                                    loadingDialog.dismisDialog();
                                     // If sign in fails, display a message to the user.
                                     Log.w("TAG", "signInWithEmail:failure", task.getException());
                                     Toast.makeText(LoginActivity.this, "Authentication failed." + task.getException(),

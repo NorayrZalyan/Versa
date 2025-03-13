@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.example.versa.LoadingDialog;
 import com.example.versa.databinding.GieAccessBottomSheetBinding;
 import com.example.versa.databinding.RoomBottomSheetBinding;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
@@ -20,6 +21,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 public class GiveAccessBottomSheet extends BottomSheetDialogFragment {
     private GieAccessBottomSheetBinding binding;
+    private LoadingDialog loadingDialog;
 
     @Nullable
     @Override
@@ -27,11 +29,14 @@ public class GiveAccessBottomSheet extends BottomSheetDialogFragment {
         binding = GieAccessBottomSheetBinding.inflate(inflater, container, false);
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         String category = getArguments().getString("position");
+        loadingDialog = new LoadingDialog(getActivity());
 
         binding.giveAccessBt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                    Log.d("TAG", "onClick: "+binding.userEmailEt.getText().toString());
+
+                loadingDialog.startLoading();
+                Log.d("TAG", "onClick: "+binding.userEmailEt.getText().toString());
                 CollectionReference usersRef = db.collection("Users");
                 usersRef.whereEqualTo("email", binding.userEmailEt.getText().toString())
                         .get()
@@ -42,11 +47,18 @@ public class GiveAccessBottomSheet extends BottomSheetDialogFragment {
                                     Log.d("Firestore", "Документ найден: " + userId);
                                     db.collection("Users").document(userId)
                                             .update("categories", FieldValue.arrayUnion(category))
-                                            .addOnSuccessListener(aVoid -> Log.d("Firestore", "Категория добавлена"))
-                                            .addOnFailureListener(e -> Log.w("Firestore", "Ошибка добавления", e));
+                                            .addOnSuccessListener(aVoid -> {
+                                                loadingDialog.dismisDialog();
+                                                Log.d("Firestore", "Категория добавлена");
+                                            })
+                                            .addOnFailureListener(e -> {
+                                                loadingDialog.dismisDialog();
+                                                Log.w("Firestore", "Ошибка добавления", e);
+                                            });
                                     dismiss();
                                 }
                             } else {
+                                loadingDialog.dismisDialog();
                                 Log.d("Firestore", "Документ с таким email не найден.");
                             }
                         });

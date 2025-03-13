@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.example.versa.LoadingDialog;
 import com.example.versa.room.Room;
 import com.example.versa.databinding.RoomBottomSheetBinding;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -23,15 +24,21 @@ import com.google.firebase.firestore.Query;
 public class  CreateRoomBottomSheet extends BottomSheetDialogFragment {
 
     private RoomBottomSheetBinding binding;
+    private LoadingDialog loadingDialog;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = RoomBottomSheetBinding.inflate(inflater, container, false);
 
+        loadingDialog = new LoadingDialog(getActivity());
+
+
         binding.createroomBottomsheetBt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                loadingDialog.startLoading();
+
                 FirebaseFirestore db = FirebaseFirestore.getInstance();
                 String roomName = binding.RoomNameEt.getText().toString();
 
@@ -50,6 +57,7 @@ public class  CreateRoomBottomSheet extends BottomSheetDialogFragment {
                                             @Override
                                             public void onComplete(@NonNull Task<Void> task) {
                                                 if (task.isSuccessful()){
+                                                    loadingDialog.dismisDialog();
                                                     Log.d("TAG", "DocumentSnapshot successfully written!");
                                                     dismiss();
                                                     Activity activity = getActivity();
@@ -58,6 +66,7 @@ public class  CreateRoomBottomSheet extends BottomSheetDialogFragment {
                                                     }
 
                                                 } else {
+                                                    loadingDialog.dismisDialog();
                                                     Log.w("TAG", "Error writing document", task.getException());
                                                 }
                                             }
@@ -74,6 +83,7 @@ public class  CreateRoomBottomSheet extends BottomSheetDialogFragment {
                                             @Override
                                             public void onComplete(@NonNull Task<Void> task) {
                                                 if (task.isSuccessful()){
+                                                    loadingDialog.dismisDialog();
                                                     Log.d("TAG", "DocumentSnapshot successfully written!");
                                                     dismiss();
                                                     Activity activity = getActivity();
@@ -81,6 +91,7 @@ public class  CreateRoomBottomSheet extends BottomSheetDialogFragment {
                                                         activity.recreate();  // Пересоздаём активность
                                                     }
                                                 } else {
+                                                    loadingDialog.dismisDialog();
                                                     Log.w("TAG", "Error writing document", task.getException());
                                                 }
                                             }
@@ -90,7 +101,10 @@ public class  CreateRoomBottomSheet extends BottomSheetDialogFragment {
 
                             }
                         })
-                        .addOnFailureListener(e -> Log.e("Firestore", "Ошибка получения данных", e));
+                        .addOnFailureListener(e -> {
+                            loadingDialog.dismisDialog();
+                            Log.e("Firestore", "Ошибка получения данных", e);
+                        });
 
 
 

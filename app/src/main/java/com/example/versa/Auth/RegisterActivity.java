@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.versa.HomeActivity;
+import com.example.versa.LoadingDialog;
 import com.example.versa.databinding.ActivityRegisterBinding;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -22,6 +23,8 @@ public class RegisterActivity extends AppCompatActivity {
     private ActivityRegisterBinding binding;
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
+    private LoadingDialog loadingDialog;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +33,7 @@ public class RegisterActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
 
+        loadingDialog = new LoadingDialog(RegisterActivity.this);
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
 
@@ -51,15 +55,19 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
+                loadingDialog.startLoading();
+
                 final String name = binding.usernameEt.getText().toString().trim();
                 final String email = binding.emailEt.getText().toString().trim();
                 final String pass = binding.passwordEt.getText().toString().trim();
                 final String jobtitle = binding.jobTitleSp.getSelectedItem().toString();
                 if (name.isEmpty() || email.isEmpty() || pass.isEmpty() || jobtitle.isEmpty()) {
+                    loadingDialog.startLoading();
                     Toast.makeText(RegisterActivity.this, "Fields cannot be empty", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 if (jobtitle.equals("Select a position at work") || jobtitle == "Select a position at work"){
+                    loadingDialog.dismisDialog();
                     Toast.makeText(RegisterActivity.this, "select your position", Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -77,9 +85,11 @@ public class RegisterActivity extends AppCompatActivity {
                                                     @Override
                                                     public void onComplete(@NonNull Task<Void> task2) {
                                                         if (task2.isSuccessful()){
+                                                            loadingDialog.dismisDialog();
                                                             Toast.makeText(RegisterActivity.this, "Registration is completed", Toast.LENGTH_SHORT).show();
                                                             startActivity(new Intent(RegisterActivity.this, HomeActivity.class));
                                                         } else {
+                                                            loadingDialog.dismisDialog();
                                                             Toast.makeText(RegisterActivity.this, "Error saving profile" + task2.getException() , Toast.LENGTH_SHORT).show();
                                                         }
                                                     }
@@ -87,6 +97,7 @@ public class RegisterActivity extends AppCompatActivity {
                                     }
 
                                 } else {
+                                    loadingDialog.dismisDialog();
                                     Toast.makeText(RegisterActivity.this, "Error" + task.getException(), Toast.LENGTH_SHORT).show();
                                 }
                             }

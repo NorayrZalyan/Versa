@@ -10,6 +10,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.example.versa.LoadingDialog;
 import com.example.versa.databinding.JoinroomBottomSheetBinding;
 import com.example.versa.databinding.RoomBottomSheetBinding;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -23,16 +24,20 @@ import com.google.firebase.firestore.FirebaseFirestore;
 public class JoinRoombottomsheet extends BottomSheetDialogFragment {
 
     private JoinroomBottomSheetBinding binding;
+    private LoadingDialog loadingDialog;
 
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = JoinroomBottomSheetBinding.inflate(inflater, container, false);
+        loadingDialog = new LoadingDialog(getActivity());
+
 
         binding.joinRoomBt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                loadingDialog.startLoading();
                 FirebaseFirestore db = FirebaseFirestore.getInstance();
                 String uid = FirebaseAuth.getInstance().getUid();
                 String roomId = binding.roomIdEt.getText().toString();
@@ -52,6 +57,7 @@ public class JoinRoombottomsheet extends BottomSheetDialogFragment {
                                                             @Override
                                                             public void onComplete(@NonNull Task<Void> task) {
                                                                 if (task.isSuccessful()){
+                                                                    loadingDialog.dismisDialog();
                                                                     Log.d("TAG", "onComplete: join room");
                                                                     dismiss();
                                                                     Activity activity = getActivity();
@@ -59,15 +65,18 @@ public class JoinRoombottomsheet extends BottomSheetDialogFragment {
                                                                         activity.recreate();  // Пересоздаём активность
                                                                     }
                                                                 } else {
+                                                                    loadingDialog.dismisDialog();
                                                                     Log.e("TAG", "onComplete: error", task.getException() );
                                                                 }
                                                             }
                                                         });
                                             } else {
+                                                loadingDialog.dismisDialog();
                                                 Log.d("TAG", "No such document");
                                                 Toast.makeText(getContext(), "No such room", Toast.LENGTH_SHORT).show();
                                             }
                                         } else {
+                                            loadingDialog.dismisDialog();
                                             Log.d("TAG", "get failed with ", task.getException());
                                         }
                                     }
