@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.example.versa.LoadingDialog;
 import com.example.versa.clients.Client;
 import com.example.versa.databinding.AddclientBottomSheetBinding;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -26,7 +27,8 @@ import java.util.Map;
 public class AddClientBottomSheet extends BottomSheetDialogFragment {
 
     private AddclientBottomSheetBinding binding;
-    FirebaseFirestore db;
+    private FirebaseFirestore db;
+    private LoadingDialog loadingDialog;
 
     @Nullable
     @Override
@@ -38,10 +40,14 @@ public class AddClientBottomSheet extends BottomSheetDialogFragment {
         String roomId = getArguments().getString("roomId");
         int category = getArguments().getInt("category");
 
+        loadingDialog = new LoadingDialog(getActivity());
+
 
         binding.addClientBt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                loadingDialog.startLoading();
 
                 String clientName = binding.clientNameEt.getText().toString();
                 String clientPhone = binding.clientPhoneEt.getText().toString();
@@ -76,6 +82,7 @@ public class AddClientBottomSheet extends BottomSheetDialogFragment {
                         updateMap.put("categories", categoriesList);
 
                         docRef.update(updateMap).addOnSuccessListener(aVoid -> {
+                            loadingDialog.dismisDialog();
                             Log.d("Firestore", "Client added successfully!");
                             dismiss();
                             Activity activity = getActivity();
@@ -83,6 +90,7 @@ public class AddClientBottomSheet extends BottomSheetDialogFragment {
                                 activity.recreate();
                             }
                         }).addOnFailureListener(e -> {
+                            loadingDialog.dismisDialog();
                             Log.e("Firestore", "Error adding client: ", e);
                         });
 
