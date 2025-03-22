@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -89,6 +90,41 @@ public class CategoryActivity extends AppCompatActivity {
                                 }
                                 ClientListAdapter clientListAdapter = new ClientListAdapter( CategoryActivity.this, clientData, id, position);
                                 binding.listview.setAdapter(clientListAdapter);
+                                binding.listview.setClickable(true);
+                                binding.listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                    @Override
+                                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+
+                                        List<Map<String, Object>> categoriesList = (List<Map<String, Object>>) document.get("categories");
+
+                                        for (int i = 0; i < categoriesList.size(); i++) {
+                                            Map<String, Object> categoryMap = categoriesList.get(i);
+
+                                            List<Map<String, String>> clientsList = (List<Map<String, String>>) categoryMap.get("clients");
+                                            for (int j = 0; j < clientsList.size(); j++) {
+
+                                                if (clientsList.get(position).get("name").equals(nameList[position])){
+                                                    Log.d("TAG", "onItemClick: "+clientsList.get(position).get("name")+ nameList[position]);
+
+                                                    String clientName = clientsList.get(position).get("name");
+                                                    String clientPhone = clientsList.get(position).get("phone");
+                                                    String clientEmail = clientsList.get(position).get("email");
+                                                    String clientdescription = clientsList.get(position).get("description");
+
+                                                    ClientDataDialog clientData1 = new ClientDataDialog(CategoryActivity.this, clientName, clientPhone, clientEmail, clientdescription);
+                                                    clientData1.startLoading();
+
+                                                }
+
+                                            }
+
+
+                                        }
+                                        List<Map<String, String>> clientsList = (List<Map<String, String>>) categoryMap.get("clients");
+
+                                    }
+                                });
 
                             } else {
 

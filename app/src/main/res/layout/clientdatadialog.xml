@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/Bacground_color"
+    android:layout_width="match_parent"
+    android:layout_height="300dp">
+
+    <TextView
+        android:id="@+id/about_clientTV"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/white"
+        android:text="about client"
+        android:gravity="center"
+        android:textSize="30dp"/>
+
+
+    <TextView
+        android:id="@+id/nameTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/white"
+        android:text="Name:"
+        app:layout_constraintTop_toBottomOf="@+id/about_clientTV"
+        android:textSize="20dp"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="20dp"/>
+    <TextView
+        android:id="@+id/phoneTv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/white"
+        android:text="Phone:"
+        app:layout_constraintTop_toBottomOf="@+id/nameTV"
+        android:textSize="20dp"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="17dp"/>
+    <TextView
+        android:id="@+id/emailTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/white"
+        android:text="Email:"
+        app:layout_constraintTop_toBottomOf="@+id/phoneTv"
+        android:textSize="20dp"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="17dp"/>
+    <TextView
+        android:id="@+id/descriptionTv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/white"
+        android:text="Description:"
+        app:layout_constraintTop_toBottomOf="@+id/emailTV"
+        android:textSize="20dp"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="17dp"/>
+
+
+    <TextView
+        android:id="@+id/client_nameTv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/white"
+        android:text="Name:"
+        app:layout_constraintTop_toBottomOf="@+id/about_clientTV"
+        android:textSize="20dp"
+        app:layout_constraintStart_toEndOf="@id/nameTV"
+        android:layout_marginStart="27dp"
+        android:layout_marginTop="20dp"/>
+    <TextView
+        android:id="@+id/client_phoneTv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/white"
+        android:text="Phone:"
+        app:layout_constraintTop_toBottomOf="@+id/nameTV"
+        android:textSize="20dp"
+        app:layout_constraintStart_toEndOf="@id/phoneTv"
+        android:layout_marginStart="27dp"
+        android:layout_marginTop="17dp"/>
+    <TextView
+        android:id="@+id/client_emailTv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/white"
+        android:text="Email:"
+        app:layout_constraintTop_toBottomOf="@+id/phoneTv"
+        android:textSize="20dp"
+        app:layout_constraintStart_toEndOf="@id/emailTV"
+        android:layout_marginStart="27dp"
+        android:layout_marginTop="17dp"/>
+
+    <EditText
+
+        android:background="@drawable/input"
+        android:id="@+id/client_descriptionTv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/white"
+        android:text="Description:"
+        app:layout_constraintTop_toBottomOf="@+id/emailTV"
+        android:textSize="20dp"
+        app:layout_constraintStart_toEndOf="@id/descriptionTv"
+        android:layout_marginStart="27dp"
+        android:layout_marginTop="17dp"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
