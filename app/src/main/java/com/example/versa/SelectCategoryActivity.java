@@ -77,60 +77,14 @@ public class SelectCategoryActivity extends AppCompatActivity {
                                 CategoryData categoryData = new CategoryData(nameList[i]);
                                 dataArrayList.add(categoryData);
                             }
-                            CategoryListAdapter categoryListAdapter = new CategoryListAdapter(SelectCategoryActivity.this, dataArrayList, "1");
+                            CategoryListAdapter categoryListAdapter = new CategoryListAdapter(SelectCategoryActivity.this, dataArrayList, roomId, nameList);
                             binding.listview.setAdapter(categoryListAdapter);
                             binding.listview.setClickable(true);
                             binding.listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                                 @Override
                                 public void onItemClick(AdapterView<?> parent, View view, int position, long longid) {
 
-                                    db.collection("Rooms").document(roomId)
-                                            .get()
-                                            .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                                                @Override
-                                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                                    if (task.isSuccessful()) {
-                                                        DocumentSnapshot document = task.getResult();
-                                                        if (document.exists()) {
-                                                            roomName = (String) document.get("roomName");
-                                                            List<Map<String, Object>> categoriesList = (List<Map<String, Object>>) document.get("categories");
-                                                            Log.d("TAG", "onComplete: " + categoriesList);
-                                                            Log.d("TAG", "onComplete:" + category);
-                                                            Log.d("TAG", "onComplete:" + categoryPosition);
-                                                            Map<String, Object> categoryMap = categoriesList.get(category);
-                                                            List<Map<String, String>> clientsList = (List<Map<String, String>>) categoryMap.get("clients");
 
-
-                                                            Log.d("TAG", "onComplete:" + position);
-                                                            Map<String, Object> categoryMap1 = categoriesList.get(position);
-                                                            List<Client> clientsList1 = (List<Client>) categoryMap1.get("clients");
-                                                            Client client = new Client(
-                                                                    clientsList.get(categoryPosition).get("name"),
-                                                                    clientsList.get(categoryPosition).get("phone"),
-                                                                    clientsList.get(categoryPosition).get("email"),
-                                                                    clientsList.get(categoryPosition).get("description")
-                                                            );
-                                                            clientsList.remove(categoryPosition);
-                                                            categoryMap.put("clients", clientsList);
-
-
-                                                            clientsList1.add(client);
-                                                            categoryMap1.put("clients", clientsList1);
-                                                            Map<String, Object> updateMap = new HashMap<>();
-                                                            updateMap.put("categories", categoriesList);
-                                                            docRef.update(updateMap);
-                                                            Intent intent1 = new Intent(SelectCategoryActivity.this, DetailedActivity.class);
-                                                            intent1.putExtra("name", roomName);
-                                                            intent1.putExtra("id", roomId);
-                                                            startActivity(intent1);
-                                                        } else {
-
-                                                        }
-                                                    } else {
-                                                        Log.e("TAG", "" + task.getException());
-                                                    }
-                                                }
-                                            });
 
                                 }
                             });

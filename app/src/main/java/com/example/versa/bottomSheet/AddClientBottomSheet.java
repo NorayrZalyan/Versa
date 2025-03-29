@@ -20,6 +20,8 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import org.checkerframework.checker.units.qual.C;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,7 +40,7 @@ public class AddClientBottomSheet extends BottomSheetDialogFragment {
 
 
         String roomId = getArguments().getString("roomId");
-        int category = getArguments().getInt("category");
+        String category = getArguments().getString("category");
 
         loadingDialog = new LoadingDialog(getActivity());
 
@@ -54,48 +56,55 @@ public class AddClientBottomSheet extends BottomSheetDialogFragment {
                 String clientEmail = binding.clientEmailEt.getText().toString();
                 String description = binding.clientDescriptionEt.getText().toString();
 
+                Client client = new Client(
+                        clientName,
+                        clientPhone,
+                        clientEmail,
+                        description
+                );
+                Log.d("TAG", "onClick: "+client);
 
 
-                FirebaseFirestore db = FirebaseFirestore.getInstance();
-                DocumentReference docRef = db.collection("Rooms").document(roomId);
-                docRef.get().addOnSuccessListener(documentSnapshot -> {
-                    if (documentSnapshot.exists()) {
-                        // Получаем список категорий
-                        List<Map<String, Object>> categoriesList = (List<Map<String, Object>>) documentSnapshot.get("categories");
+                db.collection("Rooms").document(roomId)
+                        .get()
+                        .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                if (task.isSuccessful()){
+                                    DocumentSnapshot documentSnapshot = task.getResult();
+                                    if (documentSnapshot.exists()){
 
-                        Map<String, Object> categoryMap = categoriesList.get(category);
+                                        List<Map<String, Object>> categories = (List<Map<String, Object>>) documentSnapshot.get("categories");
+                                        Log.d("TAG", "onComplete: import categories");
 
-                        List<Client> clientsList = (List<Client>) categoryMap.get("clients");
+                                        for (int i = 0; i < categories.size(); i++) {
+                                            Map<String, Object> categoryMap = (Map<String, Object>) categories.get(i);
+                                            Log.d("TAG", "onComplete: import category");
+                                            if (categoryMap.get("name").equals(category)){
+                                                Log.d("TAG", "onComplete: The names are the same");
+                                                List<Client> clients = (List<Client>) categoryMap.get("clients");
+                                                clients.add(client);
+                                                Log.d("TAG", "onComplete: clietn add clients");
+                                                categoryMap.put("clients", clients);
+                                                Map<String, Object> updateMap = new HashMap<>();
+                                                updateMap.put("categories", categories);
+                                                db.collection("Rooms").document(roomId).update(updateMap);
+                                                Log.d("TAG", "onComplete: client add");
+                                                loadingDialog.dismisDialog();
+                                                break;
+                                            }
+                                        }
 
-                        Client newClient = new Client(
-                                clientName,
-                                clientPhone,
-                                clientEmail,
-                                description
-                        );
+                                    } else {
 
-                        clientsList.add(newClient);
+                                    }
+                                } else {
 
-                        categoryMap.put("clients", clientsList);
-
-                        Map<String, Object> updateMap = new HashMap<>();
-                        updateMap.put("categories", categoriesList);
-
-                        docRef.update(updateMap).addOnSuccessListener(aVoid -> {
-                            loadingDialog.dismisDialog();
-                            Log.d("Firestore", "Client added successfully!");
-                            dismiss();
-                            Activity activity = getActivity();
-                            if (activity != null){
-                                activity.recreate();
+                                }
                             }
-                        }).addOnFailureListener(e -> {
-                            loadingDialog.dismisDialog();
-                            Log.e("Firestore", "Error adding client: ", e);
                         });
 
-                    }
-                });
+
 
 
 

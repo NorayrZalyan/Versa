@@ -131,7 +131,7 @@ public class DetailedActivity extends AppCompatActivity {
                                                             CategoryData categoryData = new CategoryData(nameList[i]);
                                                             dataArrayList.add(categoryData);
                                                         }
-                                                        categoryListAdapter = new CategoryListAdapter(DetailedActivity.this, dataArrayList, id);
+                                                        categoryListAdapter = new CategoryListAdapter(DetailedActivity.this, dataArrayList, id, nameList);
                                                         binding.listview.setAdapter(categoryListAdapter);
                                                         binding.listview.setClickable(true);
                                                         binding.listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -151,32 +151,32 @@ public class DetailedActivity extends AppCompatActivity {
 
                                                     } else if (documentSnapshot.get("jobtitle").equals("Other")) {
                                                         ArrayList<String> userCategories = (ArrayList<String>) documentSnapshot.get("categories");
-                                                        Log.d("TEST", "onComplete: import array");
+                                                        Log.d("TAG", "onComplete: "+userCategories);
+
                                                         String[] nameList = new String[userCategories.size()];
 
                                                         for (int i = 0; i < userCategories.size(); i++) {
-                                                            nameList[i] = (String) roomCategories.get(Integer.parseInt(userCategories.get(i))).get("name");
+                                                            nameList[i] = (String) userCategories.get(i);
                                                         }
                                                         for (int i = 0; i < nameList.length; i++) {
                                                             CategoryData categoryData = new CategoryData(nameList[i]);
                                                             dataArrayList.add(categoryData);
                                                         }
-                                                        categoryListAdapter = new CategoryListAdapter(DetailedActivity.this, dataArrayList, id);
+                                                        categoryListAdapter = new CategoryListAdapter(DetailedActivity.this, dataArrayList, id, nameList);
                                                         binding.listview.setAdapter(categoryListAdapter);
                                                         binding.listview.setClickable(true);
                                                         binding.listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                                                             @Override
                                                             public void onItemClick(AdapterView<?> parent, View view, int position, long longid) {
+                                                                Toast.makeText((Context) DetailedActivity.this, ""+parent.getAdapter().getItem(position), Toast.LENGTH_SHORT).show();
                                                                 Log.d("TAG", "onItemClick: "+position);
                                                                 Intent intent = new Intent(DetailedActivity.this, CategoryActivity.class);
                                                                 intent.putExtra("name", nameList[position]);
                                                                 intent.putExtra("id",id);
-                                                                intent.putExtra("roomName",roomName);
                                                                 intent.putExtra("position", position);
                                                                 startActivity(intent);
                                                             }
                                                         });
-
 
 
                                                     }

@@ -59,7 +59,7 @@ public class CategoryActivity extends AppCompatActivity {
 
                 Bundle bundle = new Bundle();
                 bundle.putString("roomId", id);
-                bundle.putInt("category", position);
+                bundle.putString("category", name);
                 AddClientBottomSheet bottomSheet = new AddClientBottomSheet();
                 bottomSheet.setArguments(bundle);
                 bottomSheet.show(getSupportFragmentManager(), bottomSheet.getTag());
@@ -76,61 +76,54 @@ public class CategoryActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             DocumentSnapshot document = task.getResult();
                             if (document.exists()) {
-                                List<Map<String, Object>> categoriesList = (List<Map<String, Object>>) document.get("categories");
-                                Map<String, Object> categoryMap = categoriesList.get(position);
-                                List<Map<String, String>> clientsList = (List<Map<String, String>>) categoryMap.get("clients");
 
-                                String[] nameList = new String[clientsList.size()];
-                                for (int i = 0; i < clientsList.size(); i++) {
-                                    nameList[i] = clientsList.get(i).get("name");
-                                }
-                                for (int i = 0; i < nameList.length; i++) {
-                                    ClientData clientData1 = new ClientData(nameList[i]);
-                                    clientData.add(clientData1);
-                                }
-                                ClientListAdapter clientListAdapter = new ClientListAdapter( CategoryActivity.this, clientData, id, position);
-                                binding.listview.setAdapter(clientListAdapter);
-                                binding.listview.setClickable(true);
-                                binding.listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                                    @Override
-                                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                db.collection("Rooms").document(id)
+                                        .get()
+                                        .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                                DocumentSnapshot documentSnapshot = task.getResult();
+                                                if (documentSnapshot.exists()){
+
+                                                    List<Map<String, Object>> categoriesList = (List<Map<String, Object>>) documentSnapshot.get("categories");
+
+                                                    for (int i = 0; i < categoriesList.size(); i++) {
+
+                                                        Map<String, Object> category = categoriesList.get(i);
+                                                        Log.d("TAG", "onComplete: "+ category.get("name"));
+
+                                                        if (category.get("name").equals(name)){
+
+                                                            Map<String, Object> categoryMap = categoriesList.get(i);
+                                                            List<Map<String, String>> clientsList = (List<Map<String, String>>) categoryMap.get("clients");
+                                                            String[] nameList = new String[clientsList.size()];
+                                                            for (int j = 0; j < clientsList.size(); j++) {
+                                                                nameList[j] = clientsList.get(j).get("name");
+                                                            }
+                                                            for (int e = 0; e < nameList.length; e++) {
+                                                                ClientData clientData1 = new ClientData(nameList[e]);
+                                                                clientData.add(clientData1);
+                                                            }
+                                                            ClientListAdapter clientListAdapter = new ClientListAdapter( CategoryActivity.this, clientData, id, position);
+                                                            binding.listview.setAdapter(clientListAdapter);
+                                                            break;
+
+                                                        }
 
 
-                                        List<Map<String, Object>> categoriesList = (List<Map<String, Object>>) document.get("categories");
-
-                                        for (int i = 0; i < categoriesList.size(); i++) {
-                                            Map<String, Object> categoryMap = categoriesList.get(i);
-
-                                            List<Map<String, String>> clientsList = (List<Map<String, String>>) categoryMap.get("clients");
-                                            for (int j = 0; j < clientsList.size(); j++) {
-
-                                                if (clientsList.get(position).get("name").equals(nameList[position])){
-                                                    Log.d("TAG", "onItemClick: "+clientsList.get(position).get("name")+ nameList[position]);
-
-                                                    String clientName = clientsList.get(position).get("name");
-                                                    String clientPhone = clientsList.get(position).get("phone");
-                                                    String clientEmail = clientsList.get(position).get("email");
-                                                    String clientdescription = clientsList.get(position).get("description");
-
-                                                    ClientDataDialog clientData1 = new ClientDataDialog(CategoryActivity.this, clientName, clientPhone, clientEmail, clientdescription);
-                                                    clientData1.startLoading();
+                                                    }
 
                                                 }
-
                                             }
+                                        });
 
 
-                                        }
-                                        List<Map<String, String>> clientsList = (List<Map<String, String>>) categoryMap.get("clients");
 
-                                    }
-                                });
+
 
                             } else {
 
                             }
-
-
                         } else {
                             Log.e("TAG", "" + task.getException());
                         }

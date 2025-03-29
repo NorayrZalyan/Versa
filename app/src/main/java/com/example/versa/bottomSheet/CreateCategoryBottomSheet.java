@@ -15,6 +15,7 @@ import com.example.versa.LoadingDialog;
 import com.example.versa.category.Category;
 import com.example.versa.databinding.CategoryBottomSheetBinding;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -51,6 +52,14 @@ public class CreateCategoryBottomSheet extends BottomSheetDialogFragment {
                 }
                 Category category = new Category(binding.categoryNameEd.getText().toString());
 
+                String uId = FirebaseAuth.getInstance().getUid();
+                db.collection("Users").document(uId).update("categories", FieldValue.arrayUnion(binding.categoryNameEd.getText().toString()))
+                        .addOnSuccessListener(aVoid -> {
+                            Log.d("Firestore", "Категория добавлена");
+                        })
+                        .addOnFailureListener(e -> {
+                            Log.w("Firestore", "Ошибка добавления", e);
+                        });
                 db.collection("Rooms").document(roomid).update("categories", FieldValue.arrayUnion(category))
                         .addOnSuccessListener(aVoid -> {
                             loadingDialog.dismisDialog();

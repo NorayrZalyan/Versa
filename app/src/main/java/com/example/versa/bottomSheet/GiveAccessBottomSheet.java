@@ -28,7 +28,7 @@ public class GiveAccessBottomSheet extends BottomSheetDialogFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = GieAccessBottomSheetBinding.inflate(inflater, container, false);
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        String category = getArguments().getString("position");
+        String category = getArguments().getString("category");
         loadingDialog = new LoadingDialog(getActivity());
 
         binding.giveAccessBt.setOnClickListener(new View.OnClickListener() {

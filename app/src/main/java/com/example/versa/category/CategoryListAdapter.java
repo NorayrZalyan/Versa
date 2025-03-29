@@ -37,12 +37,14 @@ public class CategoryListAdapter extends ArrayAdapter<CategoryData> {
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private String uid = FirebaseAuth.getInstance().getUid();
     private String roomId;
+    private  String[] nameList;
 
-    public CategoryListAdapter(@NonNull FragmentActivity activity, ArrayList<CategoryData> dataArrayList, String roomId) {
+    public CategoryListAdapter(@NonNull FragmentActivity activity, ArrayList<CategoryData> dataArrayList, String roomId, String[] nameList) {
         super(activity, R.layout.list_item, dataArrayList);
         this.context = activity;
         this.activity = activity;
         this.roomId = roomId;
+        this.nameList = nameList;
     }
 
     @NonNull
@@ -134,7 +136,7 @@ public class CategoryListAdapter extends ArrayAdapter<CategoryData> {
                                                 if (documentSnapshot.exists()){
                                                     if (documentSnapshot.get("jobtitle").equals("Admin")){
                                                         Bundle bundle = new Bundle();
-                                                        bundle.putString("position", String.valueOf(position));
+                                                        bundle.putString("category", nameList[position]);
                                                         GiveAccessBottomSheet bottomSheet = new GiveAccessBottomSheet();
                                                         bottomSheet.setArguments(bundle);
                                                         bottomSheet.show(activity.getSupportFragmentManager(), "GiveAccessBottomSheet");
