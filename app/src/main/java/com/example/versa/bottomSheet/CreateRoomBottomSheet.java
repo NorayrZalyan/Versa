@@ -18,6 +18,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
@@ -72,10 +73,11 @@ public class  CreateRoomBottomSheet extends BottomSheetDialogFragment {
                                             }
                                         });
                                 String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                                db.collection("Users").document(uid).update("roomId", String.valueOf(lastRoomID));
+                                db.collection("Users").document(uid).update("rooms", FieldValue.arrayUnion(lastRoomID));
 
                             } else {
                                 Log.d("Firestore", "Документы отсутствуют.");
+
                                 Room room1 = new Room(roomName, 1);
                                 db.collection("Rooms").document("1")
                                         .set(room1)
@@ -97,7 +99,7 @@ public class  CreateRoomBottomSheet extends BottomSheetDialogFragment {
                                             }
                                         });
                                 String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                                db.collection("Users").document(uid).update("roomId", "1");
+                                db.collection("Users").document(uid).update("rooms", FieldValue.arrayUnion("1"));
 
                             }
                         })

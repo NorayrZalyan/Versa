@@ -4,22 +4,21 @@ import java.util.ArrayList;
 
 public class User {
     private ArrayList<Integer> categories = new ArrayList<>();
+    private ArrayList<Integer> rooms = new ArrayList<>();
     private String userId;
     private String name;
     private String email;
     private String jobtitle;
-    private String RoomId;
 
     public User() {
         // Для Firebase
     }
 
-    public User(String userId, String name, String email, String jobtitle, String Roomid) {
+    public User(String userId, String name, String email, String jobtitle) {
         this.userId = userId;
         this.name = name;
         this.email = email;
         this.jobtitle = jobtitle;
-        this.RoomId = Roomid;
     }
 
     public String getUserId() {
@@ -34,8 +33,9 @@ public class User {
     public String getJobtitle() {
         return jobtitle;
     }
-    public String getRoomId() {
-        return RoomId;
+
+    public ArrayList<Integer> getRooms() {
+        return rooms;
     }
 
     public ArrayList<Integer> getCategories() {
