@@ -25,6 +25,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.ArrayList;
 public class HomeActivity extends AppCompatActivity {
     ActivityHomeBinding binding;
+    
     FirebaseAuth mAuth;
     RoomListAdapter listAdapter;
     ArrayList<RoomData> dataArrayList = new ArrayList<>();
