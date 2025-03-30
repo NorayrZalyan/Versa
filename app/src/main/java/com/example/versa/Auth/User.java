@@ -1,10 +1,11 @@
 package com.example.versa.Auth;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 public class User {
     private ArrayList<Integer> categories = new ArrayList<>();
-    private ArrayList<Integer> rooms = new ArrayList<>();
+    private ArrayList<Map<String, String>> rooms = new ArrayList<>();
     private String userId;
     private String name;
     private String email;
@@ -34,7 +35,7 @@ public class User {
         return jobtitle;
     }
 
-    public ArrayList<Integer> getRooms() {
+    public ArrayList<Map<String, String>> getRooms() {
         return rooms;
     }
 

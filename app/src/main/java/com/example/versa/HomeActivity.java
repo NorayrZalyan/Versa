@@ -23,6 +23,9 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 public class HomeActivity extends AppCompatActivity {
     ActivityHomeBinding binding;
     
@@ -56,10 +59,7 @@ public class HomeActivity extends AppCompatActivity {
                             binding.createroomBottomsheetBt.setVisibility(View.INVISIBLE);
                             binding.joinRoomBt.setVisibility(View.VISIBLE);
                         }
-                        if (document.getString("roomId") != null){
-                            binding.createroomBottomsheetBt.setVisibility(View.INVISIBLE);
-                            binding.joinRoomBt.setVisibility(View.INVISIBLE);
-                        }
+
 
 
                     } else {
@@ -110,62 +110,25 @@ public class HomeActivity extends AppCompatActivity {
                 if (task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
-                        Log.d("2", "DocumentSnapshot data: " + document.getData());
-                        String userRoom = document.getString("roomId");
-
-                        if(document.getString("roomId") != null){
-
-                            db.collection("Rooms").document(userRoom).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                                @Override
-                                public void onComplete(@NonNull Task<DocumentSnapshot> task1) {
-                                    if (task1.isSuccessful()) {
-                                        DocumentSnapshot document1 = task1.getResult();
-                                        if (document.exists()) {
-                                            Log.d("TAG", "DocumentSnapshot data: " + document.getData());
-
-                                            String userRoomName = document1.getString("roomName");
-                                            long userRoomId = document1.getLong("roomId");
-
-                                            String[] nameList = new String[]{userRoomName};
-                                            String[] idList = new String[]{String.valueOf(userRoomId)};
-                                            for (int i = 0; i < nameList.length; i++){
-                                                roomData = new RoomData(nameList[i], idList[i]);
-                                                dataArrayList.add(roomData);
-                                            }
-
-
-                                            listAdapter = new RoomListAdapter(HomeActivity.this, dataArrayList);
-                                            binding.listview.setAdapter(listAdapter);
-
-                                            binding.listview.setClickable(true);
-                                            binding.listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                                                @Override
-                                                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-
-                                                    Intent intent = new Intent(HomeActivity.this, DetailedActivity.class);
-                                                    intent.putExtra("name", nameList[i]);
-                                                    intent.putExtra("id", idList[i]);
-                                                    startActivity(intent);
-
-                                                }
-                                            });
-
-
-
-
-                                        } else {
-                                            Log.d("TAG", "No such document");
-                                        }
-                                    } else {
-                                        Log.d("TAG", "get failed with ", task.getException());
-                                    }
-                                }
-                            });
-
-
+                        List<Map<String, String>> userRooms = (List<Map<String, String>>) document.get("rooms");
+                        Log.d("TAG", "onComplete: ");
+                        Log.d("TAG", "onComplete: "+userRooms);
+                        String[] nameList = new String[userRooms.size()];
+                        String[] idList = new String[userRooms.size()];
+                        for (int i = 0; i < userRooms.size(); i++) {
+                            for (String value: userRooms.get(i).values()) {
+                                nameList[i] = value;
+                            }
+                            for (String key: userRooms.get(i).keySet()) {
+                                idList[i] = key;
+                            }
                         }
-
-
+                        for (int i = 0; i < nameList.length; i++) {
+                            RoomData roomData = new RoomData(nameList[i], idList[i]);
+                            dataArrayList.add(roomData);
+                        }
+                        RoomListAdapter roomListAdapter = new RoomListAdapter(HomeActivity.this, dataArrayList);
+                        binding.listview.setAdapter(roomListAdapter);
                     } else {
                         Log.d("TAG", "No such document");
                     }
@@ -174,6 +137,8 @@ public class HomeActivity extends AppCompatActivity {
                 }
             }
         });
+
+
 
 
     }

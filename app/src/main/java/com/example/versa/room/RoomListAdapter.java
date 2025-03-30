@@ -59,67 +59,60 @@ public class RoomListAdapter extends ArrayAdapter<RoomData> {
                         int id = item.getItemId();
                         if (id == R.id.option1) {
 
-
-                            db.collection("Users").document(uid)
-                                    .get()
-                                    .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                            db.collection("Rooms").document(String.valueOf(listData.id))
+                                    .delete()
+                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
                                         @Override
-                                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                            if (task.isSuccessful()){
-                                                DocumentSnapshot documentSnapshot = task.getResult();
-                                                if (documentSnapshot.exists()){
-                                                    if (documentSnapshot.get("jobtitle").equals("Admin")){
-
-                                                        db.collection("Rooms").document(String.valueOf(listData.id))
-                                                                .delete()
-                                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                                    @Override
-                                                                    public void onSuccess(Void aVoid) {
-                                                                        Log.d("TAG", "DocumentSnapshot successfully deleted!");
-                                                                    }
-                                                                })
-                                                                .addOnFailureListener(new OnFailureListener() {
-                                                                    @Override
-                                                                    public void onFailure(@NonNull Exception e) {
-                                                                        Log.w("TAG", "Error deleting document", e);
-                                                                    }
-                                                                });
-                                                        db.collection("Users").document(uid)
-                                                                .update("roomId", null)
-                                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                                    @Override
-                                                                    public void onSuccess(Void unused) {
-                                                                        Log.d("TAG", "deleted from user");
-                                                                        ((Activity) context).recreate();
-
-                                                                    }
-                                                                })
-                                                                .addOnFailureListener(new OnFailureListener() {
-                                                                    @Override
-                                                                    public void onFailure(@NonNull Exception e) {
-                                                                        Log.d("TAG", "not deleted from the user");
-                                                                    }
-                                                                });
-
-                                                    } else {
-                                                        Toast.makeText(getContext(), "you are not an admin", Toast.LENGTH_LONG).show();
-                                                    }
-                                                } else {
-                                                    
-
-                                                }
-                                            } else {
-                                            }
+                                        public void onSuccess(Void aVoid) {
+                                            Log.d("TAG", "DocumentSnapshot successfully deleted!");
+                                        }
+                                    })
+                                    .addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            Log.w("TAG", "Error deleting document", e);
                                         }
                                     });
+                            db.collection("Users").document(uid)
+                                    .update("roomId", null)
+                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void unused) {
+                                            Log.d("TAG", "deleted from user");
+                                            ((Activity) context).recreate();
 
+                                        }
+                                    })
+                                    .addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            Log.d("TAG", "not deleted from the user");
+                                        }
+                                    });
 
                             return true;
                         }
                         return false;
                     }
                 });
-                popup.show();
+                db.collection("Users").document(uid)
+                        .get()
+                        .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                if (task.isSuccessful()){
+                                    DocumentSnapshot documentSnapshot = task.getResult();
+                                    if (documentSnapshot.exists()){
+                                        if (documentSnapshot.get("jobtitle").equals("Admin")){
+                                            popup.show();
+                                        }
+                                    } else {
+                                    }
+                                } else {
+                                }
+                            }
+                        });
+
             }
         });
 

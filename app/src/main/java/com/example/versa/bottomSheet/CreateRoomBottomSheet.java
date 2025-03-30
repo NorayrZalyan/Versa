@@ -6,10 +6,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.example.versa.HomeActivity;
 import com.example.versa.LoadingDialog;
 import com.example.versa.room.Room;
 import com.example.versa.databinding.RoomBottomSheetBinding;
@@ -22,10 +24,14 @@ import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class  CreateRoomBottomSheet extends BottomSheetDialogFragment {
 
     private RoomBottomSheetBinding binding;
     private LoadingDialog loadingDialog;
+
 
     @Nullable
     @Override
@@ -52,14 +58,15 @@ public class  CreateRoomBottomSheet extends BottomSheetDialogFragment {
                                 DocumentSnapshot lastDocument = queryDocumentSnapshots.getDocuments().get(0);
                                 int lastRoomID = lastDocument.getLong("roomId").intValue();
                                 Room room = new Room(roomName, lastRoomID+1);
+                                int finalLastRoomID = lastRoomID;
                                 db.collection("Rooms").document(String.valueOf(++lastRoomID))
                                         .set(room)
                                         .addOnCompleteListener(new OnCompleteListener<Void>() {
                                             @Override
                                             public void onComplete(@NonNull Task<Void> task) {
                                                 if (task.isSuccessful()){
-                                                    loadingDialog.dismisDialog();
                                                     Log.d("TAG", "DocumentSnapshot successfully written!");
+                                                    loadingDialog.dismisDialog();
                                                     dismiss();
                                                     Activity activity = getActivity();
                                                     if (activity != null) {
@@ -73,7 +80,27 @@ public class  CreateRoomBottomSheet extends BottomSheetDialogFragment {
                                             }
                                         });
                                 String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                                db.collection("Users").document(uid).update("rooms", FieldValue.arrayUnion(lastRoomID));
+                                int finalLastRoomID1 = lastRoomID;
+                                db.collection("Rooms").document(String.valueOf(lastRoomID))
+                                        .get()
+                                        .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                                if (task.isSuccessful()){
+                                                    DocumentSnapshot documentSnapshot = task.getResult();
+                                                    if (documentSnapshot.exists()){
+                                                        Map<String, String> room1 = new HashMap<>();
+                                                        room1.put(String.valueOf(finalLastRoomID1), (String) documentSnapshot.get("roomName"));
+                                                        Log.d("TAG", "onComplete: "+room1);
+                                                        db.collection("Users").document(uid).update("rooms", FieldValue.arrayUnion(room1));
+                                                    } else {
+                                                    }
+                                                }else {
+                                                }
+                                            }
+                                        });
+
+
 
                             } else {
                                 Log.d("Firestore", "Документы отсутствуют.");
@@ -99,7 +126,24 @@ public class  CreateRoomBottomSheet extends BottomSheetDialogFragment {
                                             }
                                         });
                                 String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                                db.collection("Users").document(uid).update("rooms", FieldValue.arrayUnion("1"));
+                                db.collection("Rooms").document("1")
+                                        .get()
+                                        .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                                if (task.isSuccessful()){
+                                                    DocumentSnapshot documentSnapshot = task.getResult();
+                                                    if (documentSnapshot.exists()){
+                                                        Map<String, String> room1 = new HashMap<>();
+                                                        room1.put("1", (String) documentSnapshot.get("roomName"));
+                                                        Log.d("TAG", "onComplete: "+room1);
+                                                        db.collection("Users").document(uid).update("rooms", FieldValue.arrayUnion(room1));
+                                                    } else {
+                                                    }
+                                                }else {
+                                                }
+                                            }
+                                        });
 
                             }
                         })
