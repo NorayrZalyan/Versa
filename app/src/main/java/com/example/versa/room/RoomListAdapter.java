@@ -105,6 +105,7 @@ public class RoomListAdapter extends ArrayAdapter<RoomData> {
                                                         Toast.makeText(getContext(), "you are not an admin", Toast.LENGTH_LONG).show();
                                                     }
                                                 } else {
+                                                    
 
                                                 }
                                             } else {
