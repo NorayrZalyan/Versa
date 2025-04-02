@@ -11,7 +11,6 @@ import android.widget.AdapterView;
 
 import com.example.versa.Auth.MainActivity;
 import com.example.versa.bottomSheet.CreateRoomBottomSheet;
-import com.example.versa.bottomSheet.JoinRoombottomsheet;
 import com.example.versa.databinding.ActivityHomeBinding;
 import com.example.versa.room.RoomData;
 import com.example.versa.room.RoomListAdapter;
@@ -54,12 +53,7 @@ public class HomeActivity extends AppCompatActivity {
 
                         if (document.getString("jobtitle").equals("Admin")){
                             binding.createroomBottomsheetBt.setVisibility(View.VISIBLE);
-                            binding.joinRoomBt.setVisibility(View.INVISIBLE);
-                        } else if(document.getString("jobtitle").equals("Other")) {
-                            binding.createroomBottomsheetBt.setVisibility(View.INVISIBLE);
-                            binding.joinRoomBt.setVisibility(View.VISIBLE);
                         }
-
 
 
                     } else {
@@ -79,19 +73,11 @@ public class HomeActivity extends AppCompatActivity {
                 createRoomBottomSheet.show(getSupportFragmentManager(), "createRoomBottomSheet");
             }
         });
-        binding.joinRoomBt.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                JoinRoombottomsheet joinRoombottomsheet = new JoinRoombottomsheet();
-                joinRoombottomsheet.show(getSupportFragmentManager(), "joinRoombottomsheet");
-            }
-        });
         binding.button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mAuth.signOut();
                 startActivity(new Intent(HomeActivity.this, MainActivity.class));
-
             }
         });
 
@@ -129,6 +115,16 @@ public class HomeActivity extends AppCompatActivity {
                         }
                         RoomListAdapter roomListAdapter = new RoomListAdapter(HomeActivity.this, dataArrayList);
                         binding.listview.setAdapter(roomListAdapter);
+                        binding.listview.setClickable(true);
+                        binding.listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                Intent intent = new Intent(HomeActivity.this, DetailedActivity.class);
+                                intent.putExtra("roomName", nameList[position]);
+                                intent.putExtra("roomId", idList[position]);
+                                startActivity(intent);
+                            }
+                        });
                     } else {
                         Log.d("TAG", "No such document");
                     }

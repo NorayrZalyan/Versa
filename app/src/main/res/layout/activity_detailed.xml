@@ -51,6 +51,7 @@
         android:id="@+id/create_CategoryBt"
         android:layout_width="wrap_content"
         android:layout_height="50dp"
+        android:visibility="invisible"
         android:background="@drawable/actionbutton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"

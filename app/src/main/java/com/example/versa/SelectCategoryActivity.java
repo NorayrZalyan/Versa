@@ -1,27 +1,23 @@
 package com.example.versa;
 
-import android.app.Activity;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import com.example.versa.category.CategoryData;
 import com.example.versa.category.CategoryListAdapter;
 import com.example.versa.clients.Client;
-import com.example.versa.databinding.ActivityDetailedBinding;
 import com.example.versa.databinding.ActivitySelectCategoryBinding;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
+
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 
@@ -29,16 +25,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import com.example.versa.databinding.ActivitySelectCategoryBinding;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 public class SelectCategoryActivity extends AppCompatActivity {
     private ActivitySelectCategoryBinding binding;
     private ArrayList<CategoryData> dataArrayList = new ArrayList<>();
     private String roomId;
-    private int categoryPosition;
-    private int category;
     private String roomName;
+    private String categoryName;
+    private int clientPosition;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,8 +41,12 @@ public class SelectCategoryActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         roomId = intent.getStringExtra("roomId");
-        categoryPosition = intent.getIntExtra("position", -1);
-        category = intent.getIntExtra("category", -1);
+        roomName = intent.getStringExtra("roomName");
+        clientPosition = intent.getIntExtra("clientPosition", 0);
+        categoryName = intent.getStringExtra("categoryName");
+
+
+
 
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -68,26 +67,61 @@ public class SelectCategoryActivity extends AppCompatActivity {
                             String name = (String) roomCategories.get(0).get("name");
                             Log.d("TAG", "First category name: " + name);
 
-                            String[] nameList = new String[roomCategories.size()];
 
+                            ArrayList<String> nameList = new ArrayList<>();
                             for (int i = 0; i < roomCategories.size(); i++) {
-                                nameList[i] = (String) roomCategories.get(i).get("name");
+                                nameList.add((String)roomCategories.get(i).get("name"));
                             }
-                            for (int i = 0; i < nameList.length; i++) {
-                                CategoryData categoryData = new CategoryData(nameList[i]);
+                            for (int i = 0; i < nameList.size(); i++) {
+                                CategoryData categoryData = new CategoryData(nameList.get(i));
                                 dataArrayList.add(categoryData);
                             }
-                            CategoryListAdapter categoryListAdapter = new CategoryListAdapter(SelectCategoryActivity.this, dataArrayList, roomId, nameList);
+                            CategoryListAdapter categoryListAdapter = new CategoryListAdapter(SelectCategoryActivity.this, dataArrayList, roomId, roomName, nameList);
                             binding.listview.setAdapter(categoryListAdapter);
                             binding.listview.setClickable(true);
                             binding.listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                                 @Override
-                                public void onItemClick(AdapterView<?> parent, View view, int position, long longid) {
+                                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
+                                    List<Map<String, Object>> categories = (List<Map<String, Object>>) document.get("categories");
+                                    for (int i = 0; i < categories.size(); i++) {
+                                        if (categories.get(i).get("name").equals(categoryName)){
+                                            Map<String, Object> categoryMap = categories.get(i);
+                                            List<Map<String, String>> clients = (List<Map<String, String>>) categoryMap.get("clients");
 
+                                            Client client = new Client(
+                                                    clients.get(clientPosition).get("name"),
+                                                    clients.get(clientPosition).get("phone"),
+                                                    clients.get(clientPosition).get("email"),
+                                                    clients.get(clientPosition).get("description")
+                                            );
+
+                                            clients.remove(clientPosition);
+                                            categoryMap.put("clients", clients);
+                                            Map<String, Object> updateMap = new HashMap<>();
+                                            updateMap.put("categories", categories);
+                                            docRef.update(updateMap);
+
+                                            Map<String, Object> categoryMap1 = categories.get(position);
+                                            List<Client> clients1 = (List<Client>) categoryMap1.get("clients");
+                                            clients1.add(client);
+                                            categoryMap1.put("clients", clients1);
+                                            Map<String, Object> updateMap1 = new HashMap<>();
+                                            updateMap1.put("categories", categories);
+                                            docRef.update(updateMap1);
+                                            Toast.makeText(SelectCategoryActivity.this, client.getName()+" moved to "+categoryMap1.get("name"), Toast.LENGTH_LONG).show();
+                                            Intent intent = new Intent(SelectCategoryActivity.this, DetailedActivity.class);
+                                            intent.putExtra("roomName", roomName);
+                                            intent.putExtra("roomId", roomId);
+                                            startActivity(intent);
+
+                                            break;
+                                        }
+                                    }
 
                                 }
                             });
+
 
 
                         } else {

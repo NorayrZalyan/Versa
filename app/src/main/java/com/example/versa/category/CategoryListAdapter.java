@@ -31,20 +31,24 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentActivity;
 
+import org.checkerframework.checker.units.qual.A;
+
 public class CategoryListAdapter extends ArrayAdapter<CategoryData> {
     private FragmentActivity activity;
     private Context context;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private String uid = FirebaseAuth.getInstance().getUid();
     private String roomId;
-    private  String[] nameList;
+    private ArrayList<String> nameList;
+    private String roomName;
 
-    public CategoryListAdapter(@NonNull FragmentActivity activity, ArrayList<CategoryData> dataArrayList, String roomId, String[] nameList) {
+    public CategoryListAdapter(@NonNull FragmentActivity activity, ArrayList<CategoryData> dataArrayList, String roomId, String roomName, ArrayList<String> nameList) {
         super(activity, R.layout.list_item, dataArrayList);
         this.context = activity;
         this.activity = activity;
         this.roomId = roomId;
         this.nameList = nameList;
+        this.roomName = roomName;
     }
 
     @NonNull
@@ -125,41 +129,40 @@ public class CategoryListAdapter extends ArrayAdapter<CategoryData> {
                             return true;
                         } else if (id == R.id.option2) {
 
-
-                            db.collection("Users").document(uid)
-                                    .get()
-                                    .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                            if (task.isSuccessful()){
-                                                DocumentSnapshot documentSnapshot = task.getResult();
-                                                if (documentSnapshot.exists()){
-                                                    if (documentSnapshot.get("jobtitle").equals("Admin")){
-                                                        Bundle bundle = new Bundle();
-                                                        bundle.putString("category", nameList[position]);
-                                                        GiveAccessBottomSheet bottomSheet = new GiveAccessBottomSheet();
-                                                        bottomSheet.setArguments(bundle);
-                                                        bottomSheet.show(activity.getSupportFragmentManager(), "GiveAccessBottomSheet");
-                                                    } else {
-                                                        Toast.makeText(getContext(), "you are not an admin", Toast.LENGTH_LONG).show();
-                                                    }
-                                                } else {
-
-                                                }
-                                            } else {
-                                            }
-                                        }
-                                    });
-
-
-
+                            Bundle bundle = new Bundle();
+                            bundle.putString("categoryName", nameList.get(position));
+                            bundle.putString("roomId", roomId);
+                            bundle.putString("roomName", roomName);
+                            GiveAccessBottomSheet bottomSheet = new GiveAccessBottomSheet();
+                            bottomSheet.setArguments(bundle);
+                            bottomSheet.show(activity.getSupportFragmentManager(), "GiveAccessBottomSheet");
 
                             return true;
                         }
                         return false;
                     }
                 });
-                popup.show();
+                db.collection("Users").document(uid)
+                        .get()
+                        .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                if (task.isSuccessful()){
+                                    DocumentSnapshot documentSnapshot = task.getResult();
+                                    if (documentSnapshot.exists()){
+                                        if (documentSnapshot.get("jobtitle").equals("Admin")){
+                                            popup.show();
+
+                                        } else {
+                                            Toast.makeText(getContext(), "you are not an admin", Toast.LENGTH_LONG).show();
+                                        }
+                                    } else {
+
+                                    }
+                                } else {
+                                }
+                            }
+                        });
             }
         });
 

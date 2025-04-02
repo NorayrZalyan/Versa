@@ -13,10 +13,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.versa.bottomSheet.AddClientBottomSheet;
 import com.example.versa.category.CategoryData;
 import com.example.versa.category.CategoryListAdapter;
-import com.example.versa.clients.ClientListAdapter;
+//import com.example.versa.clients.ClientListAdapter;
 import com.example.versa.clients.Client;
 import com.example.versa.clients.ClientData;
+import com.example.versa.clients.ClientListAdapter;
 import com.example.versa.databinding.ActivityCategoryBinding;
+import com.google.android.gms.common.util.ClientLibraryUtils;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -33,7 +35,7 @@ public class CategoryActivity extends AppCompatActivity {
 
     private ActivityCategoryBinding binding;
     private FirebaseFirestore db;
-    private ArrayList<ClientData> clientData = new ArrayList<>();
+    private ArrayList<ClientData> clientDataArrayList = new ArrayList<>();
     private FirebaseAuth mAuth;
 
     @Override
@@ -46,11 +48,10 @@ public class CategoryActivity extends AppCompatActivity {
         db = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
         Intent intent = getIntent();
-        String name = intent.getStringExtra("name");
+        String categoryName = intent.getStringExtra("categoryName");
         String roomName = intent.getStringExtra("roomName");
-        String id = intent.getStringExtra("id");
-        int position = intent.getIntExtra("position", 0);
-        binding.categoryNameTv.setText(name);
+        String roomId = intent.getStringExtra("roomId");
+        binding.categoryNameTv.setText(categoryName);
 
 
         binding.addClientBt.setOnClickListener(new View.OnClickListener() {
@@ -58,8 +59,8 @@ public class CategoryActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 Bundle bundle = new Bundle();
-                bundle.putString("roomId", id);
-                bundle.putString("category", name);
+                bundle.putString("roomId", roomId);
+                bundle.putString("category", categoryName);
                 AddClientBottomSheet bottomSheet = new AddClientBottomSheet();
                 bottomSheet.setArguments(bundle);
                 bottomSheet.show(getSupportFragmentManager(), bottomSheet.getTag());
@@ -68,67 +69,44 @@ public class CategoryActivity extends AppCompatActivity {
         });
 
 
-        db.collection("Rooms").document(id)
+
+
+
+        db.collection("Rooms").document(roomId)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        if (task.isSuccessful()) {
-                            DocumentSnapshot document = task.getResult();
-                            if (document.exists()) {
+                        if (task.isSuccessful()){
+                            DocumentSnapshot documentSnapshot = task.getResult();
+                            if (documentSnapshot.exists()){
 
-                                db.collection("Rooms").document(id)
-                                        .get()
-                                        .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                                            @Override
-                                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                                DocumentSnapshot documentSnapshot = task.getResult();
-                                                if (documentSnapshot.exists()){
-
-                                                    List<Map<String, Object>> categoriesList = (List<Map<String, Object>>) documentSnapshot.get("categories");
-
-                                                    for (int i = 0; i < categoriesList.size(); i++) {
-
-                                                        Map<String, Object> category = categoriesList.get(i);
-                                                        Log.d("TAG", "onComplete: "+ category.get("name"));
-
-                                                        if (category.get("name").equals(name)){
-
-                                                            Map<String, Object> categoryMap = categoriesList.get(i);
-                                                            List<Map<String, String>> clientsList = (List<Map<String, String>>) categoryMap.get("clients");
-                                                            String[] nameList = new String[clientsList.size()];
-                                                            for (int j = 0; j < clientsList.size(); j++) {
-                                                                nameList[j] = clientsList.get(j).get("name");
-                                                            }
-                                                            for (int e = 0; e < nameList.length; e++) {
-                                                                ClientData clientData1 = new ClientData(nameList[e]);
-                                                                clientData.add(clientData1);
-                                                            }
-                                                            ClientListAdapter clientListAdapter = new ClientListAdapter( CategoryActivity.this, clientData, id, position);
-                                                            binding.listview.setAdapter(clientListAdapter);
-                                                            break;
-
-                                                        }
-
-
-                                                    }
-
-                                                }
-                                            }
-                                        });
-
-
-
-
+                                List<Map<String, Object>> categories = (List<Map<String, Object>>) documentSnapshot.get("categories");
+                                for (Map<String, Object> category : categories) {
+                                    if (category.get("name").equals(categoryName)){
+                                        List<Map<String, Object>> clients = (List<Map<String, Object>>) category.get("clients");
+                                        String[] nameList = new String[clients.size()];
+                                        for (int i = 0; i < clients.size(); i++) {
+                                            nameList[i] = (String) clients.get(i).get("name");
+                                        }
+                                        for (int i = 0; i < nameList.length; i++) {
+                                            ClientData clientData = new ClientData(nameList[i]);
+                                            clientDataArrayList.add(clientData);
+                                        }
+                                        ClientListAdapter clientListAdapter = new ClientListAdapter(CategoryActivity.this, clientDataArrayList, roomId, roomName, categoryName);
+                                        binding.listview.setAdapter(clientListAdapter);
+                                    }
+                                }
 
                             } else {
-
                             }
                         } else {
-                            Log.e("TAG", "" + task.getException());
                         }
                     }
                 });
+
+
+
 
     }
 }

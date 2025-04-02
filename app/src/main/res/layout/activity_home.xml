@@ -43,18 +43,6 @@
         android:textSize="20dp"
         android:layout_marginBottom="30dp"/>
 
-    <Button
-        android:id="@+id/join_roomBt"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:background="@drawable/actionbutton"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginEnd="30dp"
-        android:text="join"
-        android:visibility="invisible"
-        android:textSize="20dp"
-        android:layout_marginBottom="30dp"/>
 
     <ListView
         android:id="@+id/listview"
@@ -71,7 +59,7 @@
         android:id="@+id/button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Button"
+        android:text="log out"
         tools:layout_editor_absoluteX="27dp" />
 
 

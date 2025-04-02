@@ -91,6 +91,9 @@ public class AddClientBottomSheet extends BottomSheetDialogFragment {
                                                 db.collection("Rooms").document(roomId).update(updateMap);
                                                 Log.d("TAG", "onComplete: client add");
                                                 loadingDialog.dismisDialog();
+                                                Activity activity = getActivity();
+                                                activity.recreate();
+                                                dismiss();
                                                 break;
                                             }
                                         }

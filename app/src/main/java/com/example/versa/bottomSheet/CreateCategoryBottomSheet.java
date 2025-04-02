@@ -19,6 +19,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class CreateCategoryBottomSheet extends BottomSheetDialogFragment {
 
     private CategoryBottomSheetBinding binding;
@@ -53,8 +56,12 @@ public class CreateCategoryBottomSheet extends BottomSheetDialogFragment {
                 Category category = new Category(binding.categoryNameEd.getText().toString());
 
                 String uId = FirebaseAuth.getInstance().getUid();
-                db.collection("Users").document(uId).update("categories", FieldValue.arrayUnion(binding.categoryNameEd.getText().toString()))
+                Map<String, String> userCategory = new HashMap<>();
+                userCategory.put(roomid, binding.categoryNameEd.getText().toString());
+                db.collection("Users").document(uId).update("categories", FieldValue.arrayUnion(userCategory))
+
                         .addOnSuccessListener(aVoid -> {
+                            loadingDialog.dismisDialog();
                             Log.d("Firestore", "Категория добавлена");
                         })
                         .addOnFailureListener(e -> {
@@ -62,7 +69,6 @@ public class CreateCategoryBottomSheet extends BottomSheetDialogFragment {
                         });
                 db.collection("Rooms").document(roomid).update("categories", FieldValue.arrayUnion(category))
                         .addOnSuccessListener(aVoid -> {
-                            loadingDialog.dismisDialog();
                             Log.d("Firestore", "Категория добавлена");
                             dismiss();
                             Activity activity = getActivity();

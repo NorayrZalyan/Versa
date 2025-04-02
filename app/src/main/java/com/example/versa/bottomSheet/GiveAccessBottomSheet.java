@@ -19,6 +19,9 @@ import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class GiveAccessBottomSheet extends BottomSheetDialogFragment {
     private GieAccessBottomSheetBinding binding;
     private LoadingDialog loadingDialog;
@@ -28,7 +31,9 @@ public class GiveAccessBottomSheet extends BottomSheetDialogFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = GieAccessBottomSheetBinding.inflate(inflater, container, false);
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        String category = getArguments().getString("category");
+        String categoryName = getArguments().getString("categoryName");
+        String roomId = getArguments().getString("roomId");
+        String roomName = getArguments().getString("roomName");
         loadingDialog = new LoadingDialog(getActivity());
 
         binding.giveAccessBt.setOnClickListener(new View.OnClickListener() {
@@ -45,6 +50,13 @@ public class GiveAccessBottomSheet extends BottomSheetDialogFragment {
                                 for (QueryDocumentSnapshot document : task.getResult()) {
                                     String userId = document.getId(); // Получаем UID документа
                                     Log.d("Firestore", "Документ найден: " + userId);
+
+                                    Map<String, String> room = new HashMap<>();
+                                    room.put(roomId, roomName);
+                                    db.collection("Users").document(userId)
+                                            .update("rooms", FieldValue.arrayUnion(room));
+                                    Map<String, String> category = new HashMap<>();
+                                    category.put(roomId, categoryName);
                                     db.collection("Users").document(userId)
                                             .update("categories", FieldValue.arrayUnion(category))
                                             .addOnSuccessListener(aVoid -> {

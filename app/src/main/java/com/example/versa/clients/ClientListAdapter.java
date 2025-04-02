@@ -42,17 +42,18 @@ import androidx.fragment.app.FragmentActivity;
 public class ClientListAdapter extends ArrayAdapter<ClientData> {
 
     private String roomId;
-    private Context context1;
-    private int category;
+
     private Context context;
+    private String roomName;
+    private String categoryName;
 
 
-    public ClientListAdapter(@NonNull Context context, ArrayList<ClientData> dataArrayList, String roomId,  int category) {
+    public ClientListAdapter(@NonNull Context context, ArrayList<ClientData> dataArrayList, String roomId, String roomName, String categoryName) {
         super(context, R.layout.list_item, dataArrayList);
         this.context = context;
-        this.context1 = context;
         this.roomId = roomId;
-        this.category = category;
+        this.roomName = roomName;
+        this.categoryName = categoryName;
     }
     @NonNull
     @Override
@@ -75,38 +76,39 @@ public class ClientListAdapter extends ArrayAdapter<ClientData> {
                         int id = item.getItemId();
                         if (id == R.id.option1) {
 
-                            Intent intent = new Intent(context1 , SelectCategoryActivity.class);
+                            Intent intent = new Intent(context , SelectCategoryActivity.class);
                             intent.putExtra("roomId", roomId);
-                            intent.putExtra("position", position);
-                            intent.putExtra("category", category);
-                            context1.startActivity(intent);
+                            intent.putExtra("roomName", roomName);
+                            intent.putExtra("clientPosition", position);
+                            intent.putExtra("categoryName", categoryName);
+                            context.startActivity(intent);
 
                             return true;
                         } else if (id == R.id.option2) {
-                            FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-                            DocumentReference docRef = db.collection("Rooms").document(roomId);
-
-                                    docRef.get()
-                                    .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                            if (task.isSuccessful()) {
-                                                DocumentSnapshot document = task.getResult();
-                                                if (document.exists()) {
-                                                    List<Map<String, Object>> categoriesList = (List<Map<String, Object>>) document.get("categories");
-                                                    Map<String, Object> categoryMap = categoriesList.get(category);
-                                                    List<Map<String, String>> clientsList = (List<Map<String, String>>) categoryMap.get("clients");
-                                                    clientsList.remove(position);
-                                                    categoryMap.put("clients", clientsList);
-                                                    Map<String, Object> updateMap = new HashMap<>();
-                                                    updateMap.put("categories", categoriesList);
-                                                    docRef.update(updateMap);
-                                                    ((Activity) context).recreate();
-                                                }
-                                            }
-                                        }
-                                    });
+//                            FirebaseFirestore db = FirebaseFirestore.getInstance();
+//
+//                            DocumentReference docRef = db.collection("Rooms").document(roomId);
+//
+//                                    docRef.get()
+//                                    .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+//                                        @Override
+//                                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+//                                            if (task.isSuccessful()) {
+//                                                DocumentSnapshot document = task.getResult();
+//                                                if (document.exists()) {
+//                                                    List<Map<String, Object>> categoriesList = (List<Map<String, Object>>) document.get("categories");
+//                                                    Map<String, Object> categoryMap = categoriesList.get(position);
+//                                                    List<Map<String, String>> clientsList = (List<Map<String, String>>) categoryMap.get("clients");
+//                                                    clientsList.remove(position);
+//                                                    categoryMap.put("clients", clientsList);
+//                                                    Map<String, Object> updateMap = new HashMap<>();
+//                                                    updateMap.put("categories", categoriesList);
+//                                                    docRef.update(updateMap);
+//                                                    ((Activity) context).recreate();
+//                                                }
+//                                            }
+//                                        }
+//                                    });
 
                             return true;
                         }
