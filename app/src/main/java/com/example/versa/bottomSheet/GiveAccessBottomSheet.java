@@ -5,15 +5,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.example.versa.LoadingDialog;
+import com.example.versa.Dialog.LoadingDialog;
 import com.example.versa.databinding.GieAccessBottomSheetBinding;
-import com.example.versa.databinding.RoomBottomSheetBinding;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -71,6 +70,7 @@ public class GiveAccessBottomSheet extends BottomSheetDialogFragment {
                                 }
                             } else {
                                 loadingDialog.dismisDialog();
+                                Toast.makeText(getContext(), "User not found", Toast.LENGTH_LONG).show();
                                 Log.d("Firestore", "Документ с таким email не найден.");
                             }
                         });

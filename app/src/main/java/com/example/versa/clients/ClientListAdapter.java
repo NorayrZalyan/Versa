@@ -1,7 +1,9 @@
 package com.example.versa.clients;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -22,6 +24,7 @@ import java.util.Map;
 
 import com.example.versa.CategoryActivity;
 import com.example.versa.DetailedActivity;
+import com.example.versa.Dialog.LoadingDialog;
 import com.example.versa.R;
 import com.example.versa.SelectCategoryActivity;
 import com.example.versa.bottomSheet.GiveAccessBottomSheet;
@@ -44,6 +47,7 @@ public class ClientListAdapter extends ArrayAdapter<ClientData> {
     private String roomId;
 
     private Context context;
+
     private String roomName;
     private String categoryName;
 
@@ -85,30 +89,53 @@ public class ClientListAdapter extends ArrayAdapter<ClientData> {
 
                             return true;
                         } else if (id == R.id.option2) {
-//                            FirebaseFirestore db = FirebaseFirestore.getInstance();
-//
-//                            DocumentReference docRef = db.collection("Rooms").document(roomId);
-//
-//                                    docRef.get()
-//                                    .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-//                                        @Override
-//                                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-//                                            if (task.isSuccessful()) {
-//                                                DocumentSnapshot document = task.getResult();
-//                                                if (document.exists()) {
-//                                                    List<Map<String, Object>> categoriesList = (List<Map<String, Object>>) document.get("categories");
-//                                                    Map<String, Object> categoryMap = categoriesList.get(position);
-//                                                    List<Map<String, String>> clientsList = (List<Map<String, String>>) categoryMap.get("clients");
-//                                                    clientsList.remove(position);
-//                                                    categoryMap.put("clients", clientsList);
-//                                                    Map<String, Object> updateMap = new HashMap<>();
-//                                                    updateMap.put("categories", categoriesList);
-//                                                    docRef.update(updateMap);
-//                                                    ((Activity) context).recreate();
-//                                                }
-//                                            }
-//                                        }
-//                                    });
+                            FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+                            new AlertDialog.Builder(context)
+                                    .setMessage("Are you sure you want to delete this client?")
+                                    .setCancelable(false)
+                                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            LoadingDialog loadingDialog = new LoadingDialog((Activity) context);
+                                            loadingDialog.startLoading();
+                                            DocumentReference docRef = db.collection("Rooms").document(roomId);
+                                            docRef.get()
+                                                    .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                                        @Override
+                                                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                                            if (task.isSuccessful()) {
+                                                                DocumentSnapshot document = task.getResult();
+                                                                if (document.exists()) {
+                                                                    List<Map<String, Object>> categoriesList = (List<Map<String, Object>>) document.get("categories");
+                                                                    for (int i = 0; i < categoriesList.size(); i++) {
+                                                                        if (categoriesList.get(i).get("name").equals(categoryName)){
+                                                                            Map<String, Object> category = (Map<String, Object>) categoriesList.get(i);
+                                                                            List<Map<String, Object>> clients = (List<Map<String, Object>>) category.get("clients");
+                                                                            String clientName = (String) clients.get(position).get("name");
+                                                                            clients.remove(position);
+                                                                            category.put("clients" ,clients);
+                                                                            Map<String, Object> updateMap = new HashMap<>();
+                                                                            updateMap.put("categories",categoriesList);
+                                                                            docRef.update(updateMap);
+                                                                            Toast.makeText(getContext(), clientName + " deleted", Toast.LENGTH_LONG).show();
+                                                                            loadingDialog.dismisDialog();
+                                                                            ((Activity) context).recreate();
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    });
+
+                                        }
+                                    })
+                                    .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            dialog.cancel();
+                                        }
+                                    })
+                                    .show();
+
 
                             return true;
                         }

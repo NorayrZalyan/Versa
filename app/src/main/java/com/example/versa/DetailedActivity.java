@@ -1,27 +1,36 @@
 package com.example.versa;
 
-import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Toast;
+import android.widget.ListView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
+import com.example.versa.Auth.MainActivity;
 import com.example.versa.bottomSheet.CreateCategoryBottomSheet;
 import com.example.versa.category.CategoryData;
 import com.example.versa.category.CategoryListAdapter;
+import com.example.versa.clients.ClientData;
+import com.example.versa.clients.ClientListAdapter;
 import com.example.versa.databinding.ActivityDetailedBinding;
+import com.example.versa.staff.WorkerData;
+import com.example.versa.staff.WorkerListAdapter;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +39,7 @@ import java.util.Map;
 public class DetailedActivity extends AppCompatActivity {
 
     private ActivityDetailedBinding binding;
+    public String roomId;
     private ArrayList<CategoryData> dataArrayList = new ArrayList<>();
     FirebaseAuth mAuth;
     CategoryListAdapter categoryListAdapter;
@@ -42,7 +52,7 @@ public class DetailedActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         String roomName = intent.getStringExtra("roomName");
-        String roomId = intent.getStringExtra("roomId");
+        roomId = intent.getStringExtra("roomId");
         binding.roomNameTv.setText(roomName);
         binding.roomIdTV.setText(roomId);
 
@@ -145,15 +155,66 @@ public class DetailedActivity extends AppCompatActivity {
                     }
                 });
 
+    binding.backIv.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            startActivity(new Intent(DetailedActivity.this, HomeActivity.class));
+        }
+    });
 
+    binding.staffBt.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
 
+            showDialog();
 
-
-
-
-
-
+        }
+    });
 
 
     }
+    public void showDialog(){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        ConstraintLayout constraintLayout = findViewById(R.id.constraintlayout);
+        View view = LayoutInflater.from(DetailedActivity.this).inflate(R.layout.staff_dialog, constraintLayout);
+        AlertDialog.Builder builder = new AlertDialog.Builder(DetailedActivity.this);
+        builder.setView(view);
+        builder.setCancelable(true);
+        final AlertDialog alertDialog = builder.create();
+        if (alertDialog.getWindow() != null){
+            alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(0));
+        }
+        ListView listView = view.findViewById(R.id.listview);
+        ArrayList<WorkerData> dataArreyList = new ArrayList<>();
+        CollectionReference usersRef = FirebaseFirestore.getInstance().collection("Users");
+        usersRef.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                for (QueryDocumentSnapshot document : task.getResult()) {
+                    List<Map<String,String>> rooms = (List<Map<String, String>>) document.get("rooms");
+                    for (int i = 0; i < rooms.size(); i++) {
+                        Map<String, String> map = rooms.get(i);
+                        for (String key : map.keySet()) {
+                            if (key.equals(roomId)){
+                                WorkerData workerData = new WorkerData((String) document.get("name"));
+
+                                dataArreyList.add(workerData);
+                                WorkerListAdapter workerListAdapter = new WorkerListAdapter(DetailedActivity.this, dataArreyList);
+                                listView.setAdapter(workerListAdapter);
+
+                            }
+                        }
+                    }
+                }
+            } else {
+                Log.e("Error", "Error getting documents: ", task.getException());
+            }
+        });
+        alertDialog.show();
+    }
+
+
+    @Override
+    public void onBackPressed() {
+    }
+
 }

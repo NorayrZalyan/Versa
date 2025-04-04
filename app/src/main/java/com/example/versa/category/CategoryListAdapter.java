@@ -1,7 +1,9 @@
 package com.example.versa.category;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,8 +17,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import com.example.versa.Dialog.LoadingDialog;
 import com.example.versa.R;
 import com.example.versa.bottomSheet.GiveAccessBottomSheet;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -74,56 +79,61 @@ public class CategoryListAdapter extends ArrayAdapter<CategoryData> {
                         if (id == R.id.option1) {
 
 
-                            db.collection("Users").document(uid)
-                                    .get()
-                                    .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                            if (task.isSuccessful()){
-                                                DocumentSnapshot documentSnapshot = task.getResult();
-                                                if (documentSnapshot.exists()){
-                                                    if (documentSnapshot.get("jobtitle").equals("Admin")){
 
-                                                        Log.d("TAG", "onMenuItemClick: "+position);
-
-                                                        DocumentReference userRef = db.collection("Rooms").document(roomId);
-                                                        userRef.get().addOnSuccessListener(documentSnapshot1 -> {
-                                                            if (documentSnapshot1.exists()) {
-                                                                List<String> categories = (List<String>) documentSnapshot1.get("categories");
-                                                                if (categories != null && categories.size() > 0) {
-                                                                    categories.remove(position); // Удаляем элемент по индексу, например, нулевой
-                                                                    userRef.update("categories", categories)
+                            new AlertDialog.Builder(context)
+                                    .setMessage("Are you sure you want to delete this client?")
+                                    .setCancelable(false)
+                                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            LoadingDialog loadingDialog = new LoadingDialog((Activity) context);
+                                            loadingDialog.startLoading();
+                                            db.collection("Users")
+                                                    .get()
+                                                    .addOnSuccessListener(queryDocumentSnapshots -> {
+                                                        for (DocumentSnapshot userDoc : queryDocumentSnapshots) {
+                                                            ArrayList<Map<String, String>> categories = (ArrayList<Map<String, String>>) userDoc.get("categories");
+                                                            if (categories != null) {
+                                                                ArrayList<Map<String, String>> updatedCategories = new ArrayList<>();
+                                                                for (Map<String, String> category : categories) {
+                                                                    if (!(category.containsKey(roomId) && category.get(roomId).equals(nameList.get(position)))) {
+                                                                        updatedCategories.add(category);
+                                                                    }
+                                                                }
+                                                                if (updatedCategories.size() != categories.size()) {
+                                                                    db.collection("Users").document(userDoc.getId())
+                                                                            .update("categories", updatedCategories)
                                                                             .addOnSuccessListener(aVoid -> {
-                                                                                Log.d("Firestore", "Element removed by index");
+                                                                                Log.d("Update", "Categories updated successfully");
+                                                                                loadingDialog.dismisDialog();
                                                                                 ((Activity) context).recreate();
-
                                                                             })
-                                                                            .addOnFailureListener(e -> Log.e("Firestore", "Error updating categories", e));
+                                                                            .addOnFailureListener(e -> {
+                                                                                loadingDialog.dismisDialog();
+                                                                                Log.w("Update", "Error updating categories", e);
+                                                                            });
                                                                 }
                                                             }
-                                                        }).addOnFailureListener(e -> Log.e("Firestore", "Error getting document", e));
+                                                        }
+                                                    })
+                                                    .addOnFailureListener(e -> {
+                                                        loadingDialog.dismisDialog();
+                                                        Log.w("Error", "Error getting documents", e);
+                                                    });
 
-                                                        db.collection("Users")
-                                                                .whereArrayContains("categories", String.valueOf(position)) // Проверяем, содержит ли массив "categories" значение "2"
-                                                                .get()
-                                                                .addOnSuccessListener(queryDocumentSnapshots -> {
-                                                                    for (DocumentSnapshot document : queryDocumentSnapshots) {
-                                                                        Log.d("Firestore", "User ID: " + document.getId());
-                                                                        db.collection("Users").document(document.getId())
-                                                                                .update("categories", FieldValue.arrayRemove(String.valueOf(position)));
-                                                                    }
-                                                                })
-                                                                .addOnFailureListener(e -> Log.e("Firestore", "Error fetching users", e));
-                                                    } else {
-                                                        Toast.makeText(getContext(), "you are not an admin", Toast.LENGTH_LONG).show();
-                                                    }
-                                                } else {
-
-                                                }
-                                            } else {
-                                            }
                                         }
-                                    });
+                                    })
+                                    .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            dialog.cancel();
+                                        }
+                                    })
+                                    .show();
+
+
+
+
+
+
 
 
                             return true;

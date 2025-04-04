@@ -147,4 +147,8 @@ public class SelectCategoryActivity extends AppCompatActivity {
 
 
     }
+
+    @Override
+    public void onBackPressed() {
+    }
 }

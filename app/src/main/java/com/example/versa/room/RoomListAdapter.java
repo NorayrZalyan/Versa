@@ -1,7 +1,9 @@
 package com.example.versa.room;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -14,10 +16,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.example.versa.Dialog.LoadingDialog;
 import com.example.versa.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -59,36 +65,100 @@ public class RoomListAdapter extends ArrayAdapter<RoomData> {
                         int id = item.getItemId();
                         if (id == R.id.option1) {
 
-                            db.collection("Rooms").document(String.valueOf(listData.id))
-                                    .delete()
-                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                        @Override
-                                        public void onSuccess(Void aVoid) {
-                                            Log.d("TAG", "DocumentSnapshot successfully deleted!");
-                                        }
-                                    })
-                                    .addOnFailureListener(new OnFailureListener() {
-                                        @Override
-                                        public void onFailure(@NonNull Exception e) {
-                                            Log.w("TAG", "Error deleting document", e);
-                                        }
-                                    });
-                            db.collection("Users").document(uid)
-                                    .update("roomId", null)
-                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                        @Override
-                                        public void onSuccess(Void unused) {
-                                            Log.d("TAG", "deleted from user");
-                                            ((Activity) context).recreate();
+
+                            new AlertDialog.Builder(context)
+                                    .setMessage("Are you sure you want to delete this client?")
+                                    .setCancelable(false)
+                                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            LoadingDialog loadingDialog = new LoadingDialog((Activity) context);
+                                            loadingDialog.startLoading();
+
+                                            db.collection("Users")
+                                                    .get()
+                                                    .addOnSuccessListener(queryDocumentSnapshots -> {
+                                                        for (DocumentSnapshot userDoc : queryDocumentSnapshots) {
+                                                            ArrayList<Map<String, String>> rooms = (ArrayList<Map<String, String>>) userDoc.get("rooms");
+                                                            if (rooms != null) {
+                                                                ArrayList<Map<String, String>> updatedRooms = new ArrayList<>();
+                                                                for (Map<String, String> room : rooms) {
+                                                                    if (!(room.containsKey(listData.id) && room.get(listData.id).equals(listData.name))) {
+                                                                        updatedRooms.add(room);
+                                                                    }
+                                                                }
+                                                                if (updatedRooms.size() != rooms.size()) {
+                                                                    db.collection("Users").document(userDoc.getId())
+                                                                            .update("rooms", updatedRooms)
+                                                                            .addOnSuccessListener(aVoid -> {
+                                                                                Log.d("Update", "Categories updated successfully");
+                                                                                db.collection("Rooms").document(listData.id).delete();
+
+
+                                                                                db.collection("Users")
+                                                                                        .get()
+                                                                                        .addOnSuccessListener(queryDocumentSnapshots1 -> {
+                                                                                            for (DocumentSnapshot userDoc1 : queryDocumentSnapshots1) {
+                                                                                                ArrayList<Map<String, String>> categories = (ArrayList<Map<String, String>>) userDoc1.get("categories");
+                                                                                                if (categories != null) {
+                                                                                                    ArrayList<Map<String, String>> updatedCategories = new ArrayList<>();
+                                                                                                    for (Map<String, String> category : categories) {
+                                                                                                        if (!(category.containsKey(listData.id) )) {
+                                                                                                            updatedCategories.add(category);
+                                                                                                        }
+                                                                                                    }
+                                                                                                    if (updatedCategories.size() != categories.size()) {
+                                                                                                        db.collection("Users").document(userDoc1.getId())
+                                                                                                                .update("categories", updatedCategories)
+                                                                                                                .addOnSuccessListener(aVoid1 -> {
+                                                                                                                    Log.d("Update", "Categories updated successfully");
+                                                                                                                })
+                                                                                                                .addOnFailureListener(e -> {
+                                                                                                                    loadingDialog.dismisDialog();
+                                                                                                                    Log.w("Update", "Error updating categories", e);
+                                                                                                                });
+                                                                                                    }
+                                                                                                }
+                                                                                            }
+                                                                                        })
+                                                                                        .addOnFailureListener(e -> {
+                                                                                            loadingDialog.dismisDialog();
+                                                                                            Log.w("Error", "Error getting documents", e);
+                                                                                        });
+
+
+                                                                                loadingDialog.dismisDialog();
+                                                                                ((Activity) context).recreate();
+                                                                            })
+                                                                            .addOnFailureListener(e -> {
+                                                                                loadingDialog.dismisDialog();
+                                                                                Log.w("Update", "Error updating categories", e);
+                                                                            });
+                                                                }
+                                                            }
+                                                        }
+                                                    })
+                                                    .addOnFailureListener(e -> {
+                                                        loadingDialog.dismisDialog();
+                                                        Log.w("Error", "Error getting documents", e);
+                                                    });
+
+
+
+
 
                                         }
                                     })
-                                    .addOnFailureListener(new OnFailureListener() {
-                                        @Override
-                                        public void onFailure(@NonNull Exception e) {
-                                            Log.d("TAG", "not deleted from the user");
+                                    .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            dialog.cancel();
                                         }
-                                    });
+                                    })
+                                    .show();
+
+
+
+
+
 
                             return true;
                         }

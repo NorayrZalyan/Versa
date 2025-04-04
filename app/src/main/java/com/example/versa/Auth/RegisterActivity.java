@@ -9,7 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.versa.HomeActivity;
-import com.example.versa.LoadingDialog;
+import com.example.versa.Dialog.LoadingDialog;
 import com.example.versa.databinding.ActivityRegisterBinding;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;

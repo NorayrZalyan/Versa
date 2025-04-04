@@ -10,17 +10,14 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.example.versa.LoadingDialog;
+import com.example.versa.Dialog.LoadingDialog;
 import com.example.versa.clients.Client;
 import com.example.versa.databinding.AddclientBottomSheetBinding;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-
-import org.checkerframework.checker.units.qual.C;
 
 import java.util.HashMap;
 import java.util.List;

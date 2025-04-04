@@ -1,8 +1,10 @@
-package com.example.versa;
+package com.example.versa.Dialog;
 
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.view.LayoutInflater;
+
+import com.example.versa.R;
 
 public class LoadingDialog {
 
