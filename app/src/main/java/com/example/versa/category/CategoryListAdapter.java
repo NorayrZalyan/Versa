@@ -104,6 +104,25 @@ public class CategoryListAdapter extends ArrayAdapter<CategoryData> {
                                                                             .update("categories", updatedCategories)
                                                                             .addOnSuccessListener(aVoid -> {
                                                                                 Log.d("Update", "Categories updated successfully");
+                                                                                db.collection("Rooms").document(roomId)
+                                                                                    .get()
+                                                                                    .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                                                                        @Override
+                                                                                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                                                                            if (task.isSuccessful()){
+                                                                                                DocumentSnapshot documentSnapshot = task.getResult();
+                                                                                                if (documentSnapshot.exists()){
+                                                                                                    List<Map<String, String>> categories = (List<Map<String, String>>) documentSnapshot.get("categories");
+                                                                                                    categories.remove(position);
+                                                                                                    Map<String, Object> updateMap = new HashMap<>();
+                                                                                                    updateMap.put("categories",categories);
+                                                                                                    db.collection("Rooms").document(roomId).update(updateMap);
+                                                                                                }
+                                                                                            }
+
+                                                                                        }
+                                                                                    });
+
                                                                                 loadingDialog.dismisDialog();
                                                                                 ((Activity) context).recreate();
                                                                             })
