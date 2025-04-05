@@ -12,7 +12,7 @@
         android:id="@+id/room_nameTv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Room name"
+        android:text="Company name"
         android:textColor="@color/white"
         android:textSize="35dp"
         app:layout_constraintStart_toStartOf="parent"
@@ -22,7 +22,7 @@
     <EditText
         android:id="@+id/Room_nameEt"
         android:layout_width="300dp"
-        android:hint="Room name"
+        android:hint=" Company name"
         android:layout_marginTop="50dp"
         android:textColorHint="@color/white"
         android:layout_height="50dp"

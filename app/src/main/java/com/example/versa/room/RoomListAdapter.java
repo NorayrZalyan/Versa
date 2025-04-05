@@ -189,10 +189,10 @@ public class RoomListAdapter extends ArrayAdapter<RoomData> {
 
 
         TextView roomName = view.findViewById(R.id.listName);
-        TextView roomId = view.findViewById(R.id.listId);
+
 
         roomName.setText(listData.name);
-        roomId.setText(listData.id);
+
 
 
 

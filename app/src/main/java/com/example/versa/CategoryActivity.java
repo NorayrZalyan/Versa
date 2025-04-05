@@ -8,7 +8,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -96,8 +98,10 @@ public class CategoryActivity extends AppCompatActivity {
                                     if (category.get("name").equals(categoryName)){
                                         List<Map<String, Object>> clients = (List<Map<String, Object>>) category.get("clients");
                                         String[] nameList = new String[clients.size()];
+
                                         for (int i = 0; i < clients.size(); i++) {
                                             nameList[i] = (String) clients.get(i).get("name");
+
                                         }
                                         for (int i = 0; i < nameList.length; i++) {
                                             ClientData clientData = new ClientData(nameList[i]);
@@ -105,6 +109,21 @@ public class CategoryActivity extends AppCompatActivity {
                                         }
                                         ClientListAdapter clientListAdapter = new ClientListAdapter(CategoryActivity.this, clientDataArrayList, roomId, roomName, categoryName);
                                         binding.listview.setAdapter(clientListAdapter);
+                                        binding.listview.setClickable(true);
+                                        binding.listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                            @Override
+                                            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+
+                                                Log.d("TAG", "onItemClick: "+(String) clients.get(i).get("phone"));
+                                                a(
+                                                        (String) clients.get(i).get("name"),
+                                                        (String) clients.get(i).get("phone"),
+                                                        (String) clients.get(i).get("email"),
+                                                        (String) clients.get(i).get("description")
+                                                );
+
+                                            }
+                                        });
                                     }
                                 }
 
@@ -134,6 +153,34 @@ public class CategoryActivity extends AppCompatActivity {
 
 
     }
+
+
+    public void a(String name, String phone, String email, String description){
+
+        ConstraintLayout constraintLayout = findViewById(R.id.constraintlayout);
+        View view = LayoutInflater.from(CategoryActivity.this).inflate(R.layout.clientdata_dialog, constraintLayout);
+        AlertDialog.Builder builder = new AlertDialog.Builder(CategoryActivity.this);
+        builder.setView(view);
+        builder.setCancelable(true);
+        final AlertDialog alertDialog = builder.create();
+        if (alertDialog.getWindow() != null){
+            alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(0));
+        }
+        alertDialog.show();
+
+
+        EditText nameEt = view.findViewById(R.id.nameEt);
+        nameEt.setText(name);
+        EditText phoneEt = view.findViewById(R.id.phoneEt);
+        phoneEt.setText(phone);
+        EditText emailEt = view.findViewById(R.id.emailEt);
+        emailEt.setText(email);
+        EditText descriptionTv = view.findViewById(R.id.descriptionEt);
+        descriptionTv.setText(description);
+
+    }
+
+
 
     public void showDialog(){
         FirebaseFirestore db = FirebaseFirestore.getInstance();

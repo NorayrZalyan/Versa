@@ -22,7 +22,8 @@
     <EditText
         android:id="@+id/user_emailEt"
         android:layout_width="300dp"
-        android:hint="Enter user email"
+        android:hint=" Enter user email"
+        android:inputType="textEmailAddress"
         android:layout_marginTop="50dp"
         android:textColorHint="@color/white"
         android:layout_height="50dp"

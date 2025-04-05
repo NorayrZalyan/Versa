@@ -22,7 +22,7 @@
             android:id="@+id/text"
             android:textColor="@color/white"
             android:textSize="30sp"
-            android:text="Steff"
+            android:text="Staff"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             android:gravity="center"/>

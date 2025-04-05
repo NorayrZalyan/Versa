@@ -27,7 +27,7 @@
         android:layout_height="40dp"
         android:layout_marginTop="16dp"
         android:background="@drawable/input"
-        android:hint="Username"
+        android:hint=" Username"
         android:singleLine="true"
         android:ellipsize="none"
         android:scrollHorizontally="true"
@@ -84,7 +84,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/ubuntu_light"
-            android:text="login"
+            android:text="Login"
             android:textColor="@color/button_color"
             android:textSize="20dp" />
 
@@ -108,7 +108,7 @@
         android:layout_height="40dp"
         android:layout_marginTop="20dp"
         android:background="@drawable/input"
-        android:hint="Password"
+        android:hint=" Password"
 
         android:singleLine="true"
         android:ellipsize="none"
@@ -133,7 +133,7 @@
         android:layout_height="40dp"
         android:layout_marginTop="16dp"
         android:background="@drawable/input"
-        android:hint="Email"
+        android:hint=" Email"
 
         android:singleLine="true"
         android:ellipsize="none"
