@@ -252,10 +252,10 @@ public class CategoryActivity extends AppCompatActivity {
                         Map<String, String> map = rooms.get(i);
                         for (String value : map.values()) {
                             if (value.equals(categoryName)){
-                                WorkerData workerData = new WorkerData((String) document.get("name"));
+                                WorkerData workerData = new WorkerData((String) document.get("email"), (String) document.get("jobtitle"));
 
                                 dataArreyList.add(workerData);
-                                WorkerListAdapter workerListAdapter = new WorkerListAdapter(CategoryActivity.this, dataArreyList);
+                                WorkerListAdapter workerListAdapter = new WorkerListAdapter(CategoryActivity.this, dataArreyList, roomId);
                                 listView.setAdapter(workerListAdapter);
 
                             }

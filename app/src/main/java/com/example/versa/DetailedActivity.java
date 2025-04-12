@@ -220,10 +220,10 @@ public class DetailedActivity extends AppCompatActivity {
                         Map<String, String> map = rooms.get(i);
                         for (String key : map.keySet()) {
                             if (key.equals(roomId)){
-                                WorkerData workerData = new WorkerData((String) document.get("name"));
+                                WorkerData workerData = new WorkerData((String) document.get("email"), (String) document.get("jobtitle"));
 
                                 dataArreyList.add(workerData);
-                                WorkerListAdapter workerListAdapter = new WorkerListAdapter(DetailedActivity.this, dataArreyList);
+                                WorkerListAdapter workerListAdapter = new WorkerListAdapter(DetailedActivity.this, dataArreyList, roomId);
                                 listView.setAdapter(workerListAdapter);
 
                             }
