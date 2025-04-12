@@ -17,6 +17,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.example.versa.DetailedActivity;
 import com.example.versa.R;
 import com.example.versa.SelectCategoryActivity;
 import com.example.versa.clients.ClientData;
@@ -39,12 +40,14 @@ import java.util.Map;
 public class WorkerListAdapter extends ArrayAdapter<WorkerData> {
 
     private Context context;
+    private String activity;
     private String roomId;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
-    public WorkerListAdapter(@NonNull Context context, ArrayList<WorkerData> dataArrayList, String roomId) {
+    public WorkerListAdapter(@NonNull Context context, ArrayList<WorkerData> dataArrayList, String roomId, String activity) {
         super(context, R.layout.list_item, dataArrayList);
         this.context = context;
         this.roomId = roomId;
+        this.activity = activity;
     }
     @NonNull
     @Override
@@ -66,6 +69,7 @@ public class WorkerListAdapter extends ArrayAdapter<WorkerData> {
                     public boolean onMenuItemClick(MenuItem item) {
                         int id = item.getItemId();
                         if (id == R.id.option1) {
+
 
                             db.collection("Users")
                                     .whereEqualTo("email", listData.name)
@@ -92,19 +96,7 @@ public class WorkerListAdapter extends ArrayAdapter<WorkerData> {
                                                     Map<String, Object> updateMap = new HashMap<>();
                                                     updateMap.put("categories", categories);
                                                     db.collection("Users").document(document.getId())
-                                                            .update(updateMap);
-                                                    List<Map<String, String>> rooms = (List<Map<String, String>>) document.get("rooms");
-                                                    for (int j = 0; j < rooms.size(); j++) {
-                                                        for (String key : rooms.get(j).keySet()) {
-                                                            if (key.equals(roomId)){
-                                                                rooms.remove(j);
-                                                            }
-                                                        }
-                                                    }
-                                                    Map<String, Object> updateMap1 = new HashMap<>();
-                                                    updateMap1.put("rooms", rooms);
-                                                    db.collection("Users").document(document.getId())
-                                                            .update(updateMap1)
+                                                            .update(updateMap)
                                                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                                 @Override
                                                                 public void onSuccess(Void unused) {
@@ -112,6 +104,29 @@ public class WorkerListAdapter extends ArrayAdapter<WorkerData> {
                                                                     ((Activity) context).recreate();
                                                                 }
                                                             });
+                                                    if (activity.equals("DetailedActivity")){
+                                                        List<Map<String, String>> rooms = (List<Map<String, String>>) document.get("rooms");
+                                                        for (int j = 0; j < rooms.size(); j++) {
+                                                            for (String key : rooms.get(j).keySet()) {
+                                                                if (key.equals(roomId)){
+                                                                    rooms.remove(j);
+                                                                }
+                                                            }
+                                                        }
+                                                        Map<String, Object> updateMap1 = new HashMap<>();
+                                                        updateMap1.put("rooms", rooms);
+                                                        db.collection("Users").document(document.getId())
+                                                                .update(updateMap1)
+                                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                                    @Override
+                                                                    public void onSuccess(Void unused) {
+                                                                        Toast.makeText(getContext(), "user has been deleted", Toast.LENGTH_SHORT).show();
+                                                                        ((Activity) context).recreate();
+                                                                    }
+                                                                });
+                                                    }
+
+
 
                                                 }
                                             } else {

@@ -149,6 +149,36 @@ public class CategoryActivity extends AppCompatActivity {
             }
         });
 
+        binding.menuIv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                PopupMenu popup = new PopupMenu(CategoryActivity.this, view);
+                popup.getMenuInflater().inflate(R.menu.menu, popup.getMenu());
+                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        int id = item.getItemId();
+                        if (id == R.id.option1) {
+
+                            showDialog();
+
+                            return true;
+                        } else if (id == R.id.option2) {
+
+                            Intent intent = new Intent(CategoryActivity.this, HistoryActivity.class);
+                            intent.putExtra("roomId",roomId);
+                            intent.putExtra("roomName",roomName);
+                            startActivity(intent);
+
+                            return true;
+                        }
+                        return false;
+                    }
+                });
+                popup.show();
+            }
+        });
+
 
 
 
@@ -255,7 +285,7 @@ public class CategoryActivity extends AppCompatActivity {
                                 WorkerData workerData = new WorkerData((String) document.get("email"), (String) document.get("jobtitle"));
 
                                 dataArreyList.add(workerData);
-                                WorkerListAdapter workerListAdapter = new WorkerListAdapter(CategoryActivity.this, dataArreyList, roomId);
+                                WorkerListAdapter workerListAdapter = new WorkerListAdapter(CategoryActivity.this, dataArreyList, roomId, "CategoryActivity");
                                 listView.setAdapter(workerListAdapter);
 
                             }
