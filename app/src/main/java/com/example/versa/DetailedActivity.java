@@ -5,9 +5,11 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.PopupMenu;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -162,14 +164,37 @@ public class DetailedActivity extends AppCompatActivity {
         }
     });
 
-    binding.staffBt.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
+        binding.menuIv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
-            showDialog();
+                PopupMenu popup = new PopupMenu(DetailedActivity.this, v);
+                popup.getMenuInflater().inflate(R.menu.menu, popup.getMenu());
+                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        int id = item.getItemId();
+                        if (id == R.id.option1) {
 
-        }
-    });
+                            showDialog();
+
+                            return true;
+                        } else if (id == R.id.option2) {
+
+                            Intent intent = new Intent(DetailedActivity.this, HistoryActivity.class);
+                            intent.putExtra("roomId",roomId);
+                            intent.putExtra("roomName",roomName);
+                            startActivity(intent);
+
+                            return true;
+                        }
+                        return false;
+                    }
+                });
+                popup.show();
+
+            }
+        });
 
 
     }

@@ -121,6 +121,7 @@
             app:layout_constraintTop_toBottomOf="@+id/emailEt" />
 
         <Button
+            android:id="@+id/button"
             android:layout_width="70sp"
             android:layout_height="30dp"
             android:background="@drawable/button"

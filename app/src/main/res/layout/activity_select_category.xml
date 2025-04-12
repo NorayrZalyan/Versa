@@ -11,8 +11,11 @@
 
     <LinearLayout
         android:id="@+id/linearLayout3"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="411dp"
+        android:layout_height="1dp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView" />
 
 
@@ -26,6 +29,17 @@
         android:src="@drawable/ic_back"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+
+    <ListView
+        android:id="@+id/listview"
+        android:background="@color/bacground_light"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:dividerHeight="10.0sp"
+        android:scrollbars="vertical"
+        android:layout_marginTop="40dp"
+        tools:listitem="@layout/list_item" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

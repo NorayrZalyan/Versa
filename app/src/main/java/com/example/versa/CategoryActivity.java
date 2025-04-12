@@ -6,10 +6,13 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -17,7 +20,9 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
+import com.example.versa.Dialog.LoadingDialog;
 import com.example.versa.bottomSheet.AddClientBottomSheet;
+import com.example.versa.bottomSheet.GiveAccessBottomSheet;
 import com.example.versa.category.CategoryData;
 import com.example.versa.category.CategoryListAdapter;
 //import com.example.versa.clients.ClientListAdapter;
@@ -49,6 +54,7 @@ public class CategoryActivity extends AppCompatActivity {
     private ArrayList<ClientData> clientDataArrayList = new ArrayList<>();
     private FirebaseAuth mAuth;
     public String categoryName;
+    public String roomId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +68,7 @@ public class CategoryActivity extends AppCompatActivity {
         Intent intent = getIntent();
         categoryName = intent.getStringExtra("categoryName");
         String roomName = intent.getStringExtra("roomName");
-        String roomId = intent.getStringExtra("roomId");
+        roomId = intent.getStringExtra("roomId");
         binding.categoryNameTv.setText(categoryName);
 
 
@@ -112,14 +118,14 @@ public class CategoryActivity extends AppCompatActivity {
                                         binding.listview.setClickable(true);
                                         binding.listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                                             @Override
-                                            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                                            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
 
-                                                Log.d("TAG", "onItemClick: "+(String) clients.get(i).get("phone"));
                                                 a(
-                                                        (String) clients.get(i).get("name"),
-                                                        (String) clients.get(i).get("phone"),
-                                                        (String) clients.get(i).get("email"),
-                                                        (String) clients.get(i).get("description")
+                                                        (String) clients.get(position).get("name"),
+                                                        (String) clients.get(position).get("phone"),
+                                                        (String) clients.get(position).get("email"),
+                                                        (String) clients.get(position).get("description"),
+                                                        position
                                                 );
 
                                             }
@@ -143,32 +149,25 @@ public class CategoryActivity extends AppCompatActivity {
             }
         });
 
-        binding.button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
 
-                showDialog();
-            }
-        });
 
 
     }
 
 
-    public void a(String name, String phone, String email, String description){
+    public void a(String name, String phone, String email, String description, int position){
 
         ConstraintLayout constraintLayout = findViewById(R.id.constraintlayout);
         View view = LayoutInflater.from(CategoryActivity.this).inflate(R.layout.clientdata_dialog, constraintLayout);
         AlertDialog.Builder builder = new AlertDialog.Builder(CategoryActivity.this);
         builder.setView(view);
         builder.setCancelable(true);
+        LoadingDialog loadingDialog = new LoadingDialog(CategoryActivity.this);
         final AlertDialog alertDialog = builder.create();
         if (alertDialog.getWindow() != null){
             alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(0));
         }
         alertDialog.show();
-
-
         EditText nameEt = view.findViewById(R.id.nameEt);
         nameEt.setText(name);
         EditText phoneEt = view.findViewById(R.id.phoneEt);
@@ -178,6 +177,55 @@ public class CategoryActivity extends AppCompatActivity {
         EditText descriptionTv = view.findViewById(R.id.descriptionEt);
         descriptionTv.setText(description);
 
+        Button button = view.findViewById(R.id.button);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                loadingDialog.startLoading();
+                EditText nameEt = view.findViewById(R.id.nameEt);
+                EditText phoneEt = view.findViewById(R.id.phoneEt);
+                EditText emailEt = view.findViewById(R.id.emailEt);
+                EditText descriptionEt = view.findViewById(R.id.descriptionEt);
+
+
+                db.collection("Rooms").document(roomId)
+                        .get()
+                        .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                if (task.isSuccessful()){
+                                    DocumentSnapshot documentSnapshot = task.getResult();
+                                    if (documentSnapshot.exists()){
+                                        List<Map<String, Object>> categories = (List<Map<String, Object>>) documentSnapshot.get("categories");
+                                        for (int i = 0; i < categories.size(); i++) {
+                                            if (categories.get(i).get("name").equals(categoryName)){
+                                                Map<String, Object> categoryMap = (Map<String, Object>) categories.get(i);
+                                                List<Map<String, Object>> clients = (List<Map<String, Object>>) categoryMap.get("clients");
+                                                clients.get(position).put("name",nameEt.getText().toString());
+                                                clients.get(position).put("phone",phoneEt.getText().toString());
+                                                clients.get(position).put("email",emailEt.getText().toString());
+                                                clients.get(position).put("description",descriptionEt.getText().toString());
+                                                categoryMap.put("clients", clients);
+                                                Map<String, Object> update = new HashMap<>();
+                                                update.put("categories", categories);
+                                                db.collection("Rooms").document(roomId).update(update);
+                                                loadingDialog.dismisDialog();
+                                                alertDialog.cancel();
+                                                recreate();
+                                                break;
+                                            }
+                                        }
+                                    } else {
+                                    }
+                                } else {
+                                }
+                            }
+                        });
+
+
+
+            }
+        });
     }
 
 

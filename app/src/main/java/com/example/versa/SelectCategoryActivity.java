@@ -38,22 +38,32 @@ public class SelectCategoryActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        binding = ActivitySelectCategoryBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+
 
         Intent intent = getIntent();
         roomId = intent.getStringExtra("roomId");
         roomName = intent.getStringExtra("roomName");
         clientPosition = intent.getIntExtra("clientPosition", 0);
         categoryName = intent.getStringExtra("categoryName");
-
-
-
-
-
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
 
-        binding = ActivitySelectCategoryBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
+
+        binding.imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(SelectCategoryActivity.this, CategoryActivity.class);
+                intent.putExtra("categoryName", categoryName);
+                intent.putExtra("roomId", roomId);
+                intent.putExtra("roomName", roomName);
+                startActivity(intent);
+            }
+        });
+
+
+
         DocumentReference docRef = db.collection("Rooms").document(roomId);
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
@@ -66,8 +76,6 @@ public class SelectCategoryActivity extends AppCompatActivity {
                         if (roomCategories != null && !roomCategories.isEmpty()) {
                             String name = (String) roomCategories.get(0).get("name");
                             Log.d("TAG", "First category name: " + name);
-
-
                             ArrayList<String> nameList = new ArrayList<>();
                             for (int i = 0; i < roomCategories.size(); i++) {
                                 nameList.add((String)roomCategories.get(i).get("name"));
@@ -82,26 +90,22 @@ public class SelectCategoryActivity extends AppCompatActivity {
                             binding.listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                                 @Override
                                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
                                     List<Map<String, Object>> categories = (List<Map<String, Object>>) document.get("categories");
                                     for (int i = 0; i < categories.size(); i++) {
                                         if (categories.get(i).get("name").equals(categoryName)){
                                             Map<String, Object> categoryMap = categories.get(i);
                                             List<Map<String, String>> clients = (List<Map<String, String>>) categoryMap.get("clients");
-
                                             Client client = new Client(
                                                     clients.get(clientPosition).get("name"),
                                                     clients.get(clientPosition).get("phone"),
                                                     clients.get(clientPosition).get("email"),
                                                     clients.get(clientPosition).get("description")
                                             );
-
                                             clients.remove(clientPosition);
                                             categoryMap.put("clients", clients);
                                             Map<String, Object> updateMap = new HashMap<>();
                                             updateMap.put("categories", categories);
                                             docRef.update(updateMap);
-
                                             Map<String, Object> categoryMap1 = categories.get(position);
                                             List<Client> clients1 = (List<Client>) categoryMap1.get("clients");
                                             clients1.add(client);
@@ -114,7 +118,6 @@ public class SelectCategoryActivity extends AppCompatActivity {
                                             intent.putExtra("roomName", roomName);
                                             intent.putExtra("roomId", roomId);
                                             startActivity(intent);
-
                                             break;
                                         }
                                     }
