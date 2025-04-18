@@ -33,6 +33,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
 
+        
         android:singleLine="true"
         android:ellipsize="none"
         android:scrollHorizontally="true"
