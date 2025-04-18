@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -68,9 +69,8 @@ public class  CreateRoomBottomSheet extends BottomSheetDialogFragment {
                                                     dismiss();
                                                     Activity activity = getActivity();
                                                     if (activity != null) {
-                                                        activity.recreate();  // Пересоздаём активность
+                                                        activity.recreate();
                                                     }
-
                                                 } else {
                                                     loadingDialog.dismisDialog();
                                                     Log.w("TAG", "Error writing document", task.getException());
@@ -89,11 +89,14 @@ public class  CreateRoomBottomSheet extends BottomSheetDialogFragment {
                                                     if (documentSnapshot.exists()){
                                                         Map<String, String> room1 = new HashMap<>();
                                                         room1.put(String.valueOf(finalLastRoomID1), (String) documentSnapshot.get("roomName"));
-                                                        Log.d("TAG", "onComplete: "+room1);
+                                                        Log.d("TEST", "onComplete: "+room1);
                                                         db.collection("Users").document(uid).update("rooms", FieldValue.arrayUnion(room1));
                                                     } else {
+                                                        Toast.makeText(getContext(), "document not found", Toast.LENGTH_LONG).show();
+                                                        Log.w("MESSAGE", "onComplete: document not found");
                                                     }
-                                                }else {
+                                                } else {
+                                                    Log.e("ERROr", "onComplete: ", task.getException());
                                                 }
                                             }
                                         });

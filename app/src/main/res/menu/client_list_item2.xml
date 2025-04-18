@@ -3,11 +3,7 @@
         android:id="@+id/option1"
         android:title="move to" />
     <item
-        android:id="@+id/option2"
+        android:id="@+id/option4"
         android:title="delete" />
-    <item
-        android:id="@+id/option3"
-        android:title="finish" />
-
 
 </menu>

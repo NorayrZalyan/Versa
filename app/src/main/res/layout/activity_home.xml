@@ -39,7 +39,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         android:layout_marginEnd="30dp"
         android:text="+"
-        android:visibility="invisible"
         android:textSize="20dp"
         android:layout_marginBottom="30dp"/>
 

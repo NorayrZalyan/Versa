@@ -43,27 +43,7 @@ public class HomeActivity extends AppCompatActivity {
         String Uid = fUser.getUid();
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection("Users").document(Uid).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
-                        Log.d("1", "DocumentSnapshot data: " + document.getData());
 
-                        if (document.getString("jobtitle").equals("Admin")){
-                            binding.createroomBottomsheetBt.setVisibility(View.VISIBLE);
-                        }
-
-
-                    } else {
-                        Log.d("TAG", "No such document");
-                    }
-                } else {
-                    Log.d("TAG", "get failed with ", task.getException());
-                }
-            }
-        });
 
 
         binding.createroomBottomsheetBt.setOnClickListener(new View.OnClickListener() {

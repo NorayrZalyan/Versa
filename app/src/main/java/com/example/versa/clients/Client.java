@@ -2,7 +2,7 @@ package com.example.versa.clients;
 
 public class Client {
 
-    private String name;
+    public String name;
     private String phone;
     private String email;
     private String description;

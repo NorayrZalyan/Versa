@@ -28,12 +28,14 @@
         android:layout_marginTop="16dp"
         android:background="@drawable/input"
         android:hint=" Username"
+
         android:singleLine="true"
         android:ellipsize="none"
         android:scrollHorizontally="true"
         android:marqueeRepeatLimit="marquee_forever"
         android:focusable="true"
         android:focusableInTouchMode="true"
+
         android:inputType="text"
         android:textColor="@color/white"
         android:textColorHint="@color/white"

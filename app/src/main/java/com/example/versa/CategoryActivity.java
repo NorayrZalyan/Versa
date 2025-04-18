@@ -113,7 +113,7 @@ public class CategoryActivity extends AppCompatActivity {
                                             ClientData clientData = new ClientData(nameList[i]);
                                             clientDataArrayList.add(clientData);
                                         }
-                                        ClientListAdapter clientListAdapter = new ClientListAdapter(CategoryActivity.this, clientDataArrayList, roomId, roomName, categoryName);
+                                        ClientListAdapter clientListAdapter = new ClientListAdapter(CategoryActivity.this, clientDataArrayList, roomId, roomName, categoryName, "CategoryActivity");
                                         binding.listview.setAdapter(clientListAdapter);
                                         binding.listview.setClickable(true);
                                         binding.listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {

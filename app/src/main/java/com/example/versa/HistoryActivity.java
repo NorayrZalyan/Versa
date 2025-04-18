@@ -14,6 +14,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -71,8 +72,6 @@ public class HistoryActivity extends AppCompatActivity {
         roomId = intent.getStringExtra("roomId");
         roomName = intent.getStringExtra("roomName");
         binding.categoryNameTv.setText("History");
-
-
         binding.backIv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -87,9 +86,129 @@ public class HistoryActivity extends AppCompatActivity {
 
 
 
+        db.collection("Rooms").document(roomId)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()){
+                            DocumentSnapshot documentSnapshot = task.getResult();
+                            if (documentSnapshot.exists()){
+
+                                List<Map<String, Object>> history = (List<Map<String, Object>>) documentSnapshot.get("history");
+                                String[] nameList = new String[history.size()];
+
+                                for (int i = 0; i < history.size(); i++) {
+                                    nameList[i] = (String) history.get(i).get("name");
+
+                                }
+                                for (int i = 0; i < nameList.length; i++) {
+                                    ClientData clientData = new ClientData(nameList[i]);
+                                    clientDataArrayList.add(clientData);
+                                }
+                                ClientListAdapter clientListAdapter = new ClientListAdapter(HistoryActivity.this, clientDataArrayList, roomId, roomName, categoryName, "HistoryActivity");
+                                binding.listview.setAdapter(clientListAdapter);
+                                binding.listview.setClickable(true);
+                                binding.listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                    @Override
+                                    public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+
+                                        a(
+                                                (String) history.get(position).get("name"),
+                                                (String) history.get(position).get("phone"),
+                                                (String) history.get(position).get("email"),
+                                                (String) history.get(position).get("description"),
+                                                position
+                                        );
+
+                                    }
+                                });
+
+
+                            } else {
+                                Toast.makeText(HistoryActivity.this, "No such documnt", Toast.LENGTH_SHORT).show();
+                            }
+                        } else {
+                            Log.e("ERROR", "onComplete: ",task.getException() );
+                        }
+                    }
+                });
+
+
+
 
 
     }
+
+    public void a(String name, String phone, String email, String description, int position){
+
+        ConstraintLayout constraintLayout = findViewById(R.id.constraintlayout);
+        View view = LayoutInflater.from(HistoryActivity.this).inflate(R.layout.clientdata_dialog, constraintLayout);
+        AlertDialog.Builder builder = new AlertDialog.Builder(HistoryActivity.this);
+        builder.setView(view);
+        builder.setCancelable(true);
+        LoadingDialog loadingDialog = new LoadingDialog(HistoryActivity.this);
+        final AlertDialog alertDialog = builder.create();
+        if (alertDialog.getWindow() != null){
+            alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(0));
+        }
+        alertDialog.show();
+        EditText nameEt = view.findViewById(R.id.nameEt);
+        nameEt.setText(name);
+        EditText phoneEt = view.findViewById(R.id.phoneEt);
+        phoneEt.setText(phone);
+        EditText emailEt = view.findViewById(R.id.emailEt);
+        emailEt.setText(email);
+        EditText descriptionTv = view.findViewById(R.id.descriptionEt);
+        descriptionTv.setText(description);
+
+        Button button = view.findViewById(R.id.button);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                loadingDialog.startLoading();
+                EditText nameEt = view.findViewById(R.id.nameEt);
+                EditText phoneEt = view.findViewById(R.id.phoneEt);
+                EditText emailEt = view.findViewById(R.id.emailEt);
+                EditText descriptionEt = view.findViewById(R.id.descriptionEt);
+
+
+                db.collection("Rooms").document(roomId)
+                        .get()
+                        .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                if (task.isSuccessful()){
+                                    DocumentSnapshot documentSnapshot = task.getResult();
+                                    if (documentSnapshot.exists()){
+
+
+                                        List<Map<String, Object>> clients = (List<Map<String, Object>>) documentSnapshot.get("history");
+                                        clients.get(position).put("name",nameEt.getText().toString());
+                                        clients.get(position).put("phone",phoneEt.getText().toString());
+                                        clients.get(position).put("email",emailEt.getText().toString());
+                                        clients.get(position).put("description",descriptionEt.getText().toString());
+                                        Map<String, Object> update = new HashMap<>();
+                                        update.put("history", clients);
+                                        db.collection("Rooms").document(roomId).update(update);
+                                        loadingDialog.dismisDialog();
+                                        alertDialog.cancel();
+                                        recreate();
+
+
+                                    } else {
+                                    }
+                                } else {
+                                }
+                            }
+                        });
+
+
+
+            }
+        });
+    }
+
     @Override
     public void onBackPressed() {
     }
