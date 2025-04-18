@@ -164,37 +164,37 @@ public class DetailedActivity extends AppCompatActivity {
         }
     });
 
-        binding.menuIv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+    binding.menuIv.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
 
-                PopupMenu popup = new PopupMenu(DetailedActivity.this, v);
-                popup.getMenuInflater().inflate(R.menu.menu, popup.getMenu());
-                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem item) {
-                        int id = item.getItemId();
-                        if (id == R.id.option1) {
+            PopupMenu popup = new PopupMenu(DetailedActivity.this, v);
+            popup.getMenuInflater().inflate(R.menu.menu, popup.getMenu());
+            popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+                    int id = item.getItemId();
+                    if (id == R.id.option1) {
 
-                            showDialog();
+                        showDialog();
 
-                            return true;
-                        } else if (id == R.id.option2) {
+                        return true;
+                    } else if (id == R.id.option2) {
 
-                            Intent intent = new Intent(DetailedActivity.this, HistoryActivity.class);
-                            intent.putExtra("roomId",roomId);
-                            intent.putExtra("roomName",roomName);
-                            startActivity(intent);
+                        Intent intent = new Intent(DetailedActivity.this, HistoryActivity.class);
+                        intent.putExtra("roomId",roomId);
+                        intent.putExtra("roomName",roomName);
+                        startActivity(intent);
 
-                            return true;
-                        }
-                        return false;
+                        return true;
                     }
-                });
-                popup.show();
+                    return false;
+                }
+            });
+            popup.show();
 
-            }
-        });
+        }
+    });
 
 
     }
@@ -220,10 +220,10 @@ public class DetailedActivity extends AppCompatActivity {
                         Map<String, String> map = rooms.get(i);
                         for (String key : map.keySet()) {
                             if (key.equals(roomId)){
-                                WorkerData workerData = new WorkerData((String) document.get("name"));
+                                WorkerData workerData = new WorkerData((String) document.get("email"), (String) document.get("jobtitle"));
 
                                 dataArreyList.add(workerData);
-                                WorkerListAdapter workerListAdapter = new WorkerListAdapter(DetailedActivity.this, dataArreyList);
+                                WorkerListAdapter workerListAdapter = new WorkerListAdapter(DetailedActivity.this, dataArreyList, roomId, "DetailedActivity");
                                 listView.setAdapter(workerListAdapter);
 
                             }

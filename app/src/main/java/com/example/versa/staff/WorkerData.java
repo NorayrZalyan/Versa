@@ -4,9 +4,11 @@ public class WorkerData {
 
 
     String name;
+    String jobTitle;
 
-    public WorkerData(String name) {
+    public WorkerData(String name, String jobTitle) {
         this.name = name;
+        this.jobTitle = jobTitle;
     }
 
     public String getName() {
