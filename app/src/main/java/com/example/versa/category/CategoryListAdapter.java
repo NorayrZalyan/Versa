@@ -171,33 +171,12 @@ public class CategoryListAdapter extends ArrayAdapter<CategoryData> {
                         return false;
                     }
                 });
-                db.collection("Users").document(uid)
-                        .get()
-                        .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                            @Override
-                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                if (task.isSuccessful()){
-                                    DocumentSnapshot documentSnapshot = task.getResult();
-                                    if (documentSnapshot.exists()){
-                                        if (documentSnapshot.get("jobtitle").equals("Admin")){
-                                            popup.show();
-
-                                        } else {
-                                            Toast.makeText(getContext(), "you are not an admin", Toast.LENGTH_LONG).show();
-                                        }
-                                    } else {
-
-                                    }
-                                } else {
-                                }
-                            }
-                        });
+                popup.show();
             }
         });
 
 
         TextView roomName = view.findViewById(R.id.listName);
-        TextView roomId = view.findViewById(R.id.listId);
 
         roomName.setText(listData.name);
         

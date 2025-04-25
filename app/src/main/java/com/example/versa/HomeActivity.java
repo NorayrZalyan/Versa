@@ -82,18 +82,19 @@ public class HomeActivity extends AppCompatActivity {
                         String[] nameList = new String[userRooms.size()];
                         String[] idList = new String[userRooms.size()];
                         for (int i = 0; i < userRooms.size(); i++) {
-                            for (String value: userRooms.get(i).values()) {
-                                nameList[i] = value;
+                            for (int j = 0; j <userRooms.size() ; j++) {
+                                nameList[i] = userRooms.get(i).get("roomName");
                             }
-                            for (String key: userRooms.get(i).keySet()) {
-                                idList[i] = key;
+                            for (int j = 0; j <userRooms.size() ; j++) {
+                                idList[i] = userRooms.get(i).get("roomId");
                             }
                         }
                         for (int i = 0; i < nameList.length; i++) {
                             RoomData roomData = new RoomData(nameList[i], idList[i]);
+                            Log.e("TAG", "onComplete: "+idList[i]);
                             dataArrayList.add(roomData);
                         }
-                        RoomListAdapter roomListAdapter = new RoomListAdapter(HomeActivity.this, dataArrayList);
+                        RoomListAdapter roomListAdapter = new RoomListAdapter(HomeActivity.this, dataArrayList, idList);
                         binding.listview.setAdapter(roomListAdapter);
                         binding.listview.setClickable(true);
                         binding.listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {

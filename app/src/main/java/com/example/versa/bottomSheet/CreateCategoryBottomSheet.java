@@ -47,6 +47,12 @@ public class CreateCategoryBottomSheet extends BottomSheetDialogFragment {
             public void onClick(View v) {
                 loadingDialog.startLoading();
 
+                String categoryName = binding.categoryNameEd.getText().toString();
+                if (categoryName.isEmpty()){
+                    Toast.makeText(getContext(), "enter client name", Toast.LENGTH_SHORT).show();
+                    loadingDialog.dismisDialog();
+                    return;
+                }
 
                 String roomid = getArguments().getString("roomid");
                 db.collection("Rooms").document(roomid)
@@ -60,9 +66,9 @@ public class CreateCategoryBottomSheet extends BottomSheetDialogFragment {
                                         List<Map<String, Object>> categories = (List<Map<String, Object>>) documentSnapshot.get("categories");
                                         Log.d("TEST", "onComplete: categories "+categories.size());
                                         if (categories.size()==0){
-                                            Category category = new Category(binding.categoryNameEd.getText().toString());
+                                            Category category = new Category(categoryName);
                                             Map<String, String> userCategory = new HashMap<>();
-                                            userCategory.put(roomid, binding.categoryNameEd.getText().toString());
+                                            userCategory.put(roomid, categoryName);
                                             db.collection("Users").document(uId).update("categories", FieldValue.arrayUnion(userCategory))
                                                     .addOnSuccessListener(aVoid -> {
                                                         loadingDialog.dismisDialog();
@@ -94,15 +100,15 @@ public class CreateCategoryBottomSheet extends BottomSheetDialogFragment {
 
                                                 Log.d("TEST", "onComplete: categories != null");
 
-                                                if (categories.get(i).get("name").equals(binding.categoryNameEd.getText().toString())) {
+                                                if (categories.get(i).get("name").equals(categoryName)) {
                                                     Toast.makeText(getContext(), "This category already exists", Toast.LENGTH_LONG).show();
                                                     loadingDialog.dismisDialog();
                                                     return;
                                                 } else {
 
-                                                    Category category = new Category(binding.categoryNameEd.getText().toString());
+                                                    Category category = new Category(categoryName);
                                                     Map<String, String> userCategory = new HashMap<>();
-                                                    userCategory.put(roomid, binding.categoryNameEd.getText().toString());
+                                                    userCategory.put(roomid, categoryName);
                                                     db.collection("Users").document(uId).update("categories", FieldValue.arrayUnion(userCategory))
                                                             .addOnSuccessListener(aVoid -> {
                                                                 loadingDialog.dismisDialog();

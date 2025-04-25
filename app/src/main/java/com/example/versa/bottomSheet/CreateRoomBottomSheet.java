@@ -14,6 +14,7 @@ import androidx.annotation.Nullable;
 import com.example.versa.Dialog.LoadingDialog;
 import com.example.versa.room.Room;
 import com.example.versa.databinding.RoomBottomSheetBinding;
+import com.example.versa.staff.Worker;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
@@ -47,7 +48,11 @@ public class  CreateRoomBottomSheet extends BottomSheetDialogFragment {
 
                 FirebaseFirestore db = FirebaseFirestore.getInstance();
                 String roomName = binding.RoomNameEt.getText().toString();
-
+                if (roomName.isEmpty()){
+                    Toast.makeText(getContext(), "enter client name", Toast.LENGTH_SHORT).show();
+                    loadingDialog.dismisDialog();
+                    return;
+                }
                 db.collection("Rooms")
                         .orderBy("roomId", Query.Direction.DESCENDING)
                         .limit(1)
@@ -87,10 +92,9 @@ public class  CreateRoomBottomSheet extends BottomSheetDialogFragment {
                                                 if (task.isSuccessful()){
                                                     DocumentSnapshot documentSnapshot = task.getResult();
                                                     if (documentSnapshot.exists()){
-                                                        Map<String, String> room1 = new HashMap<>();
-                                                        room1.put(String.valueOf(finalLastRoomID1), (String) documentSnapshot.get("roomName"));
-                                                        Log.d("TEST", "onComplete: "+room1);
-                                                        db.collection("Users").document(uid).update("rooms", FieldValue.arrayUnion(room1));
+                                                        Worker worker = new Worker(String.valueOf(finalLastRoomID1), roomName, "Admin");
+                                                        Log.d("TEST", "onComplete: "+worker);
+                                                        db.collection("Users").document(uid).update("rooms", FieldValue.arrayUnion(worker));
                                                     } else {
                                                         Toast.makeText(getContext(), "document not found", Toast.LENGTH_LONG).show();
                                                         Log.w("MESSAGE", "onComplete: document not found");
@@ -135,10 +139,10 @@ public class  CreateRoomBottomSheet extends BottomSheetDialogFragment {
                                                 if (task.isSuccessful()){
                                                     DocumentSnapshot documentSnapshot = task.getResult();
                                                     if (documentSnapshot.exists()){
-                                                        Map<String, String> room1 = new HashMap<>();
-                                                        room1.put("1", (String) documentSnapshot.get("roomName"));
-                                                        Log.d("TAG", "onComplete: "+room1);
-                                                        db.collection("Users").document(uid).update("rooms", FieldValue.arrayUnion(room1));
+
+                                                        Worker worker = new Worker("1",(String) documentSnapshot.get("roomName"), "Admin");
+
+                                                        db.collection("Users").document(uid).update("rooms", FieldValue.arrayUnion(worker));
                                                     } else {
                                                     }
                                                 }else {

@@ -60,15 +60,9 @@ public class RegisterActivity extends AppCompatActivity {
                 final String name = binding.usernameEt.getText().toString().trim();
                 final String email = binding.emailEt.getText().toString().trim();
                 final String pass = binding.passwordEt.getText().toString().trim();
-                final String jobtitle = binding.jobTitleSp.getSelectedItem().toString();
-                if (name.isEmpty() || email.isEmpty() || pass.isEmpty() || jobtitle.isEmpty()) {
+                if (name.isEmpty() || email.isEmpty() || pass.isEmpty()) {
                     loadingDialog.startLoading();
                     Toast.makeText(RegisterActivity.this, "Fields cannot be empty", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                if (jobtitle.equals("Select a position at work") || jobtitle == "Select a position at work"){
-                    loadingDialog.dismisDialog();
-                    Toast.makeText(RegisterActivity.this, "select your position", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 mAuth.createUserWithEmailAndPassword(email, pass)
@@ -79,7 +73,7 @@ public class RegisterActivity extends AppCompatActivity {
                                     FirebaseUser fUser = mAuth.getCurrentUser();
                                     if (fUser != null){
                                         String uid = fUser.getUid();
-                                        User newUser = new User(uid, name, email, jobtitle);
+                                        User newUser = new User(uid, name, email);
                                         db.collection("Users").document(uid).set(newUser)
                                                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                                                     @Override

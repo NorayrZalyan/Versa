@@ -107,7 +107,6 @@ public class CategoryActivity extends AppCompatActivity {
 
                                         for (int i = 0; i < clients.size(); i++) {
                                             nameList[i] = (String) clients.get(i).get("name");
-
                                         }
                                         for (int i = 0; i < nameList.length; i++) {
                                             ClientData clientData = new ClientData(nameList[i]);
@@ -119,7 +118,6 @@ public class CategoryActivity extends AppCompatActivity {
                                         binding.listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                                             @Override
                                             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-
                                                 a(
                                                         (String) clients.get(position).get("name"),
                                                         (String) clients.get(position).get("phone"),
@@ -127,7 +125,6 @@ public class CategoryActivity extends AppCompatActivity {
                                                         (String) clients.get(position).get("description"),
                                                         position
                                                 );
-
                                             }
                                         });
                                     }
@@ -277,16 +274,25 @@ public class CategoryActivity extends AppCompatActivity {
         usersRef.get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 for (QueryDocumentSnapshot document : task.getResult()) {
-                    List<Map<String,String>> rooms = (List<Map<String, String>>) document.get("categories");
-                    for (int i = 0; i < rooms.size(); i++) {
-                        Map<String, String> map = rooms.get(i);
+                    List<Map<String,String>> categories = (List<Map<String, String>>) document.get("categories");
+                    List<Map<String,String>> rooms = (List<Map<String, String>>) document.get("rooms");
+                    for (int i = 0; i < categories.size(); i++) {
+                        Map<String, String> map = categories.get(i);
                         for (String value : map.values()) {
                             if (value.equals(categoryName)){
-                                WorkerData workerData = new WorkerData((String) document.get("email"), (String) document.get("jobtitle"));
+                                String jobTitle;
+                                for (int j = 0; j <rooms.size(); j++) {
+                                    if (rooms.get(j).get("roomId").equals(roomId)){
+                                        WorkerData workerData = new WorkerData((String) document.get("email"), (String) rooms.get(j).get("jobTitle"));
+                                        dataArreyList.add(workerData);
+                                        WorkerListAdapter workerListAdapter = new WorkerListAdapter(CategoryActivity.this, dataArreyList, roomId, "CategoryActivity");
+                                        listView.setAdapter(workerListAdapter);
+                                    }
+                                }
 
-                                dataArreyList.add(workerData);
-                                WorkerListAdapter workerListAdapter = new WorkerListAdapter(CategoryActivity.this, dataArreyList, roomId, "CategoryActivity");
-                                listView.setAdapter(workerListAdapter);
+
+
+
 
                             }
                         }

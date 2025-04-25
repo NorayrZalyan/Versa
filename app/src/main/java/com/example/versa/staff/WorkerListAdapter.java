@@ -142,22 +142,10 @@ public class WorkerListAdapter extends ArrayAdapter<WorkerData> {
                         return false;
                     }
                 });
-                String uid = FirebaseAuth.getInstance().getUid();
-                db.collection("Users").document(uid)
-                    .get()
-                    .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                            if (task.isSuccessful()){
-                                DocumentSnapshot documentSnapshot = task.getResult();
-                                if (documentSnapshot.exists()){
-                                    if (documentSnapshot.get("jobtitle").equals("Admin")){
-                                        popup.show();
-                                    }
-                                }
-                            }
-                        }
-                    });
+                popup.show();
+
+
+
             }
         });
 

@@ -1,25 +1,25 @@
 package com.example.versa.Auth;
 
+import com.example.versa.staff.Worker;
+
 import java.util.ArrayList;
 import java.util.Map;
 
+
 public class User {
-    private ArrayList<Integer> categories = new ArrayList<>();
-    private ArrayList<Map<String, String>> rooms = new ArrayList<>();
+    private ArrayList<Map<String, String>> categories = new ArrayList<>();
+    private ArrayList<Worker> rooms = new ArrayList<>();
     private String userId;
     private String name;
     private String email;
-    private String jobtitle;
 
     public User() {
-        // Для Firebase
     }
 
-    public User(String userId, String name, String email, String jobtitle) {
+    public User(String userId, String name, String email) {
         this.userId = userId;
         this.name = name;
         this.email = email;
-        this.jobtitle = jobtitle;
     }
 
     public String getUserId() {
@@ -31,15 +31,10 @@ public class User {
     public String getEmail() {
         return email;
     }
-    public String getJobtitle() {
-        return jobtitle;
-    }
-
-    public ArrayList<Map<String, String>> getRooms() {
+    public ArrayList<Worker> getRooms() {
         return rooms;
     }
-
-    public ArrayList<Integer> getCategories() {
+    public ArrayList<Map<String, String>> getCategories() {
         return categories;
     }
 }

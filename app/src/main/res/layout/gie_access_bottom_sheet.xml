@@ -22,7 +22,7 @@
     <EditText
         android:id="@+id/user_emailEt"
         android:layout_width="300dp"
-        android:hint=" Enter user email"
+        android:hint=" Enter the employee email address."
         android:inputType="textEmailAddress"
         android:layout_marginTop="50dp"
         android:textColorHint="@color/white"
@@ -32,8 +32,26 @@
         app:layout_constraintTop_toBottomOf="@+id/пive_accessЕм"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        android:singleLine="true"
+        android:ellipsize="none"
+        android:scrollHorizontally="true"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:focusable="true"
+        android:focusableInTouchMode="true"/>
 
-        
+    <EditText
+        android:id="@+id/user_jobTitleEt"
+        android:layout_width="300dp"
+        android:hint=" Enter the employee position"
+        android:inputType="textEmailAddress"
+        android:layout_marginTop="20dp"
+        android:textColorHint="@color/white"
+        android:layout_height="50dp"
+        android:textColor="@color/white"
+        android:background="@drawable/input"
+        app:layout_constraintTop_toBottomOf="@+id/user_emailEt"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         android:singleLine="true"
         android:ellipsize="none"
         android:scrollHorizontally="true"
@@ -65,5 +83,5 @@
         android:text="Give access"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/user_emailEt" />
+        app:layout_constraintTop_toBottomOf="@+id/user_jobTitleEt" />
 </androidx.constraintlayout.widget.ConstraintLayout>

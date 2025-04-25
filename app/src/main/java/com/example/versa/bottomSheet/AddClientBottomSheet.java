@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -49,6 +50,11 @@ public class AddClientBottomSheet extends BottomSheetDialogFragment {
                 loadingDialog.startLoading();
 
                 String clientName = binding.clientNameEt.getText().toString();
+                if (clientName.isEmpty()){
+                    Toast.makeText(getContext(), "enter client name", Toast.LENGTH_SHORT).show();
+                    loadingDialog.dismisDialog();
+                    return;
+                }
                 String clientPhone = binding.clientPhoneEt.getText().toString();
                 String clientEmail = binding.clientEmailEt.getText().toString();
                 String description = binding.clientDescriptionEt.getText().toString();

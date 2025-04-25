@@ -12,6 +12,7 @@ import androidx.annotation.Nullable;
 
 import com.example.versa.Dialog.LoadingDialog;
 import com.example.versa.databinding.GieAccessBottomSheetBinding;
+import com.example.versa.staff.Worker;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FieldValue;
@@ -40,9 +41,16 @@ public class GiveAccessBottomSheet extends BottomSheetDialogFragment {
             public void onClick(View v) {
 
                 loadingDialog.startLoading();
-                Log.d("TAG", "onClick: "+binding.userEmailEt.getText().toString());
+                String userEmail = binding.userEmailEt.getText().toString();
+                String userJobTitle = binding.userJobTitleEt.getText().toString();
+                if (userEmail.isEmpty() || userJobTitle.isEmpty()){
+                    Toast.makeText(getContext(), "fields cannot be empty.", Toast.LENGTH_SHORT).show();
+                    loadingDialog.dismisDialog();
+                    return;
+                }
+                Log.d("TAG", "onClick: "+userEmail);
                 CollectionReference usersRef = db.collection("Users");
-                usersRef.whereEqualTo("email", binding.userEmailEt.getText().toString())
+                usersRef.whereEqualTo("email", userEmail)
                         .get()
                         .addOnCompleteListener(task -> {
                             if (task.isSuccessful() && !task.getResult().isEmpty()) {
@@ -50,10 +58,11 @@ public class GiveAccessBottomSheet extends BottomSheetDialogFragment {
                                     String userId = document.getId(); // Получаем UID документа
                                     Log.d("Firestore", "Документ найден: " + userId);
 
-                                    Map<String, String> room = new HashMap<>();
-                                    room.put(roomId, roomName);
+                                    Worker worker = new Worker(roomId,roomName,userJobTitle);
                                     db.collection("Users").document(userId)
-                                            .update("rooms", FieldValue.arrayUnion(room));
+                                            .update("rooms", FieldValue.arrayUnion(worker));
+
+
                                     Map<String, String> category = new HashMap<>();
                                     category.put(roomId, categoryName);
                                     db.collection("Users").document(userId)

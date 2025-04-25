@@ -23,6 +23,7 @@ import com.example.versa.category.CategoryListAdapter;
 import com.example.versa.clients.ClientData;
 import com.example.versa.clients.ClientListAdapter;
 import com.example.versa.databinding.ActivityDetailedBinding;
+import com.example.versa.staff.Worker;
 import com.example.versa.staff.WorkerData;
 import com.example.versa.staff.WorkerListAdapter;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -33,6 +34,7 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,6 +48,8 @@ public class DetailedActivity extends AppCompatActivity {
     FirebaseAuth mAuth;
     CategoryListAdapter categoryListAdapter;
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,7 +60,6 @@ public class DetailedActivity extends AppCompatActivity {
         String roomName = intent.getStringExtra("roomName");
         roomId = intent.getStringExtra("roomId");
         binding.roomNameTv.setText(roomName);
-        binding.roomIdTV.setText(roomId);
 
 
         mAuth = FirebaseAuth.getInstance();
@@ -72,12 +75,6 @@ public class DetailedActivity extends AppCompatActivity {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
                         Log.d("1", "DocumentSnapshot data: " + document.getData());
-
-                        if (document.getString("jobtitle").equals("Admin")){
-                            binding.createCategoryBt.setVisibility(View.VISIBLE);
-                        } else if(document.getString("jobtitle").equals("Other")) {
-                            binding.createCategoryBt.setVisibility(View.INVISIBLE);
-                        }
                     } else {
                         Log.d("TAG", "No such document");
                     }
@@ -210,30 +207,31 @@ public class DetailedActivity extends AppCompatActivity {
             alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(0));
         }
         ListView listView = view.findViewById(R.id.listview);
-        ArrayList<WorkerData> dataArreyList = new ArrayList<>();
-        CollectionReference usersRef = FirebaseFirestore.getInstance().collection("Users");
-        usersRef.get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                for (QueryDocumentSnapshot document : task.getResult()) {
-                    List<Map<String,String>> rooms = (List<Map<String, String>>) document.get("rooms");
-                    for (int i = 0; i < rooms.size(); i++) {
-                        Map<String, String> map = rooms.get(i);
-                        for (String key : map.keySet()) {
-                            if (key.equals(roomId)){
-                                WorkerData workerData = new WorkerData((String) document.get("email"), (String) document.get("jobtitle"));
-
-                                dataArreyList.add(workerData);
-                                WorkerListAdapter workerListAdapter = new WorkerListAdapter(DetailedActivity.this, dataArreyList, roomId, "DetailedActivity");
-                                listView.setAdapter(workerListAdapter);
-
+        ArrayList<WorkerData> workerDataList = new ArrayList<>();
+        db.collection("Users")
+            .get()
+            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                    if (task.isSuccessful()){
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            List<Map<String, Object>> rooms = (List<Map<String, Object>>) document.get("rooms");
+                            for (int i = 0; i < rooms.size(); i++) {
+                                if (rooms.get(i).get("roomId").equals(roomId)){
+                                    WorkerData workerData = new WorkerData((String) document.get("email"), (String) rooms.get(i).get("jobTitle"));
+                                    workerDataList.add(workerData);
+                                    WorkerListAdapter workerListAdapter = new WorkerListAdapter(DetailedActivity.this, workerDataList, roomId, "DetailedActivity");
+                                    listView.setAdapter(workerListAdapter);
+                                }
                             }
                         }
+                    } else {
+                        Log.e("TAG", "onComplete: ",task.getException() );
                     }
                 }
-            } else {
-                Log.e("Error", "Error getting documents: ", task.getException());
-            }
-        });
+            });
+
+
         alertDialog.show();
     }
 

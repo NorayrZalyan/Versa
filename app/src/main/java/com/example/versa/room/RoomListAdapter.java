@@ -25,6 +25,7 @@ import androidx.annotation.Nullable;
 
 import com.example.versa.Dialog.LoadingDialog;
 import com.example.versa.R;
+import com.example.versa.staff.Worker;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -33,15 +34,18 @@ import com.google.firebase.Firebase;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 public class RoomListAdapter extends ArrayAdapter<RoomData> {
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private Context context;
     private String uid = FirebaseAuth.getInstance().getUid();
-    public RoomListAdapter(@NonNull Context context, ArrayList<RoomData> dataArrayList) {
+    private String[] idList;
+    public RoomListAdapter(@NonNull Context context, ArrayList<RoomData> dataArrayList, String[] idList) {
         super(context, R.layout.list_item, dataArrayList);
         this.context = context;
-
+        this.idList = idList;
     }
 
     @NonNull
@@ -72,77 +76,55 @@ public class RoomListAdapter extends ArrayAdapter<RoomData> {
                                     .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int id) {
                                             LoadingDialog loadingDialog = new LoadingDialog((Activity) context);
-                                            loadingDialog.startLoading();
 
+
+
+//                                            deleting a room from users
                                             db.collection("Users")
                                                     .get()
-                                                    .addOnSuccessListener(queryDocumentSnapshots -> {
-                                                        for (DocumentSnapshot userDoc : queryDocumentSnapshots) {
-                                                            ArrayList<Map<String, String>> rooms = (ArrayList<Map<String, String>>) userDoc.get("rooms");
-                                                            if (rooms != null) {
-                                                                ArrayList<Map<String, String>> updatedRooms = new ArrayList<>();
-                                                                for (Map<String, String> room : rooms) {
-                                                                    if (!(room.containsKey(listData.id) && room.get(listData.id).equals(listData.name))) {
-                                                                        updatedRooms.add(room);
+                                                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                                        @Override
+                                                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                                            if (task.isSuccessful()) {
+                                                                for (QueryDocumentSnapshot document : task.getResult()) {
+                                                                    List<Map<String, Object>> rooms = (List<Map<String, Object>>) document.get("rooms");
+                                                                    List<Map<String, String>> categories = (List<Map<String, String>>) document.get("categories");
+                                                                    for (int i = 0; i < rooms.size(); i++) {
+                                                                        if (rooms.get(i).get("roomId").equals(idList[position])){
+                                                                            Log.d("Test", "onComplete: "+rooms.get(i).get("roomId")+" "+i);
+                                                                            rooms.remove(i);
+                                                                        }
+                                                                        for (int j = 0; j < categories.size(); j++) {
+                                                                            for (String key :categories.get(j).keySet()) {
+                                                                                if (key.equals(idList[position])){
+                                                                                    categories.remove(j);
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                        Map<String, Object> updateMap = new HashMap<>();
+                                                                        updateMap.put("rooms",rooms);
+                                                                        updateMap.put("categories",categories);
+                                                                        db.collection("Users").document(document.getId()).update(updateMap);
+                                                                        ((Activity) context).recreate();
+                                                                        break;
                                                                     }
                                                                 }
-                                                                if (updatedRooms.size() != rooms.size()) {
-                                                                    db.collection("Users").document(userDoc.getId())
-                                                                            .update("rooms", updatedRooms)
-                                                                            .addOnSuccessListener(aVoid -> {
-                                                                                Log.d("Update", "Categories updated successfully");
-                                                                                db.collection("Rooms").document(listData.id).delete();
-
-
-                                                                                db.collection("Users")
-                                                                                        .get()
-                                                                                        .addOnSuccessListener(queryDocumentSnapshots1 -> {
-                                                                                            for (DocumentSnapshot userDoc1 : queryDocumentSnapshots1) {
-                                                                                                ArrayList<Map<String, String>> categories = (ArrayList<Map<String, String>>) userDoc1.get("categories");
-                                                                                                if (categories != null) {
-                                                                                                    ArrayList<Map<String, String>> updatedCategories = new ArrayList<>();
-                                                                                                    for (Map<String, String> category : categories) {
-                                                                                                        if (!(category.containsKey(listData.id) )) {
-                                                                                                            updatedCategories.add(category);
-                                                                                                        }
-                                                                                                    }
-                                                                                                    if (updatedCategories.size() != categories.size()) {
-                                                                                                        db.collection("Users").document(userDoc1.getId())
-                                                                                                                .update("categories", updatedCategories)
-                                                                                                                .addOnSuccessListener(aVoid1 -> {
-                                                                                                                    Log.d("Update", "Categories updated successfully");
-                                                                                                                })
-                                                                                                                .addOnFailureListener(e -> {
-                                                                                                                    loadingDialog.dismisDialog();
-                                                                                                                    Log.w("Update", "Error updating categories", e);
-                                                                                                                });
-                                                                                                    }
-                                                                                                }
-                                                                                            }
-                                                                                        })
-                                                                                        .addOnFailureListener(e -> {
-                                                                                            loadingDialog.dismisDialog();
-                                                                                            Log.w("Error", "Error getting documents", e);
-                                                                                        });
-
-
-                                                                                loadingDialog.dismisDialog();
-                                                                                ((Activity) context).recreate();
-                                                                            })
-                                                                            .addOnFailureListener(e -> {
-                                                                                loadingDialog.dismisDialog();
-                                                                                Log.w("Update", "Error updating categories", e);
-                                                                            });
-                                                                }
+                                                            } else {
+                                                                Log.w("Firestore", "Error getting documents.", task.getException());
                                                             }
                                                         }
-                                                    })
-                                                    .addOnFailureListener(e -> {
-                                                        loadingDialog.dismisDialog();
-                                                        Log.w("Error", "Error getting documents", e);
                                                     });
-
-
+//                                            deleting a room
+                                            db.collection("Rooms").document(idList[position]).delete()
+                                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                        @Override
+                                                        public void onComplete(@NonNull Task<Void> task) {
+                                                            if (task.isSuccessful()){
+                                                                ((Activity) context).recreate();
+                                                                Toast.makeText(getContext(),"company deleted",Toast.LENGTH_LONG).show();
+                                                            }
+                                                        }
+                                                    });
 
 
 
@@ -165,24 +147,7 @@ public class RoomListAdapter extends ArrayAdapter<RoomData> {
                         return false;
                     }
                 });
-                db.collection("Users").document(uid)
-                        .get()
-                        .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                            @Override
-                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                if (task.isSuccessful()){
-                                    DocumentSnapshot documentSnapshot = task.getResult();
-                                    if (documentSnapshot.exists()){
-                                        if (documentSnapshot.get("jobtitle").equals("Admin")){
-                                            popup.show();
-                                        }
-                                    } else {
-                                    }
-                                } else {
-                                }
-                            }
-                        });
-
+                popup.show();
             }
         });
 

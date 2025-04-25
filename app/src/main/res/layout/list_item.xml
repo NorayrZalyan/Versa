@@ -26,6 +26,10 @@
             android:text="name"
             android:textColor="@color/white"
             android:textSize="24dp"
+            android:autoSizeTextType="uniform"
+            android:autoSizeMinTextSize="12sp"
+            android:autoSizeMaxTextSize="30sp"
+            android:autoSizeStepGranularity="2sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -61,8 +65,8 @@
                 android:src="@drawable/more_icon_white_nobg"/>
 
         </LinearLayout>
-            
-            
+
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 

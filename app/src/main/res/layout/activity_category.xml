@@ -10,14 +10,19 @@
 
     <TextView
         android:id="@+id/category_nameTv"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="323dp"
+        android:layout_height="37dp"
         android:fontFamily="sans-serif"
         android:gravity="center"
         android:text="Category name"
         android:textColor="@color/white"
-        android:textSize="40dp"
-        app:layout_constraintStart_toStartOf="parent"
+        android:autoSizeTextType="uniform"
+        android:autoSizeMinTextSize="12sp"
+        android:autoSizeMaxTextSize="30sp"
+        android:autoSizeStepGranularity="2sp"
+        android:layout_marginTop="10dp"
+        app:layout_constraintEnd_toStartOf="@+id/menuIv"
+        app:layout_constraintStart_toEndOf="@+id/backIv"
         app:layout_constraintTop_toTopOf="parent" />
 
     <LinearLayout
