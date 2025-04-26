@@ -279,23 +279,24 @@ public class CategoryActivity extends AppCompatActivity {
                     for (int i = 0; i < categories.size(); i++) {
                         Map<String, String> map = categories.get(i);
                         for (String value : map.values()) {
-                            if (value.equals(categoryName)){
-                                String jobTitle;
-                                for (int j = 0; j <rooms.size(); j++) {
-                                    if (rooms.get(j).get("roomId").equals(roomId)){
-                                        WorkerData workerData = new WorkerData((String) document.get("email"), (String) rooms.get(j).get("jobTitle"));
-                                        dataArreyList.add(workerData);
-                                        WorkerListAdapter workerListAdapter = new WorkerListAdapter(CategoryActivity.this, dataArreyList, roomId, "CategoryActivity");
-                                        listView.setAdapter(workerListAdapter);
+                            for (String key :map.keySet()) {
+
+
+                                if (value.equals(categoryName) && key.equals(roomId)) {
+                                    String jobTitle;
+                                    for (int j = 0; j < rooms.size(); j++) {
+                                        if (rooms.get(j).get("roomId").equals(roomId)) {
+                                            WorkerData workerData = new WorkerData((String) document.get("email"), (String) rooms.get(j).get("jobTitle"));
+                                            dataArreyList.add(workerData);
+                                            WorkerListAdapter workerListAdapter = new WorkerListAdapter(CategoryActivity.this, dataArreyList, roomId, "CategoryActivity");
+                                            listView.setAdapter(workerListAdapter);
+                                        }
                                     }
                                 }
 
-
-
-
-
                             }
                         }
+
                     }
                 }
             } else {
