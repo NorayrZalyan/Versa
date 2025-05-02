@@ -72,7 +72,7 @@ public class RoomListAdapter extends ArrayAdapter<RoomData> {
 
                             new AlertDialog.Builder(context)
                                     .setMessage("Are you sure you want to delete this client?")
-                                    .setCancelable(false)
+                                    .setCancelable(true)
                                     .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int id) {
                                             LoadingDialog loadingDialog = new LoadingDialog((Activity) context);

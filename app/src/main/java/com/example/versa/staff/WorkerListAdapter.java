@@ -1,7 +1,9 @@
 package com.example.versa.staff;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,7 +19,9 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.example.versa.CategoryActivity;
 import com.example.versa.DetailedActivity;
+import com.example.versa.Dialog.LoadingDialog;
 import com.example.versa.R;
 import com.example.versa.SelectCategoryActivity;
 import com.example.versa.clients.ClientData;
@@ -42,12 +46,14 @@ public class WorkerListAdapter extends ArrayAdapter<WorkerData> {
     private Context context;
     private String activity;
     private String roomId;
+    private String categoryName;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
-    public WorkerListAdapter(@NonNull Context context, ArrayList<WorkerData> dataArrayList, String roomId, String activity) {
+    public WorkerListAdapter(@NonNull Context context, ArrayList<WorkerData> dataArrayList, String roomId, String activity, String categoryName) {
         super(context, R.layout.list_item, dataArrayList);
         this.context = context;
         this.roomId = roomId;
         this.activity = activity;
+        this.categoryName = categoryName;
     }
     @NonNull
     @Override
@@ -62,6 +68,10 @@ public class WorkerListAdapter extends ArrayAdapter<WorkerData> {
         more.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (listData.jobTitle.equals("Admin")){
+                    Toast.makeText(context, "You cannot delete the administrator", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 PopupMenu popup = new PopupMenu(parent.getContext(), v);
                 popup.getMenuInflater().inflate(R.menu.room_list_item_menu, popup.getMenu());
                 popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
@@ -70,70 +80,88 @@ public class WorkerListAdapter extends ArrayAdapter<WorkerData> {
                         int id = item.getItemId();
                         if (id == R.id.option1) {
 
+                            if (listData.jobTitle.equals("Admin")){
+                                Toast.makeText(context, "You cannot delete the administrator", Toast.LENGTH_SHORT).show();
 
-                            db.collection("Users")
-                                    .whereEqualTo("email", listData.name)
-                                    .get()
-                                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                            if (task.isSuccessful()) {
-                                                for (QueryDocumentSnapshot document : task.getResult()) {
+                            }
 
-                                                    if (document.get("jobtitle").equals("Admin")){
-                                                        Toast.makeText(getContext(), "you can't remove the admin", Toast.LENGTH_SHORT).show();
-                                                        return;
-                                                    }
+                            new AlertDialog.Builder(context)
+                                    .setMessage("Are you sure you want to delete this client?")
+                                    .setCancelable(true)
+                                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            LoadingDialog loadingDialog = new LoadingDialog((Activity) context);
+                                            loadingDialog.startLoading();
+                                            db.collection("Users")
+                                                    .whereEqualTo("email", listData.name)
+                                                    .get()
+                                                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                                        @Override
+                                                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                                            if (task.isSuccessful()) {
+                                                                for (QueryDocumentSnapshot document : task.getResult()) {
 
-                                                    List<Map<String, String>> categories = (List<Map<String, String>>) document.get("categories");
-                                                    for (int i = 0; i < categories.size(); i++) {
-                                                        for (String key : categories.get(i).keySet()) {
-                                                            if (key.equals(roomId)){
-                                                                categories.remove(i);
-                                                            }
-                                                        }
-                                                    }
-                                                    Map<String, Object> updateMap = new HashMap<>();
-                                                    updateMap.put("categories", categories);
-                                                    db.collection("Users").document(document.getId())
-                                                            .update(updateMap)
-                                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                                @Override
-                                                                public void onSuccess(Void unused) {
-                                                                    Toast.makeText(getContext(), "user has been deleted", Toast.LENGTH_SHORT).show();
-                                                                    ((Activity) context).recreate();
-                                                                }
-                                                            });
-                                                    if (activity.equals("DetailedActivity")){
-                                                        List<Map<String, String>> rooms = (List<Map<String, String>>) document.get("rooms");
-                                                        for (int j = 0; j < rooms.size(); j++) {
-                                                            for (String key : rooms.get(j).keySet()) {
-                                                                if (key.equals(roomId)){
-                                                                    rooms.remove(j);
-                                                                }
-                                                            }
-                                                        }
-                                                        Map<String, Object> updateMap1 = new HashMap<>();
-                                                        updateMap1.put("rooms", rooms);
-                                                        db.collection("Users").document(document.getId())
-                                                                .update(updateMap1)
-                                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                                    @Override
-                                                                    public void onSuccess(Void unused) {
-                                                                        Toast.makeText(getContext(), "user has been deleted", Toast.LENGTH_SHORT).show();
+                                                                    if (activity.equals("DetailedActivity")){
+                                                                        List<Map<String, String>> categories = (List<Map<String, String>>) document.get("categories");
+                                                                        List<Map<String, Object>> rooms = (List<Map<String, Object>>) document.get("rooms");
+                                                                        for (int i = 0; i < categories.size(); i++){
+                                                                            for (String key : categories.get(i).keySet()) {
+                                                                                if (key.equals(roomId)){
+                                                                                    categories.remove(i);
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                        for (int i = 0; i < rooms.size(); i++) {
+                                                                            if (rooms.get(i).get("roomId").equals(roomId)){
+                                                                                rooms.remove(i);
+                                                                            }
+                                                                        }
+                                                                        Map<String, Object> updateMAp = new HashMap<>();
+                                                                        updateMAp.put("categories",categories);
+                                                                        updateMAp.put("rooms",rooms);
+                                                                        db.collection("Users").document(document.getId()).update(updateMAp);
+                                                                        Toast.makeText(getContext(), "employee removed" ,Toast.LENGTH_LONG).show();
                                                                         ((Activity) context).recreate();
+                                                                        loadingDialog.dismisDialog();
+
+                                                                    } else if (activity.equals("CategoryActivity")) {
+                                                                        List<Map<String, String>> categories = (List<Map<String, String>>) document.get("categories");
+                                                                        for (int i = 0; i < categories.size(); i++){
+                                                                            for (String key : categories.get(i).keySet()) {
+                                                                                for (String value : categories.get(i).values()) {
+                                                                                    if (key.equals(roomId) && value.equals(categoryName)) {
+                                                                                        categories.remove(i);
+                                                                                    }
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                        Map<String, Object> updateMAp1 = new HashMap<>();
+                                                                        updateMAp1.put("categories",categories);
+                                                                        db.collection("Users").document(document.getId()).update(updateMAp1);
+                                                                        Toast.makeText(getContext(), "employee removed" ,Toast.LENGTH_LONG).show();
+                                                                        ((Activity) context).recreate();
+                                                                        loadingDialog.dismisDialog();
                                                                     }
-                                                                });
-                                                    }
+
+
+                                                                }
+                                                            } else {
+                                                                Log.d("ERROR", "Error getting documents: ", task.getException());
+                                                                loadingDialog.dismisDialog();
+                                                            }
+                                                        }
+                                                    });
 
 
 
-                                                }
-                                            } else {
-                                                Log.d("TEST", "Error getting documents: ", task.getException());
-                                            }
                                         }
-                                    });
+                                    })
+                                    .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            dialog.cancel();
+                                        }
+                                    })
+                                    .show();
 
 
                             return true;
@@ -142,7 +170,32 @@ public class WorkerListAdapter extends ArrayAdapter<WorkerData> {
                         return false;
                     }
                 });
-                popup.show();
+
+                String uid = FirebaseAuth.getInstance().getUid();
+                db.collection("Users").document(uid)
+                    .get()
+                    .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            if (task.isSuccessful()){
+                                DocumentSnapshot documentSnapshot = task.getResult();
+                                if (documentSnapshot.exists()){
+                                    List<Map<String, Object>> rooms = (List<Map<String, Object>>)documentSnapshot.get("rooms");
+                                    for (int i = 0; i < rooms.size(); i++) {
+                                        if (rooms.get(i).get("jobTitle").equals("Admin")){
+                                            popup.show();
+                                        } else {
+                                            Toast.makeText(getContext(), "Only the administrator can interact with employees",Toast.LENGTH_LONG).show();
+                                        }
+                                    }
+
+                                } else {
+                                    Log.d("ERROR", "onComplete: Document not found");
+                                }
+                            } else
+                                Log.d("ERROR", "onComplete: "+ task.getException());
+                        }
+                    });
 
 
 

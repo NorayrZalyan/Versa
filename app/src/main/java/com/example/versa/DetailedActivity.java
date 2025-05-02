@@ -220,7 +220,7 @@ public class DetailedActivity extends AppCompatActivity {
                                 if (rooms.get(i).get("roomId").equals(roomId)){
                                     WorkerData workerData = new WorkerData((String) document.get("email"), (String) rooms.get(i).get("jobTitle"));
                                     workerDataList.add(workerData);
-                                    WorkerListAdapter workerListAdapter = new WorkerListAdapter(DetailedActivity.this, workerDataList, roomId, "DetailedActivity");
+                                    WorkerListAdapter workerListAdapter = new WorkerListAdapter(DetailedActivity.this, workerDataList, roomId, "DetailedActivity", null);
                                     listView.setAdapter(workerListAdapter);
                                 }
                             }

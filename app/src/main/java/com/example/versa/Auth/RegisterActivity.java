@@ -2,6 +2,7 @@ package com.example.versa.Auth;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -13,6 +14,7 @@ import com.example.versa.Dialog.LoadingDialog;
 import com.example.versa.databinding.ActivityRegisterBinding;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.ActionCodeSettings;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -60,9 +62,15 @@ public class RegisterActivity extends AppCompatActivity {
                 final String name = binding.usernameEt.getText().toString().trim();
                 final String email = binding.emailEt.getText().toString().trim();
                 final String pass = binding.passwordEt.getText().toString().trim();
+                final String conf_pass = binding.confPasswordEt.getText().toString().trim();
                 if (name.isEmpty() || email.isEmpty() || pass.isEmpty()) {
-                    loadingDialog.startLoading();
+                    loadingDialog.dismisDialog();
                     Toast.makeText(RegisterActivity.this, "Fields cannot be empty", Toast.LENGTH_SHORT).show();
+                    return;
+                } else if (!pass.equals(conf_pass)) {
+                    loadingDialog.dismisDialog();
+                    Log.d("TEST", "onClick: "+pass + " " + conf_pass);
+                    Toast.makeText(RegisterActivity.this, "passwords do not match", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 mAuth.createUserWithEmailAndPassword(email, pass)
@@ -73,21 +81,21 @@ public class RegisterActivity extends AppCompatActivity {
                                     FirebaseUser fUser = mAuth.getCurrentUser();
                                     if (fUser != null){
                                         String uid = fUser.getUid();
-                                        User newUser = new User(uid, name, email);
-                                        db.collection("Users").document(uid).set(newUser)
+                                        mAuth.getCurrentUser().sendEmailVerification()
                                                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                                                     @Override
-                                                    public void onComplete(@NonNull Task<Void> task2) {
-                                                        if (task2.isSuccessful()){
-                                                            loadingDialog.dismisDialog();
-                                                            Toast.makeText(RegisterActivity.this, "Registration is completed", Toast.LENGTH_SHORT).show();
-                                                            startActivity(new Intent(RegisterActivity.this, HomeActivity.class));
+                                                    public void onComplete(@NonNull Task<Void> task) {
+                                                        if (task.isSuccessful()){
+                                                            startActivity(new Intent(RegisterActivity.this, ConfirmationEmailActivity.class)
+                                                                    .putExtra("name",name)
+                                                                    .putExtra("email",email)
+                                                                    .putExtra("uid",uid));
                                                         } else {
-                                                            loadingDialog.dismisDialog();
-                                                            Toast.makeText(RegisterActivity.this, "Error saving profile" + task2.getException() , Toast.LENGTH_SHORT).show();
+                                                            Log.d("ERROR", "onComplete: ."+task.getException());
                                                         }
                                                     }
                                                 });
+
                                     }
 
                                 } else {
