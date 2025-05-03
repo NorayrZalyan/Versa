@@ -86,8 +86,19 @@ public class ConfirmationEmailActivity extends AppCompatActivity {
                     count++;
                     handler.postDelayed(this, 7000);
                 } else {
+                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                    user.delete()
+                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if (task.isSuccessful()){
+                                    startActivity(new Intent(ConfirmationEmailActivity.this, RegisterActivity.class));
+                                } else {
+                                    Log.e("ERROR", " delete user ",task.getException());
+                                }
+                            }
+                        });
                     Toast.makeText(ConfirmationEmailActivity.this, "The link has expired. Please try again.", Toast.LENGTH_SHORT).show();
-                    
                     Log.d("Counter", "Counter stopped at: " + count);
                 }
             }
