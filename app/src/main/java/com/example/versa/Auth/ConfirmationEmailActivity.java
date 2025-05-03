@@ -38,18 +38,12 @@ public class ConfirmationEmailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityConfirmationEmailBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-
         db = FirebaseFirestore.getInstance();
-
-
         mAuth = FirebaseAuth.getInstance();
-
         Intent intent = getIntent();
         String name = intent.getStringExtra("name");
         String email = intent.getStringExtra("email");
         String uid = intent.getStringExtra("uid");
-
-
 
 
 
@@ -58,11 +52,11 @@ public class ConfirmationEmailActivity extends AppCompatActivity {
             public void run() {
                 if (count < maxCount) {
 
-
                     FirebaseUser user = mAuth.getCurrentUser();
                     if (user != null) {
                         user.reload().addOnCompleteListener(task -> {
                             if (user.isEmailVerified()) {
+                                handler.removeCallbacks(this);
                                 User newUser = new User(uid, name, email);
                                 db.collection("Users").document(uid).set(newUser)
                                         .addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -81,7 +75,6 @@ public class ConfirmationEmailActivity extends AppCompatActivity {
                             }
                         });
                     }
-
                     Log.d("Counter", "Iteration: " + count);
                     count++;
                     handler.postDelayed(this, 7000);
