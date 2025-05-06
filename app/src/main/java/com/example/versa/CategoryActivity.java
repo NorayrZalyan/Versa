@@ -286,7 +286,7 @@ public class CategoryActivity extends AppCompatActivity {
                                     String jobTitle;
                                     for (int j = 0; j < rooms.size(); j++) {
                                         if (rooms.get(j).get("roomId").equals(roomId)) {
-                                            WorkerData workerData = new WorkerData((String) document.get("email"), (String) rooms.get(j).get("jobTitle"));
+                                            WorkerData workerData = new WorkerData((String) document.get("name"), (String) rooms.get(j).get("jobTitle"));
                                             dataArreyList.add(workerData);
                                             WorkerListAdapter workerListAdapter = new WorkerListAdapter(CategoryActivity.this, dataArreyList, roomId, "CategoryActivity",categoryName);
                                             listView.setAdapter(workerListAdapter);

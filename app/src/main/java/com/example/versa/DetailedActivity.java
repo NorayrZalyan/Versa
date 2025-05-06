@@ -218,7 +218,7 @@ public class DetailedActivity extends AppCompatActivity {
                             List<Map<String, Object>> rooms = (List<Map<String, Object>>) document.get("rooms");
                             for (int i = 0; i < rooms.size(); i++) {
                                 if (rooms.get(i).get("roomId").equals(roomId)){
-                                    WorkerData workerData = new WorkerData((String) document.get("email"), (String) rooms.get(i).get("jobTitle"));
+                                    WorkerData workerData = new WorkerData((String) document.get("name"), (String) rooms.get(i).get("jobTitle"));
                                     workerDataList.add(workerData);
                                     WorkerListAdapter workerListAdapter = new WorkerListAdapter(DetailedActivity.this, workerDataList, roomId, "DetailedActivity", null);
                                     listView.setAdapter(workerListAdapter);

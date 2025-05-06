@@ -15,7 +15,7 @@
         android:id="@+id/list_item_layout"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:background="@color/Bacground_color">
+        android:background="@color/bacground_dark">
 
 
         <TextView

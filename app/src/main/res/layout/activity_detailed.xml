@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bacground_light"
+    android:background="@color/Bacground_color"
     tools:context=".DetailedActivity">
 
     <TextView
@@ -32,9 +32,12 @@
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginTop="60dp"/>
 
+
+        
+
     <ListView
         android:id="@+id/listview"
-        android:background="@color/bacground_light"
+        android:background="@color/Bacground_color"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:dividerHeight="10.0sp"

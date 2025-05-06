@@ -5,6 +5,9 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -68,12 +71,47 @@ public class WorkerListAdapter extends ArrayAdapter<WorkerData> {
         more.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (listData.jobTitle.equals("Admin")){
-                    Toast.makeText(context, "You cannot delete the administrator", Toast.LENGTH_SHORT).show();
-                    return;
-                }
+
+
+                String uid = FirebaseAuth.getInstance().getUid();
+                db.collection("Users").document(uid)
+                        .get()
+                        .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                if (task.isSuccessful()){
+                                    DocumentSnapshot documentSnapshot = task.getResult();
+                                    if (documentSnapshot.exists()){
+
+                                        List<Map<String, Object>> rooms = (List<Map<String, Object>>) documentSnapshot.get("rooms");
+                                        for (int i = 0; i < rooms.size(); i++) {
+                                            if (rooms.get(i).get("roomId").equals(roomId)){
+                                                if (!rooms.get(i).get("jobTitle").equals("Admin")){
+                                                    Toast.makeText(context, "Only an admin can manage employees", Toast.LENGTH_SHORT).show();
+                                                    return;
+                                                }
+                                            }
+                                        }
+
+                                    } else {
+                                        Log.d("TEST", "onComplete: no such document");
+                                    }
+                                } else {
+                                    Log.e("ERROR", "onComplete: ", task.getException());
+                                }
+                            }
+                        });
+
+
                 PopupMenu popup = new PopupMenu(parent.getContext(), v);
                 popup.getMenuInflater().inflate(R.menu.room_list_item_menu, popup.getMenu());
+                if (listData.jobTitle.equals("Admin")){
+                    MenuItem item = popup.getMenu().getItem(0);
+                    SpannableString spanString = new SpannableString(item.getTitle());
+                    spanString.setSpan(new ForegroundColorSpan(Color.GRAY), 0, spanString.length(), 0); // Красный цвет
+                    item.setTitle(spanString);
+                }
+
                 popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
@@ -82,7 +120,7 @@ public class WorkerListAdapter extends ArrayAdapter<WorkerData> {
 
                             if (listData.jobTitle.equals("Admin")){
                                 Toast.makeText(context, "You cannot delete the administrator", Toast.LENGTH_SHORT).show();
-
+                                return false;
                             }
 
                             new AlertDialog.Builder(context)
@@ -171,7 +209,7 @@ public class WorkerListAdapter extends ArrayAdapter<WorkerData> {
                     }
                 });
 
-                String uid = FirebaseAuth.getInstance().getUid();
+                
                 db.collection("Users").document(uid)
                     .get()
                     .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {

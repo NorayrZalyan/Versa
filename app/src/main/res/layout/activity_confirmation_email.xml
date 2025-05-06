@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bacground_light"
+    android:background="@color/Bacground_color"
     tools:context=".Auth.ConfirmationEmailActivity">
 
 

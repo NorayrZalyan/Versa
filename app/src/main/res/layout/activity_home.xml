@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bacground_light"
+    android:background="@color/Bacground_color"
     tools:context=".HomeActivity">
 
 
@@ -45,7 +45,7 @@
 
     <ListView
         android:id="@+id/listview"
-        android:background="@color/bacground_light"
+        android:background="@color/Bacground_color"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:dividerHeight="10.0sp"
@@ -61,7 +61,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:background="@color/bacground_light"
+        android:background="@color/Bacground_color"
         android:src="@drawable/ic_logout"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
