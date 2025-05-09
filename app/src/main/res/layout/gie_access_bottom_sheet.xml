@@ -13,21 +13,20 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Give access"
-        android:textColor="@color/white"
+        android:textColor="@color/black"
         android:textSize="35dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
-
     <EditText
         android:id="@+id/user_emailEt"
         android:layout_width="300dp"
         android:hint=" Enter the employee email address."
         android:inputType="textEmailAddress"
         android:layout_marginTop="50dp"
-        android:textColorHint="@color/white"
+        android:textColorHint="@color/button_color"
         android:layout_height="50dp"
-        android:textColor="@color/white"
+        android:textColor="@color/button_color"
         android:background="@drawable/input"
         app:layout_constraintTop_toBottomOf="@+id/пive_accessЕм"
         app:layout_constraintStart_toStartOf="parent"
@@ -45,9 +44,9 @@
         android:hint=" Enter the employee position"
         android:inputType="textEmailAddress"
         android:layout_marginTop="20dp"
-        android:textColorHint="@color/white"
+        android:textColorHint="@color/button_color"
         android:layout_height="50dp"
-        android:textColor="@color/white"
+        android:textColor="@color/button_color"
         android:background="@drawable/input"
         app:layout_constraintTop_toBottomOf="@+id/user_emailEt"
         app:layout_constraintStart_toStartOf="parent"
@@ -63,16 +62,16 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="308dp"
         android:background="@color/white"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="250dp"
-        android:singleLine="true"
         android:ellipsize="none"
-        android:scrollHorizontally="true"
-        android:marqueeRepeatLimit="marquee_forever"
         android:focusable="true"
         android:focusableInTouchMode="true"
-        />
+        android:marqueeRepeatLimit="marquee_forever"
+        android:scrollHorizontally="true"
+        android:singleLine="true"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_editor_absoluteX="16dp" />
 
     <Button
         android:id="@+id/give_access_Bt"
@@ -81,6 +80,7 @@
         android:layout_marginTop="20dp"
         android:background="@drawable/button"
         android:text="Give access"
+        android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/user_jobTitleEt" />

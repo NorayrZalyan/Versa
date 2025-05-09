@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
-    <color name="Bacground_color">#585F62</color>
-    <color name="bacground_dark">#444B4B</color>
-    <color name="button_color">#09D9DB</color>
+    <color name="white">#FFFFFF</color>
+    <color name="Bacground_color">#FFFFFF</color>
+    <color name="bacground_dark">#02490C</color>
+    <color name="button_color">#02490C</color>
     <color name="button_dark">#025566</color>
 
 </resources>

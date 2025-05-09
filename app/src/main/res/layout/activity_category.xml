@@ -15,7 +15,7 @@
         android:fontFamily="sans-serif"
         android:gravity="center"
         android:text="Category name"
-        android:textColor="@color/white"
+        android:textColor="@color/black"
         android:autoSizeTextType="uniform"
         android:autoSizeMinTextSize="12sp"
         android:autoSizeMaxTextSize="30sp"
@@ -26,11 +26,10 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <LinearLayout
-        android:id="@+id/linearLayout2"
         android:layout_width="match_parent"
         android:layout_height="2dp"
         android:layout_marginTop="60dp"
-        android:background="@color/white"
+        android:background="@color/black"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ListView
@@ -51,7 +50,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         android:layout_marginEnd="30dp"
-        android:text="add client"
+        android:text=" add client "
+        android:textColor="@color/white"
         android:textSize="20dp"
         android:layout_marginBottom="30dp"/>
 

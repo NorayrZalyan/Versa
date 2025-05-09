@@ -15,7 +15,7 @@
         android:layout_marginTop="150dp"
         android:fontFamily="@font/ubuntu_light"
         android:text="Sign up"
-        android:textColor="@color/white"
+        android:textColor="@color/black"
         android:textSize="35dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -37,8 +37,8 @@
         android:focusableInTouchMode="true"
 
         android:inputType="text"
-        android:textColor="@color/white"
-        android:textColorHint="@color/white"
+        android:textColor="@color/button_color"
+        android:textColorHint="@color/button_color"
         android:textSize="20dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.502"
@@ -65,7 +65,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Have an account?  "
-            android:textColor="@color/white"
+            android:textColor="@color/black"
             android:textSize="20dp" />
 
         <TextView
@@ -106,10 +106,10 @@
         android:focusable="true"
         android:focusableInTouchMode="true"
         android:inputType="textPassword"
-        android:textColor="@color/white"
+        android:textColor="@color/button_color"
 
 
-        android:textColorHint="@color/white"
+        android:textColorHint="@color/button_color"
         android:textSize="20dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.502"
@@ -132,8 +132,8 @@
         android:focusableInTouchMode="true"
 
         android:inputType="text"
-        android:textColor="@color/white"
-        android:textColorHint="@color/white"
+        android:textColor="@color/button_color"
+        android:textColorHint="@color/button_color"
         android:textSize="20dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.502"
@@ -156,10 +156,10 @@
         android:focusable="true"
         android:focusableInTouchMode="true"
         android:inputType="textPassword"
-        android:textColor="@color/white"
+        android:textColor="@color/button_color"
 
 
-        android:textColorHint="@color/white"
+        android:textColorHint="@color/button_color"
         android:textSize="20dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.502"

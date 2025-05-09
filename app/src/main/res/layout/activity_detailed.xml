@@ -20,23 +20,22 @@
         android:fontFamily="@font/ubuntu_light"
         android:gravity="center"
         android:text="RoomName"
-        android:textColor="@color/white"
+        android:textColor="@color/black"
         android:textSize="20dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="2dp"
-        android:background="@color/white"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="60dp"/>
-
-
-        
+        android:layout_marginTop="60dp"
+        android:background="@color/black"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ListView
         android:id="@+id/listview"
+        android:background="@color/Bacground_color"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:dividerHeight="10.0sp"
@@ -52,7 +51,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         android:layout_marginEnd="30dp"
-        android:text="create Category"
+        android:text=" create Category "
+        android:textColor="@color/white"
         android:textSize="20dp"
         android:layout_marginBottom="30dp"/>
 
@@ -61,6 +61,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
+
         android:layout_marginTop="16dp"
         android:src="@drawable/ic_back"
         app:layout_constraintStart_toStartOf="parent"

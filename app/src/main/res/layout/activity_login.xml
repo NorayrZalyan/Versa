@@ -16,7 +16,7 @@
         android:layout_marginTop="200dp"
         android:fontFamily="@font/ubuntu_light"
         android:text="Login"
-        android:textColor="@color/white"
+        android:textColor="@color/black"
         android:textSize="35dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -40,7 +40,7 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/ubuntu_bold"
             android:text="Have an account?  "
-            android:textColor="@color/white"
+            android:textColor="@color/black"
             android:textSize="20dp" />
 
         <TextView
@@ -61,6 +61,7 @@
         android:layout_marginTop="20dp"
         android:background="@drawable/button"
         android:text="Login"
+        android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.502"
         app:layout_constraintStart_toStartOf="parent"
@@ -84,7 +85,7 @@
         android:textColor="@color/white"
 
 
-        android:textColorHint="@color/white"
+        android:textColorHint="@color/button_color"
         android:textSize="20dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.502"
@@ -109,7 +110,7 @@
         android:inputType="text"
         android:textColor="@color/white"
 
-        android:textColorHint="@color/white"
+        android:textColorHint="@color/button_color"
         android:textSize="20dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.502"

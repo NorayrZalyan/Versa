@@ -54,6 +54,7 @@ public class WorkerListAdapter extends ArrayAdapter<WorkerData> {
     public WorkerListAdapter(@NonNull Context context, ArrayList<WorkerData> dataArrayList, String roomId, String activity, String categoryName) {
         super(context, R.layout.list_item, dataArrayList);
         this.context = context;
+
         this.roomId = roomId;
         this.activity = activity;
         this.categoryName = categoryName;
