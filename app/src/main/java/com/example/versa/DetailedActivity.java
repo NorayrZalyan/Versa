@@ -15,6 +15,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.versa.Auth.MainActivity;
 import com.example.versa.bottomSheet.CreateCategoryBottomSheet;
@@ -68,21 +70,7 @@ public class DetailedActivity extends AppCompatActivity {
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-        db.collection("Users").document(Uid).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
-                        Log.d("1", "DocumentSnapshot data: " + document.getData());
-                    } else {
-                        Log.d("TAG", "No such document");
-                    }
-                } else {
-                    Log.d("TAG", "get failed with ", task.getException());
-                }
-            }
-        });
+
 
 
 
@@ -103,6 +91,10 @@ public class DetailedActivity extends AppCompatActivity {
 
 
 
+        ;
+
+
+
 
         String uid = FirebaseAuth.getInstance().getUid();
         db.collection("Users").document(uid)
@@ -113,6 +105,9 @@ public class DetailedActivity extends AppCompatActivity {
                         if(task.isSuccessful()){
                             DocumentSnapshot documentSnapshot = task.getResult();
                             if (documentSnapshot.exists()){
+
+
+
 
                                 List<Map<String, String>> userCategories = (List<Map<String, String>>) documentSnapshot.get("categories");
                                 Log.d("TAG", "onComplete: "+userCategories);
@@ -129,21 +124,12 @@ public class DetailedActivity extends AppCompatActivity {
                                     CategoryData categoryData = new CategoryData(nameList.get(i));
                                     dataArrayList.add(categoryData);
                                 }
-                                categoryListAdapter = new CategoryListAdapter(DetailedActivity.this, dataArrayList, roomId, roomName, nameList);
-                                binding.listview.setAdapter(categoryListAdapter);
-                                binding.listview.setClickable(true);
-                                binding.listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                                    @Override
-                                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                RecyclerView recyclerView = binding.listView;
+                                recyclerView.setLayoutManager(new LinearLayoutManager(DetailedActivity.this, LinearLayoutManager.HORIZONTAL,false));
+                                CategoryListAdapter ada = new CategoryListAdapter(DetailedActivity.this, dataArrayList, roomId);
+                                recyclerView.setAdapter(ada);
 
-                                        Intent intent = new Intent(DetailedActivity.this, CategoryActivity.class);
-                                        intent.putExtra("roomId", roomId);
-                                        intent.putExtra("roomName", roomName);
-                                        intent.putExtra("categoryName", nameList.get(position));
-                                        startActivity(intent);
 
-                                    }
-                                });
 
                             } else {
                                 Log.d("TAG", "No such document");

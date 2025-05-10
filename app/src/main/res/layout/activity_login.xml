@@ -82,10 +82,10 @@
         android:focusable="true"
         android:focusableInTouchMode="true"
         android:inputType="textPassword"
-        android:textColor="@color/white"
+        android:textColor="@color/black"
 
 
-        android:textColorHint="@color/button_color"
+        android:textColorHint="@color/bacground_dark"
         android:textSize="20dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.502"
@@ -108,9 +108,9 @@
         android:focusable="true"
         android:focusableInTouchMode="true"
         android:inputType="text"
-        android:textColor="@color/white"
+        android:textColor="@color/black"
 
-        android:textColorHint="@color/button_color"
+        android:textColorHint="@color/bacground_dark"
         android:textSize="20dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.502"

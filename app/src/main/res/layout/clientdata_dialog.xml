@@ -75,8 +75,8 @@
             android:background="@drawable/input"
             android:inputType="text"
             android:hint=" Name"
-            android:textColor="@color/button_color"
-            android:textColorHint="@color/button_color"
+            android:textColor="@color/black"
+            android:textColorHint="@color/bacground_dark"
             app:layout_constraintStart_toEndOf="@id/nameTv"
             app:layout_constraintTop_toTopOf="@id/nameTv" />
 
@@ -88,8 +88,8 @@
             android:layout_marginStart="30dp"
             android:background="@drawable/input"
             android:hint=" Phone"
-            android:textColor="@color/button_color"
-            android:textColorHint="@color/button_color"
+            android:textColor="@color/black"
+            android:textColorHint="@color/bacground_dark"
             app:layout_constraintStart_toEndOf="@id/phoneTv"
             app:layout_constraintTop_toTopOf="@id/phoneTv" />
 
@@ -100,8 +100,8 @@
             android:layout_marginStart="30dp"
             android:background="@drawable/input"
             android:hint=" Email"
-            android:textColor="@color/button_color"
-            android:textColorHint="@color/button_color"
+            android:textColor="@color/black"
+            android:textColorHint="@color/bacground_dark"
             app:layout_constraintStart_toEndOf="@id/emailTv"
             app:layout_constraintTop_toTopOf="@id/emailTv" />
 
@@ -113,8 +113,8 @@
             android:layout_marginTop="20dp"
             android:background="@drawable/input"
             android:hint=" Description"
-            android:textColor="@color/button_color"
-            android:textColorHint="@color/button_color"
+            android:textColor="@color/black"
+            android:textColorHint="@color/bacground_dark"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.504"
             app:layout_constraintStart_toStartOf="parent"
