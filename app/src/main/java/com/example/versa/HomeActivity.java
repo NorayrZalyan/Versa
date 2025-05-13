@@ -93,7 +93,7 @@ public class HomeActivity extends AppCompatActivity {
                         }
                         for (int i = 0; i < nameList.length; i++) {
                             RoomData roomData = new RoomData(nameList[i], idList[i]);
-                            Log.e("TAG", "onComplete: "+idList[i]);
+                            Log.d("test", "onComplete: "+idList[i]);
                             dataArrayList.add(roomData);
                         }
                         RoomListAdapter roomListAdapter = new RoomListAdapter(HomeActivity.this, dataArrayList, idList);

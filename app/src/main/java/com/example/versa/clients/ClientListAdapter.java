@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.example.versa.CategoryActivity;
+import com.example.versa.CategoryFragment;
 import com.example.versa.DetailedActivity;
 import com.example.versa.Dialog.LoadingDialog;
 import com.example.versa.HistoryActivity;
@@ -80,7 +81,7 @@ public class ClientListAdapter extends ArrayAdapter<ClientData> {
                 PopupMenu popup = new PopupMenu(parent.getContext(), v);
                 if (activity.equals("HistoryActivity")){
                     popup.getMenuInflater().inflate(R.menu.client_list_item2, popup.getMenu());
-                } else if (activity.equals("CategoryActivity")) {
+                } else if (activity.equals("CategoryFragment")) {
                     popup.getMenuInflater().inflate(R.menu.client_list_item_menu, popup.getMenu());
                 }
                 popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {

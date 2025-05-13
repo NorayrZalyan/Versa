@@ -126,7 +126,7 @@ public class DetailedActivity extends AppCompatActivity {
                                 }
                                 RecyclerView recyclerView = binding.listView;
                                 recyclerView.setLayoutManager(new LinearLayoutManager(DetailedActivity.this, LinearLayoutManager.HORIZONTAL,false));
-                                CategoryListAdapter ada = new CategoryListAdapter(DetailedActivity.this, dataArrayList, roomId);
+                                CategoryListAdapter ada = new CategoryListAdapter(DetailedActivity.this, dataArrayList, nameList, roomId, getSupportFragmentManager(), roomName);
                                 recyclerView.setAdapter(ada);
 
 

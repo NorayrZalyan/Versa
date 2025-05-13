@@ -25,6 +25,7 @@ import androidx.annotation.Nullable;
 
 import com.example.versa.Dialog.LoadingDialog;
 import com.example.versa.R;
+import com.example.versa.category.Category;
 import com.example.versa.staff.Worker;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -89,31 +90,39 @@ public class RoomListAdapter extends ArrayAdapter<RoomData> {
                                                                 for (QueryDocumentSnapshot document : task.getResult()) {
                                                                     List<Map<String, Object>> rooms = (List<Map<String, Object>>) document.get("rooms");
                                                                     List<Map<String, String>> categories = (List<Map<String, String>>) document.get("categories");
+
+                                                                    List<Map<String, String>> resCategories = new ArrayList<>();
+                                                                    Map<String, String> resMap = new HashMap<>();
+
+                                                                    Map<String, String> newMap = new HashMap<>();
                                                                     for (int i = 0; i < rooms.size(); i++) {
                                                                         if (rooms.get(i).get("roomId").equals(idList[position])){
-                                                                            Log.d("Test", "onComplete: "+rooms.get(i).get("roomId")+" "+i);
                                                                             rooms.remove(i);
                                                                         }
-                                                                        for (int j = 0; j < categories.size(); j++) {
-                                                                            for (String key :categories.get(j).keySet()) {
-                                                                                if (key.equals(idList[position])){
-                                                                                    categories.remove(j);
+                                                                    }
+
+                                                                    for (int j = 0; j < categories.size(); j++) {
+                                                                        for (String key :categories.get(j).keySet()) {
+                                                                            for (String value : categories.get(j).values()) {
+                                                                                if (!key.equals(idList[position])) {
+                                                                                    resMap.put(key, value);
+                                                                                    resCategories.add(resMap);
                                                                                 }
                                                                             }
                                                                         }
-                                                                        Map<String, Object> updateMap = new HashMap<>();
-                                                                        updateMap.put("rooms",rooms);
-                                                                        updateMap.put("categories",categories);
-                                                                        db.collection("Users").document(document.getId()).update(updateMap);
-                                                                        ((Activity) context).recreate();
-                                                                        break;
                                                                     }
+                                                                    Map<String, Object> updateMap = new HashMap<>();
+                                                                    updateMap.put("rooms",rooms);
+                                                                    updateMap.put("categories",resCategories);
+                                                                    db.collection("Users").document(document.getId())
+                                                                            .update(updateMap);
                                                                 }
                                                             } else {
                                                                 Log.w("Firestore", "Error getting documents.", task.getException());
                                                             }
                                                         }
                                                     });
+
 //                                            deleting a room
                                             db.collection("Rooms").document(idList[position]).delete()
                                                     .addOnCompleteListener(new OnCompleteListener<Void>() {
