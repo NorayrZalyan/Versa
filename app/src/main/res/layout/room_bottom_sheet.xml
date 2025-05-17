@@ -58,11 +58,12 @@
         android:id="@+id/createroom_bottomsheetBt"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="4dp"
         android:background="@drawable/button"
-        android:textColor="@color/white"
         android:text="Create"
+        android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/Room_nameEt" />
 </androidx.constraintlayout.widget.ConstraintLayout>

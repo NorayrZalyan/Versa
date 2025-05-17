@@ -21,9 +21,9 @@
         android:layout_width="wrap_content"
         android:layout_height="50dp"
         android:background="@drawable/actionbutton"
-        android:layout_gravity="bottom"
-        android:layout_marginStart="260dp"
-        android:layout_marginBottom="24dp"
+        android:layout_gravity="bottom|end"
+        android:layout_marginEnd="15dp"
+        android:layout_marginBottom="15dp"
         android:text=" add client "
         android:textSize="20dp" />
 
