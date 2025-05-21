@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Color;
+import android.graphics.ColorFilter;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,9 +14,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 
+import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -45,6 +49,9 @@ public class CategoryListAdapter extends RecyclerView.Adapter<CategoryListAdapte
     private String roomId;
     private String roomName;
     private ArrayList<String> nameList = new ArrayList<>();
+    private int selectedPosition = RecyclerView.NO_POSITION;
+
+
 
     // data is passed into the constructor
     public CategoryListAdapter(Context context, ArrayList<CategoryData> data, ArrayList<String> nameList, String roomId, FragmentManager fragmentManager, String roomName) {
@@ -69,6 +76,30 @@ public class CategoryListAdapter extends RecyclerView.Adapter<CategoryListAdapte
     public void onBindViewHolder(ViewHolder holder, int position) {
         CategoryData animal = mData.get(position);
         holder.myTextView.setText(animal.getName());
+
+        if (selectedPosition == position) {
+            holder.Rl.setBackgroundColor(Color.GRAY);
+        } else {
+            holder.Rl.setBackgroundColor(Color.parseColor("#4B94B4"));
+        }
+
+        holder.itemView.setOnClickListener(v -> {
+            selectedPosition = holder.getAdapterPosition();
+            Log.d("TAG", "onBindViewHolder: "+selectedPosition);
+            notifyDataSetChanged(); // Обновить весь список
+
+
+            Bundle bundle = new Bundle();
+            bundle.putString("name", getItem(selectedPosition));
+            bundle.putString("roomId", roomId);
+            fragmentManager.beginTransaction()
+                    .replace(R.id.fragment_container_view, CategoryFragment.class, bundle)
+                    .addToBackStack(null).commit();
+
+        });
+
+
+
     }
 
     // total number of rows
@@ -79,13 +110,16 @@ public class CategoryListAdapter extends RecyclerView.Adapter<CategoryListAdapte
 
 
     // stores and recycles views as they are scrolled off screen
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class ViewHolder extends RecyclerView.ViewHolder {
         TextView myTextView;
+        RelativeLayout Rl;
 
         ViewHolder(View itemView) {
             super(itemView);
             myTextView = itemView.findViewById(R.id.listName);
-            itemView.setOnClickListener(this);
+            Rl = itemView.findViewById(R.id.Rl);
+
+//            itemView.setOnClickListener(this);
 
 
             ImageView moreIv = itemView.findViewById(R.id.moreIv);
@@ -131,13 +165,13 @@ public class CategoryListAdapter extends RecyclerView.Adapter<CategoryListAdapte
                                                                                             .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                                                                                                 @Override
                                                                                                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                                                                                    if (task.isSuccessful()){
+                                                                                                    if (task.isSuccessful()) {
                                                                                                         DocumentSnapshot documentSnapshot = task.getResult();
-                                                                                                        if (documentSnapshot.exists()){
+                                                                                                        if (documentSnapshot.exists()) {
                                                                                                             List<Map<String, String>> categories = (List<Map<String, String>>) documentSnapshot.get("categories");
                                                                                                             categories.remove(getAdapterPosition());
                                                                                                             Map<String, Object> updateMap = new HashMap<>();
-                                                                                                            updateMap.put("categories",categories);
+                                                                                                            updateMap.put("categories", categories);
                                                                                                             db.collection("Rooms").document(roomId).update(updateMap);
                                                                                                         }
                                                                                                     }
@@ -146,11 +180,11 @@ public class CategoryListAdapter extends RecyclerView.Adapter<CategoryListAdapte
                                                                                             });
 
 
-
                                                                                     FragmentManager fm = fragmentManager;
-                                                                                    for(int i = 0; i < fm.getBackStackEntryCount(); ++i) {
+                                                                                    for (int i = 0; i < fm.getBackStackEntryCount(); ++i) {
                                                                                         fm.popBackStack();
-                                                                                    }                                                                                    loadingDialog.dismisDialog();
+                                                                                    }
+                                                                                    loadingDialog.dismisDialog();
                                                                                     ((Activity) context).recreate();
                                                                                 })
                                                                                 .addOnFailureListener(e -> {
@@ -199,19 +233,16 @@ public class CategoryListAdapter extends RecyclerView.Adapter<CategoryListAdapte
         }
 
 
-
-
-
-        @Override
-        public void onClick(View view) {
-            if (mClickListener != null) mClickListener.onItemClick(view, getAdapterPosition());
-            Bundle bundle = new Bundle();
-            bundle.putString("name", getItem(getAdapterPosition()));
-            bundle.putString("roomId", roomId);
-            fragmentManager.beginTransaction()
-                    .replace(R.id.fragment_container_view, CategoryFragment.class, bundle)
-                    .addToBackStack(null).commit();
-        }
+//        @Override
+//        public void onClick(View view) {
+//            if (mClickListener != null) mClickListener.onItemClick(view, getAdapterPosition());
+//            Bundle bundle = new Bundle();
+//            bundle.putString("name", getItem(getAdapterPosition()));
+//            bundle.putString("roomId", roomId);
+//            fragmentManager.beginTransaction()
+//                    .replace(R.id.fragment_container_view, CategoryFragment.class, bundle)
+//                    .addToBackStack(null).commit();
+//        }
     }
 
     // convenience method for getting data at click position
