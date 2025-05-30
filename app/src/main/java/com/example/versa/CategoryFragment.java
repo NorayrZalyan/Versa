@@ -141,15 +141,21 @@ public class CategoryFragment extends Fragment {
 
         ConstraintLayout constraintLayout = context.findViewById(R.id.constraintlayout);
         View view = LayoutInflater.from(getContext()).inflate(R.layout.clientdata_dialog, constraintLayout);
+
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+
         builder.setView(view);
-        builder.setCancelable(true);
-        LoadingDialog loadingDialog = new LoadingDialog(getActivity());
         final AlertDialog alertDialog = builder.create();
+
         if (alertDialog.getWindow() != null){
             alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(0));
         }
         alertDialog.show();
+
+
+        LoadingDialog loadingDialog = new LoadingDialog(getActivity());
+
+
         EditText nameEt = view.findViewById(R.id.nameEt);
         nameEt.setText(name);
         EditText phoneEt = view.findViewById(R.id.phoneEt);
@@ -208,6 +214,10 @@ public class CategoryFragment extends Fragment {
 
             }
         });
+
+
+
+
     }
 
 }
