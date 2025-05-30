@@ -58,7 +58,7 @@
         android:id="@+id/createroom_bottomsheetBt"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
+        android:layout_marginTop="30dp"
         android:background="@drawable/button"
         android:text="Create"
         android:textColor="@color/white"

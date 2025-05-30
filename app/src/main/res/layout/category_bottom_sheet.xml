@@ -58,7 +58,7 @@
         android:id="@+id/create_categoryBt"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="30dp"
         android:background="@drawable/button"
         android:text="Create"
         android:textColor="@color/white"

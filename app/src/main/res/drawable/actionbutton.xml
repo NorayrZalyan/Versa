@@ -8,8 +8,8 @@
     </solid>
     <stroke
         android:inset="2dp"
-        android:width="2dp"
-        android:color="@color/Bacground_color"/>
+        android:width="0.5dp"
+        android:color="@color/black"/>
     <corners android:radius="360dp"/>
 
 </shape>

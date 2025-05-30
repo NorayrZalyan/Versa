@@ -9,21 +9,22 @@
     tools:context=".HomeActivity">
 
 
-
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Company"
-        android:gravity="center"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         android:layout_marginTop="15dp"
+        android:fontFamily="@font/ubuntu_light"
+
+        android:gravity="center"
+        android:text="Сompanies"
+        android:textColor="@color/black"
         android:textSize="40dp"
-        android:textColor="@color/black"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="3dp"
+        android:layout_height="1dp"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginTop="80dp"
         android:background="@color/black"/>
@@ -46,12 +47,10 @@
 
     <ListView
         android:id="@+id/listview"
-        android:background="@color/Bacground_color"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:dividerHeight="10.0sp"
         android:scrollbars="vertical"
-
         android:layout_marginTop="90dp"
         tools:listitem="@layout/list_item" />
 

@@ -47,10 +47,26 @@ public class RegisterActivity extends AppCompatActivity {
         });
 
 
+        binding.testUser.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                mAuth.signInWithEmailAndPassword("individualproject2025@gmail.com", "Samsung2025")
+                        .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                if (task.isSuccessful()) {
+                                    Log.d("Login Test User", "signInWithEmail:success");
+                                    startActivity(new Intent(RegisterActivity.this, HomeActivity.class));
+                                } else {
+                                    Log.w("Login Test User", "signInWithEmail:failure", task.getException());
+                                }
+                            }
+                        });
 
 
-
-
+            }
+        });
 
 
         binding.signupBt.setOnClickListener(new View.OnClickListener() {
